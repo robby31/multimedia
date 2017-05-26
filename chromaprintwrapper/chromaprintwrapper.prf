@@ -1,0 +1,12 @@
+QT += xml
+
+INCLUDEPATH += $$PWD
+
+!exists($$(MYLIBRARY)) {
+    error("variable MYLIBRARY not set.")
+}
+
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(chromaprintwrapper)
+
+INCLUDEPATH += $$PWD/../../libchromaprint-1.1/src
+LIBS += -L$$PWD/../../libchromaprint-1.1/build/src -lchromaprint

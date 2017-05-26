@@ -28,3 +28,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += tst_chromaprintwrappertests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+include (../chromaprintwrapper/chromaprintwrapper.prf)
