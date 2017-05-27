@@ -4,4 +4,5 @@ SUBDIRS += \
     chromaprintwrapper \
     testsChromaprintWrapper \
     acoustid \
-    testacoustid
+    testacoustid \
+    mediadevice
