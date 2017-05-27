@@ -5,4 +5,5 @@ SUBDIRS += \
     testsChromaprintWrapper \
     acoustid \
     testacoustid \
-    mediadevice
+    mediadevice \
+    testsffmpeg
