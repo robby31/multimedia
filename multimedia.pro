@@ -2,4 +2,6 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     chromaprintwrapper \
-    testsChromaprintWrapper
+    testsChromaprintWrapper \
+    acoustid \
+    testacoustid

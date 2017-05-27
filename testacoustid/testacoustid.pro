@@ -28,3 +28,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += tst_acoustidtest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+include (../acoustid/acoustid.prf)
