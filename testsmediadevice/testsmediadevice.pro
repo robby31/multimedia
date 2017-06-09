@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-05-27T22:48:24
+# Project created by QtCreator 2017-05-29T22:39:56
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += testlib
 
 QT       -= gui
 
-TARGET = tst_ffmpegtest
+TARGET = tst_mediadevicetest
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -26,9 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
-SOURCES += tst_ffmpegtest.cpp
+SOURCES += tst_mediadevicetest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 include (../mediadevice/mediadevice.prf)
-
-DEFINES += PROFILING

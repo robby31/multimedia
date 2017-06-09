@@ -31,10 +31,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    qffmpegprocess.cpp
+    qffmpeg.cpp \
+    device.cpp \
+    transcodeprocess.cpp \
+    ffmpegtranscoding.cpp \
+    streamingfile.cpp \
+    mencodertranscoding.cpp
 
 HEADERS += \
-    qffmpegprocess.h
+    qffmpeg.h \
+    device.h \
+    transcodeprocess.h \
+    ffmpegtranscoding.h \
+    streamingfile.h \
+    mencodertranscoding.h
 
 unix {
     target.path = /usr/lib
@@ -43,3 +53,5 @@ unix {
 
 DISTFILES += \
     mediadevice.prf
+
+include (../../Analyzer/analyzer.pri)

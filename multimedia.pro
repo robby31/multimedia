@@ -6,4 +6,5 @@ SUBDIRS += \
     acoustid \
     testacoustid \
     mediadevice \
-    testsffmpeg
+    testsffmpeg \
+    testsmediadevice

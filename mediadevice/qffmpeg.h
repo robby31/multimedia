@@ -1,5 +1,5 @@
-#ifndef QFFMPEGPROCESS_H
-#define QFFMPEGPROCESS_H
+#ifndef QFFMPEG_H
+#define QFFMPEG_H
 
 #include <QObject>
 #include <QProcess>
@@ -7,14 +7,14 @@
 
 #include "../../Analyzer/analyzer.h"
 
-class QFfmpegProcess : public QObject
+class QFfmpeg : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit QFfmpegProcess(QObject *parent = 0);
-    explicit QFfmpegProcess(const QString &filename, QObject *parent = 0);
-    virtual ~QFfmpegProcess() Q_DECL_OVERRIDE;
+    explicit QFfmpeg(QObject *parent = 0);
+    explicit QFfmpeg(const QString &filename, QObject *parent = 0);
+    virtual ~QFfmpeg() Q_DECL_OVERRIDE;
 
     bool isValid() const;
 
@@ -71,4 +71,4 @@ private:
     QByteArray *picture;
 };
 
-#endif // QFFMPEGPROCESS_H
+#endif // QFFMPEG_H

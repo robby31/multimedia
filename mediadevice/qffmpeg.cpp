@@ -1,13 +1,13 @@
-#include "qffmpegprocess.h"
+#include "qffmpeg.h"
 
-QString QFfmpegProcess::EXE_DIRPATH = "";
+QString QFfmpeg::EXE_DIRPATH = "";
 
-void QFfmpegProcess::setDirPath(const QString &folder)
+void QFfmpeg::setDirPath(const QString &folder)
 {
     EXE_DIRPATH = folder;
 }
 
-QFfmpegProcess::QFfmpegProcess(QObject *parent):
+QFfmpeg::QFfmpeg(QObject *parent):
     QObject(parent),
     programFfmpegProbe(Q_NULLPTR),
     programFfmpegPicture(Q_NULLPTR),
@@ -35,7 +35,7 @@ QFfmpegProcess::QFfmpegProcess(QObject *parent):
     ANALYZER_RETURN
 }
 
-QFfmpegProcess::QFfmpegProcess(const QString &filename, QObject *parent):
+QFfmpeg::QFfmpeg(const QString &filename, QObject *parent):
     QObject(parent),
     programFfmpegProbe(Q_NULLPTR),
     programFfmpegPicture(Q_NULLPTR),
@@ -67,7 +67,7 @@ QFfmpegProcess::QFfmpegProcess(const QString &filename, QObject *parent):
     ANALYZER_RETURN
 }
 
-QFfmpegProcess::~QFfmpegProcess()
+QFfmpeg::~QFfmpeg()
 {
     if (programFfmpegProbe)
     {
@@ -84,7 +84,7 @@ QFfmpegProcess::~QFfmpegProcess()
     }
 }
 
-bool QFfmpegProcess::isValid() const
+bool QFfmpeg::isValid() const
 {
     if (EXE_DIRPATH.isEmpty())
     {
@@ -97,7 +97,7 @@ bool QFfmpegProcess::isValid() const
     }
 }
 
-void QFfmpegProcess::probeFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void QFfmpeg::probeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     ANALYZER
 
@@ -112,7 +112,7 @@ void QFfmpegProcess::probeFinished(int exitCode, QProcess::ExitStatus exitStatus
     if (process && exitStatus == QProcess::NormalExit)
     {
         xmlResProbe.setContent(process->readAll());
-//        qDebug() << xmlResProbe.toString();
+        qDebug() << xmlResProbe.toString();
 
         QDomNodeList streamList = xmlResProbe.elementsByTagName("stream");
         for (int index=0;index<streamList.count();++index)
@@ -146,7 +146,7 @@ void QFfmpegProcess::probeFinished(int exitCode, QProcess::ExitStatus exitStatus
     ANALYZER_RETURN
 }
 
-QString QFfmpegProcess::metaData(const QString &tagName) const
+QString QFfmpeg::metaData(const QString &tagName) const
 {
     ANALYZER
 
@@ -169,7 +169,7 @@ QString QFfmpegProcess::metaData(const QString &tagName) const
     return QString();
 }
 
-QString QFfmpegProcess::getFormat() const
+QString QFfmpeg::getFormat() const
 {
     if (waitProbeFinished())
     {
@@ -182,7 +182,7 @@ QString QFfmpegProcess::getFormat() const
     }
 }
 
-qint64 QFfmpegProcess::size() const
+qint64 QFfmpeg::size() const
 {
     if (waitProbeFinished())
     {
@@ -195,7 +195,7 @@ qint64 QFfmpegProcess::size() const
     }
 }
 
-int QFfmpegProcess::getBitrate() const
+int QFfmpeg::getBitrate() const
 {
     if (waitProbeFinished())
     {
@@ -208,7 +208,7 @@ int QFfmpegProcess::getBitrate() const
     }
 }
 
-QString QFfmpegProcess::getAudioFormat() const
+QString QFfmpeg::getAudioFormat() const
 {
     ANALYZER
 
@@ -221,7 +221,7 @@ QString QFfmpegProcess::getAudioFormat() const
     return res;
 }
 
-int QFfmpegProcess::getAudioBitrate() const
+int QFfmpeg::getAudioBitrate() const
 {
     ANALYZER
 
@@ -234,7 +234,7 @@ int QFfmpegProcess::getAudioBitrate() const
     return res;
 }
 
-int QFfmpegProcess::getAudioChannelCount() const
+int QFfmpeg::getAudioChannelCount() const
 {
     ANALYZER
 
@@ -247,7 +247,7 @@ int QFfmpegProcess::getAudioChannelCount() const
     return res;
 }
 
-int QFfmpegProcess::getAudioSamplerate() const
+int QFfmpeg::getAudioSamplerate() const
 {
     ANALYZER
 
@@ -260,7 +260,7 @@ int QFfmpegProcess::getAudioSamplerate() const
     return res;
 }
 
-QString QFfmpegProcess::getVideoResolution() const
+QString QFfmpeg::getVideoResolution() const
 {
     if (waitProbeFinished())
     {
@@ -273,7 +273,7 @@ QString QFfmpegProcess::getVideoResolution() const
 }
 
 
-double QFfmpegProcess::getVideoFrameRate() const
+double QFfmpeg::getVideoFrameRate() const
 {
     if (waitProbeFinished())
     {
@@ -290,7 +290,7 @@ double QFfmpegProcess::getVideoFrameRate() const
     }
 }
 
-QStringList QFfmpegProcess::getStreamsTag(const QString &codec_type, const QString &tagName) const
+QStringList QFfmpeg::getStreamsTag(const QString &codec_type, const QString &tagName) const
 {
     QStringList res;
 
@@ -321,7 +321,7 @@ QStringList QFfmpegProcess::getStreamsTag(const QString &codec_type, const QStri
     return res;
 }
 
-qint64 QFfmpegProcess::getDuration() const
+qint64 QFfmpeg::getDuration() const
 {
     ANALYZER
 
@@ -334,7 +334,7 @@ qint64 QFfmpegProcess::getDuration() const
     return res;
 }
 
-void QFfmpegProcess::parsePicture()
+void QFfmpeg::parsePicture()
 {
     ANALYZER
 
@@ -357,7 +357,7 @@ void QFfmpegProcess::parsePicture()
     ANALYZER_RETURN
 }
 
-void QFfmpegProcess::pictureFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void QFfmpeg::pictureFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     ANALYZER
 
@@ -389,7 +389,7 @@ void QFfmpegProcess::pictureFinished(int exitCode, QProcess::ExitStatus exitStat
     ANALYZER_RETURN
 }
 
-QByteArray QFfmpegProcess::getPicture() const {
+QByteArray QFfmpeg::getPicture() const {
     ANALYZER
 
     if (waitPictureFinished())
@@ -421,7 +421,7 @@ QByteArray QFfmpegProcess::getPicture() const {
     return QByteArray();
 }
 
-QHash<QString, double> QFfmpegProcess::getVolumeInfo(const int timeout)
+QHash<QString, double> QFfmpeg::getVolumeInfo(const int timeout)
 {
     ANALYZER
 
@@ -471,7 +471,7 @@ QHash<QString, double> QFfmpegProcess::getVolumeInfo(const int timeout)
     return result;
 }
 
-bool QFfmpegProcess::setFilename(const QString &filename, const bool &readPicture)
+bool QFfmpeg::setFilename(const QString &filename, const bool &readPicture)
 {
     ANALYZER
 
@@ -520,7 +520,7 @@ bool QFfmpegProcess::setFilename(const QString &filename, const bool &readPictur
     return true;
 }
 
-bool QFfmpegProcess::waitProbeFinished() const
+bool QFfmpeg::waitProbeFinished() const
 {
     ANALYZER
     if (programFfmpegProbe)
@@ -544,12 +544,12 @@ bool QFfmpegProcess::waitProbeFinished() const
     }
 }
 
-void QFfmpegProcess::probeDestroyed()
+void QFfmpeg::probeDestroyed()
 {
     programFfmpegProbe = Q_NULLPTR;
 }
 
-bool QFfmpegProcess::waitPictureFinished() const
+bool QFfmpeg::waitPictureFinished() const
 {
     if (programFfmpegPicture)
     {
@@ -564,7 +564,7 @@ bool QFfmpegProcess::waitPictureFinished() const
     }
 }
 
-void QFfmpegProcess::pictureDestroyed()
+void QFfmpeg::pictureDestroyed()
 {
     programFfmpegPicture = Q_NULLPTR;
 }

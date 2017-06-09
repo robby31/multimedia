@@ -1,7 +1,7 @@
 #include <QString>
 #include <QtTest>
 
-#include "qffmpegprocess.h"
+#include "qffmpeg.h"
 
 class ffmpegTest : public QObject
 {
@@ -17,7 +17,7 @@ private Q_SLOTS:
 
 ffmpegTest::ffmpegTest()
 {
-    QFfmpegProcess::setDirPath("/opt/local/bin");
+    QFfmpeg::setDirPath("/opt/local/bin");
 }
 
 void ffmpegTest::testCase1_data()
@@ -80,7 +80,7 @@ void ffmpegTest::testCase1()
     QFETCH(QString, TLEN);
     QFETCH(QString, date);
 
-    QFfmpegProcess media(pathname);
+    QFfmpeg media(pathname);
 
     QCOMPARE(media.getFormat(), format);
     QCOMPARE(media.getDuration(), duration);
