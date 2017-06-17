@@ -6,11 +6,10 @@ TranscodeProcess::TranscodeProcess(QObject *parent) :
     m_opened(false),
     m_url(),
     m_pos(0),
-    m_size(-1),
     transcodeClock(),
     killTranscodeProcess(false),
     m_paused(false),
-    m_lengthInSeconds(-1),
+    m_durationMSecs(-1),
     m_format(UNKNOWN),
     m_audioLanguages(),
     m_subtitleLanguages(),
@@ -79,18 +78,56 @@ void TranscodeProcess::dataAvailable()
 
 qint64 TranscodeProcess::size() const
 {
-    if (m_size!=-1)
-        return m_size;
+    qint64 tmp_size = fullSize();
 
-    return m_process.size();
+    if (tmp_size > 0)
+    {
+        if (endByte() != -1)
+        {
+            if (startByte() != -1)
+                return endByte() - startByte() + 1;
+        }
+        else
+        {
+            if (startByte() != -1 && tmp_size >= startByte())
+                return tmp_size - startByte();
+        }
+
+        return tmp_size;
+    }
+    else
+    {
+        qWarning() << "length or bitrate is invalid" << lengthInMSeconds() << bitrate() << "full size = " << tmp_size << url();
+        return -1;
+    }
 }
 
-void TranscodeProcess::setSize(const qint64 size)
+qint64 TranscodeProcess::lengthInSeconds() const
 {
-    if (size > 0)
-        m_size = size;
+    return lengthInMSeconds()/1000;
+}
+
+qint64 TranscodeProcess::lengthInMSeconds() const
+{
+    if (timeSeekStart() > 0)
+    {
+        if (timeSeekEnd() > timeSeekStart() && (timeSeekEnd()*1000) < m_durationMSecs)
+            return (timeSeekEnd() - timeSeekStart())*1000;
+        else
+            return m_durationMSecs - timeSeekStart()*1000;
+    }
     else
-        qWarning() << "unable to set size" << size;
+    {
+        if (timeSeekEnd() > 0 && (timeSeekEnd()*1000) < m_durationMSecs)
+            return timeSeekEnd()*1000;
+        else
+            return m_durationMSecs;
+    }
+}
+
+void TranscodeProcess::setLengthInMSeconds(const qint64 duration)
+{
+    m_durationMSecs = duration;
 }
 
 bool TranscodeProcess::atEnd() const
@@ -311,9 +348,61 @@ bool TranscodeProcess::waitForFinished(int msecs)
     return m_process.waitForFinished(msecs);
 }
 
+qint64 TranscodeProcess::fullSize() const
+{
+    if (lengthInMSeconds() > 0 && bitrate() > 0)
+    {
+        if (format() == MP3)
+            return (double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0 + 2000;   // header size = 2000 bytes
+        else
+            return overheadfactor()*(double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0;
+    }
+    else
+    {
+        return -1;
+    }
+}
+
 void TranscodeProcess::setRange(qint64 startByte, qint64 endByte)
 {
-    Q_UNUSED(startByte)
-    Q_UNUSED(endByte)
-    qWarning() << "function setRange not available for TranscodeProcess";
+    qint64 start = startByte;
+    qint64 end = endByte;
+
+    int tmp_size = fullSize();
+
+    if (tmp_size > 0 && start >= tmp_size)
+    {
+        qWarning() << "invalid startByte (greater than file size)" << startByte << tmp_size;
+        start = 0;
+    }
+
+    if (tmp_size > 0 && end >= tmp_size)
+    {
+        qWarning() << "invalid endByte (greater than file size)" << endByte << tmp_size;
+        end = - 1;
+    }
+
+    Device::setRange(start, end);
+}
+
+double TranscodeProcess::overheadfactor() const
+{
+    switch (format())
+    {
+    case MP3:
+        return 1.0;
+    case LPCM:
+        return 1.00001;
+    case AAC:
+        return 1.01;
+    case ALAC:
+        return 1.08;
+    case H264_AAC:
+    case H264_AC3:
+        return 1.105;
+    case MPEG2_AC3:
+        return 1.0847;
+    default:
+        return 1.0;
+    }
 }

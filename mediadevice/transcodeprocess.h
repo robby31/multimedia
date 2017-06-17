@@ -25,11 +25,13 @@ public:
 
     QString url() const { return m_url; }
 
-    void setSize(const qint64 size);
     virtual qint64 size() const Q_DECL_OVERRIDE;
 
-    qint64 lengthInSeconds() const                          { return m_lengthInSeconds; }
-    void setLengthInSeconds(const qint64 length)            { m_lengthInSeconds = length; }
+    qint64 lengthInSeconds() const;
+    qint64 lengthInMSeconds() const;
+    void setLengthInMSeconds(const qint64 duration);
+
+    double overheadfactor() const;
 
     virtual void setRange(qint64 startByte, qint64 endByte) Q_DECL_OVERRIDE;
 
@@ -68,6 +70,7 @@ public:
 protected:
     void setProgram(const QString &program)         { m_process.setProgram(program);        }
     void setArguments(const QStringList &arguments) { m_process.setArguments(arguments);    }
+    qint64 fullSize() const;
 
 private:
     qint64 transcodedPos() const { return pos() + bytesAvailable(); }  // position in bytes of transcoded data
@@ -100,13 +103,12 @@ private:
     QString m_url;
 
     qint64 m_pos;
-    qint64 m_size;
 
     QElapsedTimer transcodeClock;
     bool killTranscodeProcess;  // true if the application aborts the transcoding
     bool m_paused;              // true if the transcoding has been paused
 
-    qint64 m_lengthInSeconds;
+    qint64 m_durationMSecs;     // duration in mseconds
     TranscodeFormatAvailable m_format;
 
     QStringList m_audioLanguages;

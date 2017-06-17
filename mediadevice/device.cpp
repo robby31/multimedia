@@ -36,7 +36,7 @@ qint64 Device::progress()
     if (size() <= 0)
         return 0;
     else
-        return qint64(100.0*double(pos())/double(size()));
+        return qCeil(100.0*double(pos())/double(size()));
 }
 
 qint64 Device::timeSeekStart() const

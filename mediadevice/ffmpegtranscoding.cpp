@@ -19,15 +19,28 @@ void FfmpegTranscoding::updateArguments()
 {
     QString ssOption;
     if (timeSeekStart() > 0)
+    {
         ssOption = QString("%1").arg(timeSeekStart());
-
-//    else if (range() != 0 && !range()->isNull())
-//    {
-//        if (range()->getStartByte() > 0 && lengthInSeconds() > 0) {
-//            double start_position = double(range()->getStartByte())/double(range()->getSize())*double(lengthInSeconds());
-//            ssOption = QString("%1").arg(long(start_position));
-//        }
-//    }
+    }
+    else if (startByte() > 0)
+    {
+        if (lengthInSeconds() > 0 && fullSize() > 0)
+        {
+            if (startByte() <= fullSize())
+            {
+                double start_position = double(startByte())/double(fullSize())*double(lengthInSeconds());
+                ssOption = QString("%1").arg(qCeil(start_position));
+            }
+            else
+            {
+                qWarning() << "startByte is greater than size" << startByte() << fullSize();
+            }
+        }
+        else
+        {
+            qWarning() << "unable to set startByte" << startByte() << ", length is not set" << lengthInSeconds() << "or size is not valid" << fullSize();
+        }
+    }
 
     QStringList arguments;
 //    arguments << "-loglevel" << "error";
@@ -46,6 +59,7 @@ void FfmpegTranscoding::updateArguments()
     if (format() == MP3)
     {
         arguments << "-map" <<  "0:a";
+        arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "mp3" << "-codec:a" << "libmp3lame";
 
@@ -56,6 +70,7 @@ void FfmpegTranscoding::updateArguments()
     else if (format() == AAC)
     {
         arguments << "-map" <<  "0:a";
+        arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "ipod" << "-codec:a" << "libfdk_aac";
 
@@ -65,6 +80,7 @@ void FfmpegTranscoding::updateArguments()
     else if (format() == ALAC)
     {
         arguments << "-map" <<  "0:a";
+        arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "ipod" << "-codec:a" << "alac" << "-sample_fmt" << "s16p" << "-movflags" << "frag_keyframe+empty_moov+faststart";
 
@@ -74,6 +90,7 @@ void FfmpegTranscoding::updateArguments()
     else if (format() == LPCM)
     {
         arguments << "-map" <<  "0:a";
+        arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "s16be";
 
@@ -83,6 +100,7 @@ void FfmpegTranscoding::updateArguments()
     else if (format() == WAV)
     {
         arguments << "-map" <<  "0:a";
+        arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "wav";
 
@@ -257,25 +275,23 @@ void FfmpegTranscoding::updateArguments()
         qCritical() << QString("Invalid format: %1").arg(format());
     }
 
-//    if (range() != 0 && !range()->isNull())
-//    {
-//        if (range()->getLength() > 0)
-//        {
-//            if (range()->getHighRange() >= 0)
-//                arguments << "-fs" << QString("%1").arg(range()->getLength());
-//        }
-//        else
-//        {
-//            // invalid length
-//            arguments << "-fs 0";
-//        }
-//    }
     if (timeSeekEnd() > 0)
     {
-        if (timeSeekStart() >= 0 && timeSeekStart() < timeSeekEnd())
-            arguments << "-to" << QString("%1").arg(timeSeekEnd()-timeSeekStart());
+        arguments << "-to" << QString("%1").arg(lengthInSeconds());
+    }
+    else if (endByte() >= 0)
+    {
+        if (size() > 0)
+        {
+            if (endByte() >= 0)
+                arguments << "-fs" << QString("%1").arg(size());
+        }
         else
-            arguments << "-to" << QString("%1").arg(timeSeekEnd());
+        {
+            // invalid length
+            arguments << "-fs 0";
+            qWarning() << "invalid size" << size();
+        }
     }
 
     // normalize audio

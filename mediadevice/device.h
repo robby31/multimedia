@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QWaitCondition>
+#include <QtMath>
 
 class Device : public QObject
 {
@@ -38,7 +39,7 @@ public:
     void setDurationBuffer(int duration);
 
     void setBitrate(const qint64 &bitrate);
-    qint64 bitrate() const;
+    qint64 bitrate() const;  // bitrate in kbits/sec
 
     void appendLog(const QString &msg);
 
