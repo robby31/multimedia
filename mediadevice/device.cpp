@@ -67,12 +67,12 @@ qint64 Device::endByte() const
 
 void Device::setRange(qint64 startByte, qint64 endByte)
 {
-    if (startByte >= 0 or startByte == -1)
+    if (startByte >= 0 || startByte == -1)
         m_startByte = startByte;
     else
         qCritical() << "invalid startByte" << startByte;
 
-    if (endByte == -1 or (endByte >= 0 && endByte >= startByte))
+    if (endByte == -1 || (endByte >= 0 && endByte >= startByte))
         m_endByte = endByte;
     else
         qCritical() << "invalid endByte" << endByte;

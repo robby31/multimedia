@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QDateTime>
+#include <QMutex>
 #include <QWaitCondition>
 #include <QtMath>
 

@@ -91,7 +91,7 @@ bool StreamingFile::isOpen() const
 
 bool StreamingFile::open()
 {
-    if (timeSeekStart() != -1 or timeSeekEnd() != -1)
+    if (timeSeekStart() != -1 || timeSeekEnd() != -1)
         qWarning() << "timeseek defined not applicable for StreamingFile.";
 
     bool res = m_file.open(QIODevice::ReadOnly);

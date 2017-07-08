@@ -135,7 +135,7 @@ bool TranscodeProcess::atEnd() const
     if (!isOpen())
         return true;
 
-    if (!isOpen() or bytesAvailable()>0 or m_process.state() == QProcess::Running)
+    if (!isOpen() || bytesAvailable()>0 || m_process.state() == QProcess::Running)
         return false;
     else
         return m_process.atEnd();
