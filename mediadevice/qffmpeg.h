@@ -40,6 +40,7 @@ public:
     qint64 size() const;
 
     static void setDirPath(const QString &folder);
+    static QString getVersion();
 
     bool setFilename(const QString &filename, const bool &readPicture = false);
 

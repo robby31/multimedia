@@ -7,6 +7,35 @@ void QFfmpeg::setDirPath(const QString &folder)
     EXE_DIRPATH = folder;
 }
 
+QString QFfmpeg::getVersion()
+{
+    QDir folder(EXE_DIRPATH);
+    if (folder.exists())
+    {
+        QProcess process;
+        process.setProgram(QDir(EXE_DIRPATH).absoluteFilePath("ffmpeg"));
+
+        QStringList args;
+        args << "-version";
+        process.setArguments(args);
+
+        process.start();
+        if (process.waitForFinished() && process.exitCode() == 0)
+        {
+            QByteArray data = process.readLine();
+            return data;
+        }
+        else
+        {
+            return QString();
+        }
+    }
+    else
+    {
+        return QString();
+    }
+}
+
 QFfmpeg::QFfmpeg(QObject *parent):
     QObject(parent),
     programFfmpegProbe(Q_NULLPTR),
