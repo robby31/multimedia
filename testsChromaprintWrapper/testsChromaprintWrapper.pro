@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
+QT       += testlib xml
 
 QT       -= gui
 
@@ -29,4 +29,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += tst_chromaprintwrappertests.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-include (../chromaprintwrapper/chromaprintwrapper.prf)
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/usr/local/include
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(chromaprintwrapper)
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION/usr/local/lib -l$$qtLibraryTarget(chromaprint)
+

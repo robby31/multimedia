@@ -84,7 +84,7 @@ int ChromaprintWrapper::decode_audio_file(ChromaprintContext *chromaprint_ctx, c
 
                     int nb_samples = data.size()*8/16/channels;
 
-                    if (!chromaprint_feed(chromaprint_ctx, data.data(), nb_samples))
+                    if (!chromaprint_feed(chromaprint_ctx, (int16_t*)data.data(), nb_samples))
                     {
                         qWarning() << "error in reading audio data" << file_name;
                         return 0;

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
+QT       += testlib xml
 
 QT       -= gui
 
@@ -29,6 +29,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += tst_ffmpegtest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-include (../mediadevice/mediadevice.prf)
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(mediadevice)
 
 DEFINES += PROFILING

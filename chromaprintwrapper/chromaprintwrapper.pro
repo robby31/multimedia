@@ -19,8 +19,6 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
     error("variable MYLIBRARY not set.")
 }
 
-DESTDIR = $$(MYLIBRARY)/$$QT_VERSION
-
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -38,12 +36,14 @@ SOURCES += \
 HEADERS += \
     chromaprint_wrapper.h
 
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/usr/local/include
 
-INCLUDEPATH += $$PWD/../../libchromaprint-1.1/src
+installPath = $$(MYLIBRARY)/$$QT_VERSION
+target.path = $$installPath
 
-DISTFILES += \
-    chromaprintwrapper.prf
+installIncludePath = $$installPath/include/multimedia
+
+h_include.files = chromaprint_wrapper.h
+h_include.path = $$installIncludePath
+
+INSTALLS += target h_include

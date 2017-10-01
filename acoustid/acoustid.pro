@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       -= gui
-QT       += network
+QT       += network xml
 
 TARGET = $$qtLibraryTarget(acoustid)
 
@@ -17,8 +17,6 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 !exists($$(MYLIBRARY)) {
     error("variable MYLIBRARY not set.")
 }
-
-DESTDIR = $$(MYLIBRARY)/$$QT_VERSION
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -39,12 +37,18 @@ HEADERS += acoustid.h \
     acoustidanswer.h \
     acoustidclient.h
 
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/usr/local/include
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(chromaprintwrapper)
 
-include (../chromaprintwrapper/chromaprintwrapper.prf)
+installPath = $$(MYLIBRARY)/$$QT_VERSION
+target.path = $$installPath
 
-DISTFILES += \
-    acoustid.prf
+installIncludePath = $$installPath/include/multimedia
+
+h_includes.files = acoustid.h \
+    acoustidanswer.h \
+    acoustidclient.h
+h_includes.path = $$installIncludePath
+
+INSTALLS += target h_includes

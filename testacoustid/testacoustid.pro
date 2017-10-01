@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
+QT       += testlib network xml
 
 QT       -= gui
 
@@ -29,4 +29,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += tst_acoustidtest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-include (../acoustid/acoustid.prf)
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/usr/local/include
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(acoustid)
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(chromaprintwrapper)
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION/usr/local/lib -l$$qtLibraryTarget(chromaprint)
+
