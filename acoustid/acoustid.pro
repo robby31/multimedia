@@ -39,7 +39,6 @@ HEADERS += acoustid.h \
 
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/usr/local/include
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(chromaprintwrapper)
 
 installPath = $$(MYLIBRARY)/$$QT_VERSION
 target.path = $$installPath
