@@ -92,7 +92,7 @@ void FfmpegTranscoding::updateArguments()
         arguments << "-map" <<  "0:a";
         arguments << "-map_metadata" << "-1";
 
-        arguments << "-f" << "s16be";
+        arguments << "-f" << "s16le";
 
         if (bitrate() > 0)
             arguments << "-b:a " << QString("%1").arg(bitrate());
