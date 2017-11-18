@@ -30,9 +30,6 @@ public:
 
     virtual QByteArray read(qint64 maxlen) Q_DECL_OVERRIDE;
 
-protected:
-    virtual void updateArguments() Q_DECL_OVERRIDE { }
-
 signals:
 
 public slots:

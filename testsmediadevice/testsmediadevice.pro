@@ -8,6 +8,8 @@ QT       += testlib
 
 QT       -= gui
 
+QT += multimedia xml
+
 TARGET = tst_mediadevicetest
 CONFIG   += console
 CONFIG   -= app_bundle
@@ -32,3 +34,10 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
 LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(mediadevice)
 
+INCLUDEPATH += /opt/local/include
+LIBS += -L/opt/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample
+
+DEFINES += USE_AVRESAMPLE
+LIBS += -L/opt/local/lib -lavresample
+
+DYLD_LIBRARY_PATH += /opt/local/lib

@@ -33,5 +33,5 @@ INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/usr/local/include
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
 LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(acoustid)
 LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(chromaprintwrapper)
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION/usr/local/lib -l$$qtLibraryTarget(chromaprint)
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION/usr/local/lib -lchromaprint
 

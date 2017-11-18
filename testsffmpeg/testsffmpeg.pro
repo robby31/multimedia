@@ -6,7 +6,7 @@
 
 QT       += testlib xml
 
-QT       -= gui
+#QT       -= gui
 
 TARGET = tst_ffmpegtest
 CONFIG   += console
@@ -25,11 +25,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+DEFINES += PROFILING
 
 SOURCES += tst_ffmpegtest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/analyzer
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(analyzer)
+
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
 LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(mediadevice)
 
-DEFINES += PROFILING
+INCLUDEPATH += /opt/local/include
+LIBS += -L/opt/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample
+
+DEFINES += USE_AVRESAMPLE
+LIBS += -L/opt/local/lib -lavresample
+
+DYLD_LIBRARY_PATH += /opt/local/lib
