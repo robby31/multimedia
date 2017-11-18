@@ -5,7 +5,7 @@
 #include <QProcess>
 #include <QtXml>
 
-#include "../../Analyzer/analyzer.h"
+#include "analyzer.h"
 
 class QFfmpeg : public QObject
 {

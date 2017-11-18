@@ -9,4 +9,6 @@ SUBDIRS += \
     testacoustid \
     mediadevice \
     testsffmpeg \
-    testsmediadevice
+    testsmediadevice \
+    spectrumanalyser \
+    testsspectrumanalyser
