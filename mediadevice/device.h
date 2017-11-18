@@ -28,7 +28,7 @@ public:
     virtual bool atEnd() const = 0;
     virtual qint64 bytesAvailable() const = 0;
     virtual qint64 pos() const = 0;
-    qint64 progress();
+    virtual qint64 progress();
 
     virtual bool open() = 0;
     virtual bool isOpen() const = 0;
@@ -49,9 +49,6 @@ public:
     bool waitOpen(const int &timeout=30000);
 
     virtual QByteArray read(qint64 maxlen) = 0;
-
-protected:
-    virtual void updateArguments() = 0;
 
 signals:
     void LogMessage(const QString &msg);

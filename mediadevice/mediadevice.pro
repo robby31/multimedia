@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       -= gui
-QT       += xml
+QT       += xml multimedia
 
 TARGET = $$qtLibraryTarget(mediadevice)
 TEMPLATE = lib
@@ -34,7 +34,18 @@ SOURCES += \
     transcodeprocess.cpp \
     ffmpegtranscoding.cpp \
     streamingfile.cpp \
-    mencodertranscoding.cpp
+    mencodertranscoding.cpp \
+    wavfile.cpp \
+    qffmpegmedia.cpp \
+    qffmpegstream.cpp \
+    qffmpegcodec.cpp \
+    qffmpegframe.cpp \
+    qffmpegpacket.cpp \
+    qffmpegtranscoding.cpp \
+    transcodedevice.cpp \
+    qffmpegbuffer.cpp \
+    qffmpeginputmedia.cpp \
+    qffmpegoutputmedia.cpp
 
 HEADERS += \
     qffmpeg.h \
@@ -42,23 +53,32 @@ HEADERS += \
     transcodeprocess.h \
     ffmpegtranscoding.h \
     streamingfile.h \
-    mencodertranscoding.h
+    mencodertranscoding.h \
+    wavfile.h \
+    qffmpegmedia.h \
+    qffmpegstream.h \
+    qffmpegcodec.h \
+    qffmpegframe.h \
+    qffmpegpacket.h \
+    qffmpegtranscoding.h \
+    transcodedevice.h \
+    qffmpegbuffer.h \
+    qffmpeginputmedia.h \
+    qffmpegoutputmedia.h
 
 DISTFILES +=
 
-include (../../Analyzer/analyzer.pri)
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/analyzer
+
+DEFINES += USE_AVRESAMPLE
+INCLUDEPATH += /opt/local/include
 
 installPath = $$(MYLIBRARY)/$$QT_VERSION
 target.path = $$installPath
 
 installIncludePath = $$installPath/include/multimedia
 
-h_include.files = qffmpeg.h \
-    device.h \
-    transcodeprocess.h \
-    ffmpegtranscoding.h \
-    streamingfile.h \
-    mencodertranscoding.h
+h_include.files = $${HEADERS}
 h_include.path = $$installIncludePath
 
 INSTALLS += target h_include
