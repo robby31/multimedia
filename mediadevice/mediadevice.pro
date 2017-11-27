@@ -45,7 +45,15 @@ SOURCES += \
     transcodedevice.cpp \
     qffmpegbuffer.cpp \
     qffmpeginputmedia.cpp \
-    qffmpegoutputmedia.cpp
+    qffmpegoutputmedia.cpp \
+    qffmpegdecoder.cpp \
+    qffmpegencoder.cpp \
+    qffmpeginputstream.cpp \
+    qffmpegoutputstream.cpp \
+    qffmpegaudioencoder.cpp \
+    qffmpegvideoencoder.cpp \
+    qffmpegaudiodecoder.cpp \
+    qffmpegvideodecoder.cpp
 
 HEADERS += \
     qffmpeg.h \
@@ -64,7 +72,15 @@ HEADERS += \
     transcodedevice.h \
     qffmpegbuffer.h \
     qffmpeginputmedia.h \
-    qffmpegoutputmedia.h
+    qffmpegoutputmedia.h \
+    qffmpegdecoder.h \
+    qffmpegencoder.h \
+    qffmpeginputstream.h \
+    qffmpegoutputstream.h \
+    qffmpegaudioencoder.h \
+    qffmpegvideoencoder.h \
+    qffmpegaudiodecoder.h \
+    qffmpegvideodecoder.h
 
 DISTFILES +=
 
