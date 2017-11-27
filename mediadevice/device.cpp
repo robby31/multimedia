@@ -5,15 +5,7 @@ qint64 Device::objectCounter = 0;
 const QString Device::CRLF = "\r\n";
 
 Device::Device(QObject *parent) :
-    QObject(parent),
-    timeseek_start(-1),
-    timeseek_end(-1),
-    m_startByte(-1),
-    m_endByte(-1),
-    m_bitrate(-1),
-    m_maxBufferSize(1024*1024*10),   // 10 MBytes by default when bitrate is unknown
-    m_durationBuffer(20),
-    requestDataStarted(false)
+    QObject(parent)
 {
     ++objectCounter;
 
@@ -91,24 +83,6 @@ void Device::setMaxBufferSize(const qint64 &size)
         qCritical() << "setMaxBufferSize : invalid size" << size;
 }
 
-qint64 Device::bitrate() const
-{
-    return m_bitrate;
-}
-
-void Device::setBitrate(const qint64 &bitrate)
-{
-    if (bitrate > 0)
-    {
-        m_bitrate = bitrate;
-        setMaxBufferSize(m_bitrate/8*durationBuffer());
-    }
-    else
-    {
-        qCritical() << "invalid bitrate" << bitrate;
-    }
-}
-
 int Device::durationBuffer() const
 {
     return m_durationBuffer;
@@ -119,8 +93,7 @@ void Device::setDurationBuffer(int duration)
     if (duration > 0)
     {
         m_durationBuffer = duration;
-
-        setBitrate(m_bitrate);
+        setMaxBufferSize(bitrate()/8*durationBuffer());
     }
     else
     {

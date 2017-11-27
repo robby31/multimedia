@@ -27,20 +27,19 @@ public:
     virtual qint64 size() const = 0;
     virtual bool atEnd() const = 0;
     virtual qint64 bytesAvailable() const = 0;
-    virtual qint64 pos() const = 0;
-    virtual qint64 progress();
+    virtual qint64 pos() const = 0;  // returns position in bytes
+    virtual qint64 progress();       // returns progress in percentage
 
     virtual bool open() = 0;
     virtual bool isOpen() const = 0;
+
+    virtual qint64 bitrate() const = 0;  // bitrate in kbits/sec
 
     qint64 maxBufferSize() const;
     void setMaxBufferSize(const qint64 &size);
 
     int durationBuffer()   const;
     void setDurationBuffer(int duration);
-
-    void setBitrate(const qint64 &bitrate);
-    qint64 bitrate() const;  // bitrate in kbits/sec
 
     void appendLog(const QString &msg);
 
@@ -72,20 +71,18 @@ private slots:
     void deviceOpened();
 
 private:
-    // Carriage return and line feed.
-    static const QString CRLF;
+    static const QString CRLF;    // Carriage return and line feed.
 
-    qint64 timeseek_start;
-    qint64 timeseek_end;
+    qint64 timeseek_start = -1;
+    qint64 timeseek_end = -1;
 
-    qint64 m_startByte;
-    qint64 m_endByte;
+    qint64 m_startByte = -1;
+    qint64 m_endByte = -1;
 
-    qint64 m_bitrate;
-    qint64 m_maxBufferSize;
-    int m_durationBuffer;       // when bitrate is known, m_maxBufferSize is set to m_durationBuffer seconds of streaming
+    qint64 m_maxBufferSize = 1024*1024*10;  // 10 MBytes by default when bitrate is unknown
+    int m_durationBuffer = 20;              // when bitrate is known, m_maxBufferSize is set to m_durationBuffer seconds of streaming
 
-    bool requestDataStarted;
+    bool requestDataStarted = false;
 
     QMutex mutex;
     QWaitCondition readyToOpenCondition;
