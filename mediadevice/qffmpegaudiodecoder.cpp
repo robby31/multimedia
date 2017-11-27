@@ -1,6 +1,7 @@
 #include "qffmpegaudiodecoder.h"
 
-QFfmpegAudioDecoder::QFfmpegAudioDecoder()
+QFfmpegAudioDecoder::QFfmpegAudioDecoder():
+    QFfmpegDecoder()
 {
 
 }

@@ -1,8 +1,9 @@
 #ifndef QFFMPEGAUDIODECODER_H
 #define QFFMPEGAUDIODECODER_H
 
+#include "qffmpegdecoder.h"
 
-class QFfmpegAudioDecoder
+class QFfmpegAudioDecoder : public QFfmpegDecoder
 {
 public:
     QFfmpegAudioDecoder();
