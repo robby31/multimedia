@@ -1,6 +1,7 @@
 #include "qffmpegvideodecoder.h"
 
-QFFmpegVideoDecoder::QFFmpegVideoDecoder()
+QFfmpegVideoDecoder::QFfmpegVideoDecoder():
+    QFfmpegDecoder()
 {
 
 }

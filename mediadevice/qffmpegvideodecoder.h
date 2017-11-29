@@ -1,11 +1,12 @@
 #ifndef QFFMPEGVIDEODECODER_H
 #define QFFMPEGVIDEODECODER_H
 
+#include "qffmpegdecoder.h"
 
-class QFFmpegVideoDecoder
+class QFfmpegVideoDecoder: public QFfmpegDecoder
 {
 public:
-    QFFmpegVideoDecoder();
+    QFfmpegVideoDecoder();
 };
 
 #endif // QFFMPEGVIDEODECODER_H
