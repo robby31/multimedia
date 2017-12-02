@@ -48,30 +48,12 @@ bool QFfmpegVideoEncoder::init_rescale(QFfmpegCodec *input)
 
 QFfmpegFrame *QFfmpegVideoEncoder::rescaleFrame(QFfmpegFrame *frame)
 {
-    if (m_rescaleCtx != NULL and frame != NULL and frame->isValid())
+    if (codecCtx() != NULL && m_rescaleCtx != NULL and frame != NULL and frame->isValid())
     {
         QFfmpegFrame *newFrame = new QFfmpegFrame();
-        if (!newFrame or !newFrame->isValid())
+        if (!newFrame or !newFrame->isValid() or !newFrame->init_frame(pixelFormat(), codecCtx()->width, codecCtx()->height) or !newFrame->makeWritable())
         {
             qCritical() << "Error allocation new frame.";
-            delete newFrame;
-            return NULL;
-        }
-
-        newFrame->ptr()->format = pixelFormat();
-        newFrame->ptr()->width = codecCtx()->width;
-        newFrame->ptr()->height = codecCtx()->height;
-
-        if (av_frame_get_buffer(newFrame->ptr(), 32) < 0)
-        {
-            qCritical() << "Error allocation a video buffer.";
-            delete newFrame;
-            return NULL;
-        }
-
-        if (av_frame_make_writable(newFrame->ptr()) < 0)
-        {
-            qCritical() << "unable to create new frame for resampling." << newFrame->isValid();
             delete newFrame;
             return NULL;
         }
