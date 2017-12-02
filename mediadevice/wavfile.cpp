@@ -41,7 +41,6 @@
 #include <qendian.h>
 #include <QVector>
 #include <QDebug>
-#include "utils.h"
 #include "wavfile.h"
 
 struct chunk
@@ -78,18 +77,80 @@ struct CombinedHeader
     WAVEHeader  wave;
 };
 
-WavFile::WavFile(QObject *parent)
-    : QFile(parent)
-    , m_headerLength(0)
+WavFile::WavFile(QObject *parent):
+    QObject(parent),
+    m_device(Q_NULLPTR),
+    m_headerLength(0),
+    m_error(NoError)
 {
 
 }
 
-bool WavFile::open(const QString &fileName)
+bool WavFile::openLocalFile(const QString &fileName)
 {
-    close();
-    setFileName(fileName);
-    return QFile::open(QIODevice::ReadOnly) && readHeader();
+    if (m_device)
+    {
+        m_device->close();
+        m_device->deleteLater();
+        m_device = Q_NULLPTR;
+    }
+
+    m_device = new QFile(fileName, this);
+
+    if (!m_device->open(QIODevice::ReadOnly))
+    {
+        m_error = InvalidFile;
+        m_device->deleteLater();
+        m_device = Q_NULLPTR;
+        return false;
+    }
+
+    if (!readHeader())
+    {
+        m_device->close();
+        m_device->deleteLater();
+        m_device = Q_NULLPTR;
+
+        FfmpegTranscoding decode_audio;
+        decode_audio.setFormat(WAV);
+        decode_audio.setOriginalLengthInMSeconds(120000);
+        decode_audio.setAudioSampleRate(48000);
+        decode_audio.setBitrate(1536000);
+        decode_audio.setUrl(fileName);
+        if (decode_audio.isReadyToOpen() && decode_audio.open())
+        {
+            decode_audio.startRequestData();
+            decode_audio.waitForFinished();
+            QBuffer *buffer = new QBuffer(this);
+
+            m_device = buffer;
+            if (!m_device->open(QIODevice::ReadWrite))
+            {
+                m_error = InvalidFile;
+                m_device->deleteLater();
+                m_device = Q_NULLPTR;
+                return false;
+            }
+
+            while (!decode_audio.atEnd())
+                buffer->write(decode_audio.read(1000000));
+
+            if (!readHeader())
+            {
+                m_error = InvalidHeader;
+                m_device->close();
+                delete m_device;
+                m_device = Q_NULLPTR;
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
 const QAudioFormat &WavFile::fileFormat() const
@@ -99,53 +160,144 @@ const QAudioFormat &WavFile::fileFormat() const
 
 qint64 WavFile::headerLength() const
 {
-return m_headerLength;
+    return m_headerLength;
 }
 
 bool WavFile::readHeader()
 {
-    seek(0);
-    CombinedHeader header;
-    bool result = read(reinterpret_cast<char *>(&header), sizeof(CombinedHeader)) == sizeof(CombinedHeader);
-    if (result) {
-        if ((memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0
-            || memcmp(&header.riff.descriptor.id, "RIFX", 4) == 0)
-            && memcmp(&header.riff.type, "WAVE", 4) == 0
-            && memcmp(&header.wave.descriptor.id, "fmt ", 4) == 0
-            && (header.wave.audioFormat == 1 || header.wave.audioFormat == 0)) {
+    bool result = false;
 
-            // Read off remaining header information
-            DATAHeader dataHeader;
+    if (m_device)
+    {
+        m_device->seek(0);
+        CombinedHeader header;
+        result = m_device->read(reinterpret_cast<char *>(&header), sizeof(CombinedHeader)) == sizeof(CombinedHeader);
+        if (result) {
+            if ((memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0
+                 || memcmp(&header.riff.descriptor.id, "RIFX", 4) == 0)
+                    && memcmp(&header.riff.type, "WAVE", 4) == 0
+                    && memcmp(&header.wave.descriptor.id, "fmt ", 4) == 0
+                    && (header.wave.audioFormat == 1 || header.wave.audioFormat == 0)) {
 
-            if (qFromLittleEndian<quint32>(header.wave.descriptor.size) > sizeof(WAVEHeader)) {
-                // Extended data available
-                quint16 extraFormatBytes;
-                if (peek((char*)&extraFormatBytes, sizeof(quint16)) != sizeof(quint16))
+                // Read off remaining header information
+                DATAHeader dataHeader;
+
+                if (qFromLittleEndian<quint32>(header.wave.descriptor.size) > sizeof(WAVEHeader)) {
+                    // Extended data available
+                    quint16 extraFormatBytes;
+                    if (m_device->peek((char*)&extraFormatBytes, sizeof(quint16)) != sizeof(quint16))
+                        return false;
+                    const qint64 throwAwayBytes = sizeof(quint16) + qFromLittleEndian<quint16>(extraFormatBytes);
+                    if (m_device->read(throwAwayBytes).size() != throwAwayBytes)
+                        return false;
+                }
+
+                if (m_device->read((char*)&dataHeader, sizeof(DATAHeader)) != sizeof(DATAHeader))
                     return false;
-                const qint64 throwAwayBytes = sizeof(quint16) + qFromLittleEndian<quint16>(extraFormatBytes);
-                if (read(throwAwayBytes).size() != throwAwayBytes)
-                    return false;
+
+                // Establish format
+                if (memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0)
+                    m_fileFormat.setByteOrder(QAudioFormat::LittleEndian);
+                else
+                    m_fileFormat.setByteOrder(QAudioFormat::BigEndian);
+
+                int bps = qFromLittleEndian<quint16>(header.wave.bitsPerSample);
+                m_fileFormat.setChannelCount(qFromLittleEndian<quint16>(header.wave.numChannels));
+                m_fileFormat.setCodec("audio/pcm");
+                m_fileFormat.setSampleRate(qFromLittleEndian<quint32>(header.wave.sampleRate));
+                m_fileFormat.setSampleSize(qFromLittleEndian<quint16>(header.wave.bitsPerSample));
+                m_fileFormat.setSampleType(bps == 8 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
+            } else {
+                result = false;
             }
-
-            if (read((char*)&dataHeader, sizeof(DATAHeader)) != sizeof(DATAHeader))
-                return false;
-
-            // Establish format
-            if (memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0)
-                m_fileFormat.setByteOrder(QAudioFormat::LittleEndian);
-            else
-                m_fileFormat.setByteOrder(QAudioFormat::BigEndian);
-
-            int bps = qFromLittleEndian<quint16>(header.wave.bitsPerSample);
-            m_fileFormat.setChannelCount(qFromLittleEndian<quint16>(header.wave.numChannels));
-            m_fileFormat.setCodec("audio/pcm");
-            m_fileFormat.setSampleRate(qFromLittleEndian<quint32>(header.wave.sampleRate));
-            m_fileFormat.setSampleSize(qFromLittleEndian<quint16>(header.wave.bitsPerSample));
-            m_fileFormat.setSampleType(bps == 8 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
-        } else {
-            result = false;
         }
+        m_headerLength = m_device->pos();
     }
-    m_headerLength = pos();
     return result;
+}
+
+qint64 WavFile::bytesPerSample() const
+{
+    return m_fileFormat.channelCount() * m_fileFormat.sampleSize() / 8;
+}
+
+qint64 WavFile::bitrate() const
+{
+    return bytesPerSample() * m_fileFormat.sampleRate() * 8;
+}
+
+qint64 WavFile::bytesAvailable() const
+{
+    if (m_device)
+        return m_device->bytesAvailable();
+    else
+        return 0;
+}
+
+qint64 WavFile::samplesAvailable() const
+{
+    if (bytesPerSample() != 0)
+        return bytesAvailable() / bytesPerSample();
+    else
+        return 0;
+}
+
+QByteArray WavFile::readSamples(const qint64 &nbSamples)
+{
+    if (m_device)
+        return m_device->read(nbSamples*bytesPerSample());
+    else
+        return QByteArray();
+}
+
+QByteArray WavFile::readSamplesAtPosMsec(const qint64 &posMsec, const qint64 &nbSamples)
+{
+    seek(m_headerLength + audioLength(posMsec));
+    return readSamples(nbSamples);
+}
+
+qint64 WavFile::audioLength(const qint64 &posMsec) const
+{
+    qint64 posByte = (m_fileFormat.sampleRate() * bytesPerSample()) * posMsec / 1000;
+    posByte -= posByte % (m_fileFormat.channelCount() * m_fileFormat.sampleSize());
+    return posByte;
+}
+
+qint64 WavFile::audioDurationMsec(qint64 bytes) const
+{
+    return (bytes * 1000) / (m_fileFormat.sampleRate() * bytesPerSample());
+}
+
+bool WavFile::seek(const qint64 &posMsec)
+{
+    if (m_device)
+        return m_device->seek(m_headerLength + posMsec);
+    else
+        return false;
+}
+
+qint64 WavFile::pos() const
+{
+    if (m_device)
+        return m_device->pos();
+    else
+        return 0;
+}
+
+qint64 WavFile::size() const
+{
+    if (m_device)
+        return m_device->size();
+    else
+        return 0;
+}
+
+qint64 WavFile::durationMsec() const
+{
+    return audioDurationMsec(size() - m_headerLength);
+}
+
+WavFile::TypeError WavFile::error() const
+{
+    return m_error;
 }

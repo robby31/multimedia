@@ -44,23 +44,50 @@
 #include <QObject>
 #include <QFile>
 #include <QAudioFormat>
+#include <QIODevice>
+#include "ffmpegtranscoding.h"
+#include <QBuffer>
 
-class WavFile : public QFile
+class WavFile : public QObject
 {
 public:
-    WavFile(QObject *parent = 0);
+    explicit WavFile(QObject *parent = 0);
 
-    using QFile::open;
-    bool open(const QString &fileName);
+    enum TypeError { NoError, InvalidFile, InvalidHeader };
+
+    TypeError error() const;
+
+    qint64 bytesAvailable() const;
+    qint64 samplesAvailable() const;
+
+    QByteArray readSamples(const qint64 &nbSamples);
+    QByteArray readSamplesAtPosMsec(const qint64 &posMsec, const qint64 &nbSamples);
+
+    qint64 durationMsec() const;
+
+    bool openLocalFile(const QString &fileName);
+
     const QAudioFormat &fileFormat() const;
     qint64 headerLength() const;
+
+    qint64 bytesPerSample() const;
+    qint64 bitrate() const;
+
+    bool seek(const qint64 &posMsec);
+    qint64 pos() const;
+    qint64 size() const;
+
+    qint64 audioLength(const qint64 &posMsec) const;
+    qint64 audioDurationMsec(qint64 bytes) const;
 
 private:
     bool readHeader();
 
 private:
+    QIODevice *m_device;
     QAudioFormat m_fileFormat;
     qint64 m_headerLength;
+    TypeError m_error;
 };
 
 #endif // WAVFILE_H
