@@ -18,6 +18,9 @@ public:
     AVFrame *ptr() const;
 
     bool init_frame(AVSampleFormat format, uint64_t channels, int sample_rate, int nb_samples);
+    bool init_frame(AVPixelFormat format, int width, int height);
+
+    bool makeWritable();
 
     void setMediaType(const AVMediaType &type);
     AVMediaType mediaType() const;

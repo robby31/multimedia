@@ -60,3 +60,35 @@ bool QFfmpegFrame::init_frame(AVSampleFormat format, uint64_t channel_layout, in
         return false;
     }
 }
+
+bool QFfmpegFrame::init_frame(AVPixelFormat format, int width, int height)
+{
+    if (m_frame != NULL)
+    {
+        m_frame->format = format;
+        m_frame->width = width;
+        m_frame->height = height;
+
+        if (av_frame_get_buffer(m_frame, 32) < 0)
+        {
+            qCritical() << "Error allocation frame buffer.";
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool QFfmpegFrame::makeWritable()
+{
+    if (m_frame != NULL)
+        return av_frame_make_writable(m_frame) >= 0;
+    else
+        return false;
+}
