@@ -43,8 +43,22 @@ qint64 Device::timeSeekEnd() const
 
 void Device::setTimeSeek(qint64 start, qint64 end)
 {
-    timeseek_start = start;
-    timeseek_end = end;
+    if (start < 0 && end < 0)
+    {
+        qCritical() << "invalid timeSeek" << start << end;
+    }
+    else
+    {
+        if (start > 0 && end > 0 && end < start)
+        {
+            qCritical() << "invalid timeSeek" << start << end;
+        }
+        else
+        {
+            timeseek_start = start;
+            timeseek_end = end;
+        }
+    }
 }
 
 qint64 Device::startByte() const
@@ -90,14 +104,21 @@ int Device::durationBuffer() const
 
 void Device::setDurationBuffer(int duration)
 {
-    if (duration > 0)
+    if (bitrate() > 0)
     {
-        m_durationBuffer = duration;
-        setMaxBufferSize(bitrate()/8*durationBuffer());
+        if (duration > 0)
+        {
+            m_durationBuffer = duration;
+            setMaxBufferSize(bitrate()/8*m_durationBuffer);
+        }
+        else
+        {
+            qCritical() << "invalid duration" << duration;
+        }
     }
     else
     {
-        qCritical() << "invalid duration" << duration;
+        qCritical() << "invalid bitrate" << bitrate() << "cannot set buffer size to duration" << duration;
     }
 }
 

@@ -14,9 +14,12 @@ class StreamingFile : public Device
 public:
     explicit StreamingFile(QString filename, QObject *parent = 0);
 
+    virtual void setTimeSeek(qint64 start, qint64 end) Q_DECL_OVERRIDE;
     virtual void setRange(qint64 startByte, qint64 endByte) Q_DECL_OVERRIDE;
 
     bool waitForFinished(int msecs = 30000);
+
+    virtual qint64 bitrate() const Q_DECL_OVERRIDE;  // bitrate in kbits/sec
 
     virtual qint64 size() const Q_DECL_OVERRIDE;
     virtual bool atEnd() const Q_DECL_OVERRIDE;
@@ -37,6 +40,7 @@ public slots:
 
 private:
     QFile m_file;
+    qint64 m_bitrate = -1;
 };
 
 #endif // STREAMINGFILE_H

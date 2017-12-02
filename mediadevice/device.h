@@ -16,7 +16,7 @@ public:
     explicit Device(QObject *parent = 0);
     virtual ~Device() Q_DECL_OVERRIDE;
 
-    void setTimeSeek(qint64 start, qint64 end);
+    virtual void setTimeSeek(qint64 start, qint64 end);
     qint64 timeSeekStart() const;
     qint64 timeSeekEnd() const;
 

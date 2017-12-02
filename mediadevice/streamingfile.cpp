@@ -7,6 +7,11 @@ StreamingFile::StreamingFile(QString filename, QObject *parent) :
     emit readyToOpen();
 }
 
+void StreamingFile::setTimeSeek(qint64 start, qint64 end)
+{
+    qWarning() << "timeseek not applicable for StreamingFile" << start << end;
+}
+
 void StreamingFile::setRange(qint64 startByte, qint64 endByte)
 {
     qint64 start = startByte;
@@ -98,7 +103,7 @@ bool StreamingFile::open()
 
     if (pos() < startByte())
         if (!m_file.seek(startByte()))
-            qCritical() << "Cannot seek file";
+            qCritical() << "Cannot seek file to position" << startByte() << "bytes.";
 
     if (res)
         emit openedSignal();
@@ -134,4 +139,10 @@ void StreamingFile::close()
 {
     m_file.close();
     emit closed();
+}
+
+
+qint64 StreamingFile::bitrate() const
+{
+    return m_bitrate;
 }
