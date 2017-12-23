@@ -13,7 +13,7 @@ QFfmpegEncoder::~QFfmpegEncoder()
 
 void QFfmpegEncoder::close()
 {
-    if (codecCtx())
+    if (codecCtx() != NULL)
         qDebug() << format() << codecCtx()->frame_number << "frames encoded.";
 
     if (m_encodedPkt.size() > 0)

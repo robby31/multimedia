@@ -358,7 +358,7 @@ QByteArray QFfmpegOutputMedia::read(const int &maxlen)
 
         QByteArray res = m_outputBuffer->read(maxlen);
 
-        if (bytesAvailable() == 0)
+        if (atEnd())
             flush();
 
         return res;
