@@ -54,6 +54,9 @@ public:
 
     virtual bool atEnd() const = 0;
 
+    virtual void setTimeStartInMsec(const qint64 &msec) = 0;
+    virtual qint64 timeStartInMsec() const = 0;
+
     virtual void setTimeEndInMsec(const qint64 &msec) = 0;
     virtual qint64 timeEndInMsec() const = 0;
 
