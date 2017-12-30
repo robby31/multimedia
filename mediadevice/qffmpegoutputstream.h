@@ -19,7 +19,6 @@ public:
 
     virtual QFfmpegEncoder *codec() const Q_DECL_OVERRIDE;
 
-    bool init_encoding_stream(AVFormatContext *format, AVMediaType type);
     bool init_encoding_stream(const AVCodecID id, AVFormatContext *fmtContext);
 
     bool openOutput();

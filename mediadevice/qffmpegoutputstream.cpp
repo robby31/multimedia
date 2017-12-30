@@ -32,43 +32,6 @@ QFfmpegEncoder *QFfmpegOutputStream::codec() const
     return m_codec;
 }
 
-bool QFfmpegOutputStream::init_encoding_stream(AVFormatContext *format, AVMediaType type)
-{
-    if (format != NULL)
-    {
-        AVCodec *codec;
-        int index = av_find_best_stream(format, type, -1, -1, &codec, 0);
-
-        if (index >= 0 && index < (int)format->nb_streams && setStream(format->streams[index]))
-        {
-            if (type == AVMEDIA_TYPE_AUDIO)
-                m_codec = new QFfmpegAudioEncoder();
-            else if (type == AVMEDIA_TYPE_VIDEO)
-                m_codec = new QFfmpegVideoEncoder();
-
-            if (!m_codec or !m_codec->init_codec(codec, stream()->codecpar))
-            {
-                close();
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        else
-        {
-            close();
-            return false;
-        }
-    }
-    else
-    {
-        close();
-        return false;
-    }
-}
-
 bool QFfmpegOutputStream::init_encoding_stream(const AVCodecID id, AVFormatContext *fmtContext)
 {
     if (id != AV_CODEC_ID_NONE && fmtContext != NULL)
