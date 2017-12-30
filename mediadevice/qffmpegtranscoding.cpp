@@ -88,7 +88,7 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
     QByteArray data;
 
     if (m_outputMedia)
-    {
+    {        
         if (m_timerDemux.isActive())
         {
             if (m_outputMedia->bytesAvailable() > maxlen)
@@ -168,8 +168,7 @@ void QFfmpegTranscoding::_open()
 
             if (timeSeekStart() >= 0)
             {
-                if (!m_outputMedia->seek_time(timeSeekStart()*1000))
-                    setError(QString("unable to seek media %1").arg(timeSeekStart()));
+                m_outputMedia->setTimeStartInMsec(timeSeekStart()*1000);
             }
 
             if (timeSeekEnd() >= 0)
@@ -265,13 +264,16 @@ void QFfmpegTranscoding::close()
     {
         // reset output media
 
-        int tmpBitRate = bitrate();
+        int tmpAudioBitRate = -1;
+        if (m_outputMedia->audioStream())
+            tmpAudioBitRate = m_outputMedia->audioStream()->bitrate();
 
         delete m_outputMedia;
         m_outputMedia = Q_NULLPTR;
 
         setFormat(format());
-        setBitrate(tmpBitRate);
+        if (tmpAudioBitRate > 0)
+            setAudioBitrate(tmpAudioBitRate);
     }
 
     m_nextPts = 0;
@@ -288,6 +290,11 @@ qint64 QFfmpegTranscoding::bitrate() const
 }
 
 void QFfmpegTranscoding::setBitrate(const qint64 &bitrate)
+{
+    setAudioBitrate(bitrate);
+}
+
+void QFfmpegTranscoding::setAudioBitrate(const qint64 &bitrate)
 {
     if (m_outputMedia && bitrate > 0)
     {

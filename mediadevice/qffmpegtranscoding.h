@@ -27,6 +27,7 @@ public:
 
     virtual qint64 bitrate() const Q_DECL_OVERRIDE;  // bitrate in kbits/sec
     virtual void setBitrate(const qint64 &bitrate) Q_DECL_OVERRIDE;
+    void setAudioBitrate(const qint64 &bitrate);
 
     virtual bool atEnd() const Q_DECL_OVERRIDE;
     virtual qint64 bytesAvailable() const Q_DECL_OVERRIDE;
