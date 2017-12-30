@@ -37,7 +37,7 @@ qint64 QFfmpegOutputMedia::getBitrate() const
     qint64 bit_rate = 0;
 
     if (m_audioStream && m_audioStream->isValid())
-        bit_rate += m_audioStream->bitrate();
+        bit_rate += m_audioStream->bitrate() * overhead_factor();
 
     if (m_videoStream && m_videoStream->isValid() && (!m_inputMedia or !m_inputMedia->videoStream() or m_inputMedia->videoStream()->attached_pic() == NULL))
         bit_rate += m_videoStream->bitrate();
@@ -47,13 +47,30 @@ qint64 QFfmpegOutputMedia::getBitrate() const
 
 qint64 QFfmpegOutputMedia::size() const
 {
-    qint64 duration = getDuration();
-    qint64 bit_rate = getBitrate();
+    qint64 res = headerSize();
 
-    if (duration != -1 && bit_rate != -1)
-        return headerSize() + duration * bit_rate / 8000 + trailerSize();
-    else
-        return -1;
+    if (m_audioStream && m_audioStream->isValid() && m_audioStream->getDuration() > 0 && m_audioStream->bitrate() > 0)
+    {
+        res += m_audioStream->getDuration() * m_audioStream->bitrate() * overhead_factor() / 8000;
+    }
+
+    if (m_videoStream && m_videoStream->isValid())
+    {
+        if (!m_inputMedia or !m_inputMedia->videoStream() or m_inputMedia->videoStream()->attached_pic() == NULL)
+        {
+            if (m_videoStream->getDuration() > 0 && m_videoStream->bitrate() > 0)
+                res += m_videoStream->getDuration() * m_videoStream->bitrate() / 8000;
+        }
+        else
+        {
+            // attached picture
+            res += m_videoStream->bitrate();
+        }
+    }
+
+    res += trailerSize();
+
+    return res;
 }
 
 bool QFfmpegOutputMedia::openFile(const QString &filename, QList<AVMediaType> l_mediaType)
@@ -165,9 +182,10 @@ bool QFfmpegOutputMedia::setInputMedia(QFfmpegInputMedia *input)
                 return false;
         }
 
+        m_inputMedia = input;
+
         if (openCodec())
         {
-            m_inputMedia = input;
             return true;
         }
         else
@@ -219,6 +237,16 @@ bool QFfmpegOutputMedia::openCodec()
     if (m_videoStream && m_videoStream->isValid())
         if (!m_videoStream->openOutput())
             return false;
+
+    // set estimated duration for encoding
+    if (m_inputMedia)
+    {
+        if (m_audioStream)
+            m_audioStream->setDuration(m_inputMedia->audioStream()->getDuration());
+
+        if (m_videoStream)
+            m_videoStream->setDuration(m_inputMedia->videoStream()->getDuration());
+    }
 
 //    av_dump_format(pFormatCtx, 0, pFormatCtx->filename, 1);
 
@@ -317,10 +345,10 @@ bool QFfmpegOutputMedia::close()
     return true;
 }
 
-bool QFfmpegOutputMedia::seek_time(const int &ms)
+bool QFfmpegOutputMedia::seek_time(const qint64 &ms, const qint64 &min_ts, const qint64 &max_ts)
 {
     if (m_inputMedia)
-        return m_inputMedia->seek_time(ms);
+        return m_inputMedia->seek_time(ms, min_ts, max_ts);
     else
         return false;
 }
@@ -456,7 +484,7 @@ bool QFfmpegOutputMedia::writeFrame(QFfmpegOutputStream *stream)
             return false;
         }
 
-        m_posInMsec = posInMsec ;
+        m_posInMsec = posInMsec;
 
         delete pkt;
         return true;
@@ -497,6 +525,22 @@ void QFfmpegOutputMedia::flush()
 
     if (pFormatCtx != NULL && pFormatCtx->pb != NULL)
         avio_flush(pFormatCtx->pb);
+}
+
+qint64 QFfmpegOutputMedia::timeStartInMsec() const
+{
+    if (m_inputMedia)
+        return m_inputMedia->timeStartInMsec();
+    else
+        return -1;
+}
+
+void QFfmpegOutputMedia::setTimeStartInMsec(const qint64 &msec)
+{
+    if (!seek_time(msec, msec))
+        setError(QString("unable to seek media %1").arg(msec));
+    else
+        m_inputMedia->setTimeStartInMsec(msec);
 }
 
 qint64 QFfmpegOutputMedia::timeEndInMsec() const
@@ -554,4 +598,23 @@ qint64 QFfmpegOutputMedia::headerSize() const
 qint64 QFfmpegOutputMedia::trailerSize() const
 {
     return 0;
+}
+
+double QFfmpegOutputMedia::overhead_factor() const
+{
+    QString tmpFormat = getFormat();
+
+    if (tmpFormat == "ipod")
+    {
+        return 1.03;
+    }
+    else if (!tmpFormat.isEmpty())
+    {
+        return 1.0;
+    }
+    else
+    {
+        qWarning() << "format is empty, return default overhead factor : 1.0";
+        return 1.0;
+    }
 }

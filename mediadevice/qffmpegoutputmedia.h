@@ -32,7 +32,7 @@ public:
 
     bool openBuffer(const QString &format, QHash<AVMediaType, AVCodecID> mediaConfig);
     virtual bool close() Q_DECL_OVERRIDE;
-    bool seek_time(const int &ms);
+    bool seek_time(const qint64 &ms, const qint64 &min_ts = INT64_MIN, const qint64 &max_ts = INT64_MAX);
 
     QFfmpegInputMedia *inputMedia();
     bool setInputMedia(QFfmpegInputMedia *input);
@@ -49,6 +49,9 @@ public:
 
     qint64 posInMsec() const;
 
+    virtual void setTimeStartInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
+    virtual qint64 timeStartInMsec() const Q_DECL_OVERRIDE;
+
     virtual void setTimeEndInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
     virtual qint64 timeEndInMsec() const Q_DECL_OVERRIDE;
 
@@ -63,6 +66,8 @@ private:
 
     qint64 headerSize() const;
     qint64 trailerSize() const;
+
+    double overhead_factor() const;
 
 private:
     AVFormatContext *pFormatCtx = NULL;
