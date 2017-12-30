@@ -57,6 +57,18 @@ qint64 QFfmpegInputMedia::size() const
     }
 }
 
+QFfmpegInputStream *QFfmpegInputMedia::getStream(const int &index)
+{
+    if (index >= 0 && index < (int)pFormatCtx->nb_streams)
+    {
+        QFfmpegInputStream *stream = new QFfmpegInputStream();
+        if (stream->init_decoding_stream(pFormatCtx, index))
+            return stream;
+    }
+
+    return NULL;
+}
+
 bool QFfmpegInputMedia::open(const QString &filename, const bool &flag_readPicture)
 {
     if (avformat_open_input(&pFormatCtx, filename.toStdString().c_str(), NULL, NULL) != 0)
@@ -145,12 +157,12 @@ bool QFfmpegInputMedia::reset()
     }
 }
 
-bool QFfmpegInputMedia::seek_time(const int &ms)
+bool QFfmpegInputMedia::seek_time(const qint64 &ms, const qint64 &min_ts, const qint64 &max_ts)
 {
     if (pFormatCtx != NULL)
     {
         qint64 time = ms * 1000;
-        if (avformat_seek_file(pFormatCtx, -1, INT64_MIN, time, INT64_MAX, 0) < 0)
+        if (avformat_seek_file(pFormatCtx, -1, min_ts, time, max_ts, 0) < 0)
         {
             qCritical() << "unable to seek file at position" << time / AV_TIME_BASE;
             return false;
@@ -377,6 +389,16 @@ int QFfmpegInputMedia::readPacketFromInput(AVPacket *pkt)
         return av_read_frame(pFormatCtx, pkt);
     else
         return -1;
+}
+
+qint64 QFfmpegInputMedia::timeStartInMsec() const
+{
+    return m_timeStartMsec;
+}
+
+void QFfmpegInputMedia::setTimeStartInMsec(const qint64 &msec)
+{
+    m_timeStartMsec = msec;
 }
 
 qint64 QFfmpegInputMedia::timeEndInMsec() const
