@@ -1,6 +1,7 @@
 #ifndef QFFMPEGSTREAM_H
 #define QFFMPEGSTREAM_H
 
+#include <QtCore>
 #include <QString>
 #include <QDebug>
 #include "qffmpegdecoder.h"
@@ -33,6 +34,7 @@ public:
 
     virtual void flush() = 0;
 
+    bool setDuration(const qint64 &estimated_duration_Msec);
     qint64 getDuration() const;
 
     AVSampleFormat sampleFormat() const;

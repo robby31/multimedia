@@ -170,6 +170,19 @@ qint64 QFfmpegStream::getDuration() const
      return -1;
 }
 
+bool QFfmpegStream::setDuration(const qint64 &estimated_duration_Msec)
+{
+    if (m_stream != NULL && m_stream->time_base.num != 0)
+    {
+        m_stream->duration = qCeil((double)(estimated_duration_Msec * m_stream->time_base.den) / (double)(1000 * m_stream->time_base.num));
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 QString QFfmpegStream::metaData(const QString &tagName) const
 {
     if (m_stream != NULL)
