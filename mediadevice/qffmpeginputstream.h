@@ -20,7 +20,7 @@ public:
     virtual QFfmpegDecoder *codec() const Q_DECL_OVERRIDE;
 
     bool init_decoding_stream(AVFormatContext *format, AVMediaType type);
-    bool init_decoding_stream(const AVCodecID id, AVFormatContext *fmtContext);
+    bool init_decoding_stream(AVFormatContext *format, int index);
 
     // decoding functions
     qint64 decodedFramesAvailable() const;

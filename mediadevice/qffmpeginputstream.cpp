@@ -69,29 +69,26 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, AVMediaTy
     }
 }
 
-bool QFfmpegInputStream::init_decoding_stream(const AVCodecID id, AVFormatContext *fmtContext)
+bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, int index)
 {
-    if (id != AV_CODEC_ID_NONE && fmtContext != NULL)
+    if (format != NULL && index >=0 && index < (int)format->nb_streams && format->streams[index] != NULL)
     {
-        if (setStream(avformat_new_stream(fmtContext, NULL), fmtContext->nb_streams))
+        AVCodec *codec = avcodec_find_decoder(format->streams[index]->codecpar->codec_id);
+
+        if (setStream(format->streams[index]))
         {
-            AVCodec *tmpCodec = avcodec_find_encoder(id);
-            if (tmpCodec != NULL && tmpCodec->type == AVMEDIA_TYPE_AUDIO)
+            if (codec->type == AVMEDIA_TYPE_AUDIO)
                 m_codec = new QFfmpegAudioDecoder();
-            else if (tmpCodec != NULL && tmpCodec->type == AVMEDIA_TYPE_VIDEO)
+            else if (codec->type == AVMEDIA_TYPE_VIDEO)
                 m_codec = new QFfmpegVideoDecoder();
 
-            if (!m_codec or !m_codec->init_codec(id))
+            if (!m_codec or !m_codec->init_codec(codec, stream()->codecpar))
             {
                 close();
                 return false;
             }
             else
             {
-                /* Some formats want stream headers to be separate. */
-                if (fmtContext->oformat->flags & AVFMT_GLOBALHEADER)
-                    m_codec->codecCtx()->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-
                 return true;
             }
         }
