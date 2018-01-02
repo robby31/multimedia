@@ -56,6 +56,9 @@ void TestsspectrumanalyserTest::testWAV()
     connect(&analyser, SIGNAL(spectrumChanged(FrequencySpectrum)), this, SLOT(spectrumChanged(FrequencySpectrum)));
     QCOMPARE(analyser.isReady(), true);
 
+    QElapsedTimer timer;
+    timer.start();
+
     qint64 bytesToRead = SpectrumLengthSamples*wav.bytesPerSample();
     while (wav.bytesAvailable() >= bytesToRead)
     {
@@ -70,8 +73,10 @@ void TestsspectrumanalyserTest::testWAV()
         }
     }
 
-    qWarning() << "bytes available" << wav.bytesAvailable();
-    qWarning() << "FREQUENCY" << m_freq;
+    qInfo() << "bytes available" << wav.bytesAvailable();
+    qInfo() << "FREQUENCY" << m_freq;
+    QCOMPARE(qRound(m_freq), 22969);
+    qInfo() << "analysis done in" << timer.elapsed() << "ms.";
 }
 
 void TestsspectrumanalyserTest::testMP3()
@@ -104,10 +109,12 @@ void TestsspectrumanalyserTest::testMP3()
 
     decode_audio.setUrl("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/07 On_Off.mp3");
 
-
     QCOMPARE(decode_audio.lengthInMSeconds(), 120000);
     QCOMPARE(decode_audio.audioSampleRate(), 48000);
     QCOMPARE(decode_audio.bitrate(), 1536000);
+
+    QElapsedTimer timer;
+    timer.start();
 
     QCOMPARE(decode_audio.isReadyToOpen(), true);
     QVERIFY2(decode_audio.open() == true, "unable to start FFMPEG decoding");
@@ -130,6 +137,8 @@ void TestsspectrumanalyserTest::testMP3()
 
     qInfo() << "bytes available" << decode_audio.bytesAvailable();
     qInfo() << "FREQUENCY" << m_freq;
+    QCOMPARE(qRound(m_freq), 9691);
+    qInfo() << "analysis done in" << timer.elapsed() << "ms.";
 }
 
 QTEST_MAIN(TestsspectrumanalyserTest)
