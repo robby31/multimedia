@@ -894,6 +894,7 @@ void mediadeviceTest::testQFfmpegTranscodingAAC_data()
     QTest::addColumn<QString>("pathname");
     QTest::addColumn<int>("durationInMSeconds");
     QTest::addColumn<int>("bitrate");
+    QTest::addColumn<int>("audioBitrate");
     QTest::addColumn<int>("size");
     QTest::addColumn<int>("maxBufferSize");
     QTest::addColumn<int>("durationBuffer");
@@ -906,11 +907,11 @@ void mediadeviceTest::testQFfmpegTranscodingAAC_data()
     QTest::addColumn<int>("param_time_end");
     QTest::addColumn<int>("time_end");
 
-    QTest::newRow("MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 320000 << 6438669 << 800000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
-    QTest::newRow("MP3 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 320000 << 6034669 << 800000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
-    QTest::newRow("MP3 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 320000 << 404000 << 800000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
-    QTest::newRow("MP3 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 320000 << 1212000 << 800000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
-    QTest::newRow("MP3 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 320000 << 808000 << 800000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
+    QTest::newRow("MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 329600 << 320000 << 6631829 << 824000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
+    QTest::newRow("MP3 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 329600 << 320000 << 6215709 << 824000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
+    QTest::newRow("MP3 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 329600 << 320000 << 416120 << 824000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
+    QTest::newRow("MP3 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 329600 << 320000 << 1248360 << 824000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
+    QTest::newRow("MP3 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 329600 << 320000 << 832240 << 824000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
 }
 
 void mediadeviceTest::testQFfmpegTranscodingAAC()
@@ -918,6 +919,7 @@ void mediadeviceTest::testQFfmpegTranscodingAAC()
     QFETCH(QString, pathname);
     QFETCH(int, durationInMSeconds);
     QFETCH(int, bitrate);
+    QFETCH(int, audioBitrate);
     QFETCH(int, size);
     QFETCH(int, maxBufferSize);
     QFETCH(int, durationBuffer);
@@ -933,7 +935,7 @@ void mediadeviceTest::testQFfmpegTranscodingAAC()
     QFfmpegTranscoding device;
     device.setFormat(AAC);
     device.setUrl(pathname);
-    device.setBitrate(bitrate);
+    device.setBitrate(audioBitrate);
 
     if (param_startByte != -1 or param_endByte != -1)
         device.setRange(param_startByte, param_endByte);
@@ -1394,11 +1396,11 @@ void mediadeviceTest::testQFfmpegTranscodingALAC_data()
     QTest::addColumn<int>("param_time_end");
     QTest::addColumn<int>("time_end");
 
-    QTest::newRow("MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 1411200 << 30362468 << 3528000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
-    QTest::newRow("MP3 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 1411200 << 28457348 << 3528000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
-    QTest::newRow("MP3 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 1411200 << 1905120 << 3528000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
-    QTest::newRow("MP3 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 1411200 << 5715360 << 3528000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
-    QTest::newRow("MP3 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 1411200 << 3810240 << 3528000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
+    QTest::newRow("MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 1453536 << 31273343 << 3633840 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
+    QTest::newRow("MP3 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 1453536 << 29311069 << 3633840 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
+    QTest::newRow("MP3 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 1453536 << 1962273 << 3633840 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
+    QTest::newRow("MP3 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 1453536 << 5886820 << 3633840 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
+    QTest::newRow("MP3 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 1453536 << 3924547 << 3633840 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
 }
 
 void mediadeviceTest::testQFfmpegTranscodingALAC()
