@@ -19,6 +19,8 @@ public:
     virtual QFfmpegInputStream *videoStream() const Q_DECL_OVERRIDE;
     virtual QFfmpegInputStream *subtitleStream() const Q_DECL_OVERRIDE;
 
+    bool setAudioStream(const int &streamIndex);
+
     virtual QString getFormat() const Q_DECL_OVERRIDE;
     virtual qint64 getDuration() const Q_DECL_OVERRIDE;
     virtual qint64 getBitrate() const Q_DECL_OVERRIDE;

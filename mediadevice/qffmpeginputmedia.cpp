@@ -69,6 +69,42 @@ QFfmpegInputStream *QFfmpegInputMedia::getStream(const int &index)
     return NULL;
 }
 
+bool QFfmpegInputMedia::setAudioStream(const int &streamIndex)
+{
+    if (streamIndex >= 0 && streamIndex < (int)pFormatCtx->nb_streams)
+    {
+        AVStream *stream = pFormatCtx->streams[streamIndex];
+        if (stream && stream->codecpar && stream->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
+        {
+            if (m_audioStream)
+            {
+                delete m_audioStream;
+                m_audioStream = NULL;
+            }
+
+            m_audioStream = new QFfmpegInputStream();
+            if (!m_audioStream->init_decoding_stream(pFormatCtx, streamIndex))
+            {
+                delete m_audioStream;
+                m_audioStream = NULL;
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool QFfmpegInputMedia::open(const QString &filename, const bool &flag_readPicture)
 {
     if (avformat_open_input(&pFormatCtx, filename.toStdString().c_str(), NULL, NULL) != 0)
