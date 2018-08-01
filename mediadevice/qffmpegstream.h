@@ -61,7 +61,7 @@ public:
     static qint64 objectCounter;
 
 private:
-    AVStream *m_stream = NULL;   // stream linked to AVFormatContext for decoding input
+    AVStream *m_stream = Q_NULLPTR;   // stream linked to AVFormatContext for decoding input
 };
 
 #endif // QFFMPEGSTREAM_H

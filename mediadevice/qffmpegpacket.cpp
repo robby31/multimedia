@@ -18,7 +18,7 @@ QFfmpegPacket::~QFfmpegPacket()
 
 bool QFfmpegPacket::isValid() const
 {
-    return m_pkt != NULL;
+    return m_pkt != Q_NULLPTR;
 }
 
 AVPacket *QFfmpegPacket::ptr() const

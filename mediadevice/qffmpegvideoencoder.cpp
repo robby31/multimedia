@@ -13,7 +13,7 @@ QFfmpegVideoEncoder::~QFfmpegVideoEncoder()
 
 void QFfmpegVideoEncoder::close()
 {
-    if (m_rescaleCtx != NULL)
+    if (m_rescaleCtx != Q_NULLPTR)
         sws_freeContext(m_rescaleCtx);
 
     QFfmpegEncoder::close();
@@ -21,14 +21,14 @@ void QFfmpegVideoEncoder::close()
 
 bool QFfmpegVideoEncoder::init_rescale(QFfmpegCodec *input)
 {
-    if (input && input->codecCtx() != NULL && codecCtx() != NULL)
+    if (input && input->codecCtx() != Q_NULLPTR && codecCtx() != Q_NULLPTR)
     {
         AVCodecContext *inputCodecCtx = input->codecCtx();
         if (inputCodecCtx->pix_fmt != AV_PIX_FMT_NONE)
             m_rescaleCtx = sws_getContext(inputCodecCtx->width, inputCodecCtx->height, inputCodecCtx->pix_fmt,
                                           codecCtx()->width, codecCtx()->height, pixelFormat(),
-                                          SWS_BICUBIC, NULL, NULL, NULL);
-        if (m_rescaleCtx == NULL)
+                                          SWS_BICUBIC, Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
+        if (m_rescaleCtx == Q_NULLPTR)
         {
             close();
             qCritical() << "Could not allocate rescaling context";
@@ -48,14 +48,14 @@ bool QFfmpegVideoEncoder::init_rescale(QFfmpegCodec *input)
 
 QFfmpegFrame *QFfmpegVideoEncoder::rescaleFrame(QFfmpegFrame *frame)
 {
-    if (codecCtx() != NULL && m_rescaleCtx != NULL and frame != NULL and frame->isValid())
+    if (codecCtx() != Q_NULLPTR && m_rescaleCtx != Q_NULLPTR and frame != Q_NULLPTR and frame->isValid())
     {
         QFfmpegFrame *newFrame = new QFfmpegFrame();
         if (!newFrame or !newFrame->isValid() or !newFrame->init_frame(pixelFormat(), codecCtx()->width, codecCtx()->height) or !newFrame->makeWritable())
         {
             qCritical() << "Error allocation new frame.";
             delete newFrame;
-            return NULL;
+            return Q_NULLPTR;
         }
 
         if (sws_scale(m_rescaleCtx, (const uint8_t * const *) frame->ptr()->data,
@@ -64,7 +64,7 @@ QFfmpegFrame *QFfmpegVideoEncoder::rescaleFrame(QFfmpegFrame *frame)
         {
             qCritical() << "Error while rescaling";
             delete newFrame;
-            return NULL;
+            return Q_NULLPTR;
         }
 
         return newFrame;
@@ -72,7 +72,7 @@ QFfmpegFrame *QFfmpegVideoEncoder::rescaleFrame(QFfmpegFrame *frame)
     else
     {
         qCritical() << "rescale context is not initialised.";
-        return NULL;
+        return Q_NULLPTR;
     }
 }
 
@@ -82,10 +82,10 @@ bool QFfmpegVideoEncoder::encodeFrame(QFfmpegFrame *frame)
 
     if (isValid())
     {
-        if (frame == NULL)
+        if (frame == Q_NULLPTR)
         {
             // flush encoder
-            return QFfmpegEncoder::encodeFrame(NULL);
+            return QFfmpegEncoder::encodeFrame(Q_NULLPTR);
         }
         else
         {

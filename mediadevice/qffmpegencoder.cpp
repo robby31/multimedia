@@ -13,7 +13,7 @@ QFfmpegEncoder::~QFfmpegEncoder()
 
 void QFfmpegEncoder::close()
 {
-    if (codecCtx() != NULL)
+    if (codecCtx() != Q_NULLPTR)
         qDebug() << format() << codecCtx()->frame_number << "frames encoded.";
 
     if (m_encodedPkt.size() > 0)
@@ -30,7 +30,7 @@ bool QFfmpegEncoder::encodeFrame(QFfmpegFrame *frame)
 
     if (isValid())
     {
-        AVPacket *pkt = NULL;
+        AVPacket *pkt = Q_NULLPTR;
         pkt = av_packet_alloc();
         if (!pkt)
         {
@@ -43,10 +43,10 @@ bool QFfmpegEncoder::encodeFrame(QFfmpegFrame *frame)
             av_init_packet(pkt);
 
             /* send the frame to the encoder */
-            if (frame != NULL && frame->ptr() != NULL)
+            if (frame != Q_NULLPTR && frame->ptr() != Q_NULLPTR)
                 ret = avcodec_send_frame(codecCtx(), frame->ptr());
             else
-                ret = avcodec_send_frame(codecCtx(), NULL); // flush encoder
+                ret = avcodec_send_frame(codecCtx(), Q_NULLPTR); // flush encoder
 
             if (ret == AVERROR_EOF)
             {
@@ -102,7 +102,7 @@ AVPacket *QFfmpegEncoder::takeEncodedPkt()
     if (!m_encodedPkt.isEmpty())
         return m_encodedPkt.takeFirst();
     else
-        return NULL;
+        return Q_NULLPTR;
 }
 
 QByteArray QFfmpegEncoder::getRawData()
@@ -111,7 +111,7 @@ QByteArray QFfmpegEncoder::getRawData()
 
     foreach (AVPacket *pkt, m_encodedPkt)
     {
-        if (pkt != NULL)
+        if (pkt != Q_NULLPTR)
             res.append(QByteArray::fromRawData((char *)pkt->data, pkt->size));
     }
 

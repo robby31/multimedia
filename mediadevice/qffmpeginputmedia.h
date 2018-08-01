@@ -10,7 +10,7 @@ class QFfmpegInputMedia : public QFfmpegMedia
 
 public:
     QFfmpegInputMedia();
-    virtual ~QFfmpegInputMedia();
+    virtual ~QFfmpegInputMedia() Q_DECL_OVERRIDE;
 
     virtual AVFormatContext *context() const Q_DECL_OVERRIDE;
 
@@ -49,11 +49,11 @@ private:
     void readPicture();
 
 private:
-    AVFormatContext *pFormatCtx = NULL;
+    AVFormatContext *pFormatCtx = Q_NULLPTR;
 
-    QFfmpegInputStream *m_audioStream = NULL;
-    QFfmpegInputStream *m_videoStream = NULL;
-    QFfmpegInputStream *m_subtitleStream = NULL;
+    QFfmpegInputStream *m_audioStream = Q_NULLPTR;
+    QFfmpegInputStream *m_videoStream = Q_NULLPTR;
+    QFfmpegInputStream *m_subtitleStream = Q_NULLPTR;
 
     QByteArray m_picture;
     bool m_eof = false;

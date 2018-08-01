@@ -20,7 +20,7 @@ public:
     static qint64 objectCounter;
 
 private:
-    AVPacket *m_pkt = NULL;
+    AVPacket *m_pkt = Q_NULLPTR;
 };
 
 #endif // QFFMPEGPACKET_H

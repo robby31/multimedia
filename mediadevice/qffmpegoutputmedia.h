@@ -11,7 +11,7 @@ class QFfmpegOutputMedia : public QFfmpegMedia
 
 public:
     QFfmpegOutputMedia();
-    virtual ~QFfmpegOutputMedia();
+    virtual ~QFfmpegOutputMedia() Q_DECL_OVERRIDE;
 
     virtual AVFormatContext *context() const Q_DECL_OVERRIDE;
 
@@ -39,9 +39,9 @@ public:
 
     virtual bool atEnd() const Q_DECL_OVERRIDE;
     qint64 bytesAvailable() const;
-    QByteArray read(const int &maxlen);
+    QByteArray read(const qint64 &maxlen);
 
-    void demuxInputToBufferSize(const int &size);
+    void demuxInputToBufferSize(const qint64 &size);
 
     bool encodeMedia();
 
@@ -70,15 +70,15 @@ private:
     double overhead_factor() const;
 
 private:
-    AVFormatContext *pFormatCtx = NULL;
+    AVFormatContext *pFormatCtx = Q_NULLPTR;
     bool m_headerWritten = false;
 
-    QFfmpegOutputStream *m_audioStream = NULL;
-    QFfmpegOutputStream *m_videoStream = NULL;
-    QFfmpegOutputStream *m_subtitleStream = NULL;
+    QFfmpegOutputStream *m_audioStream = Q_NULLPTR;
+    QFfmpegOutputStream *m_videoStream = Q_NULLPTR;
+    QFfmpegOutputStream *m_subtitleStream = Q_NULLPTR;
 
-    QFfmpegInputMedia *m_inputMedia = NULL;
-    QFfmpegBuffer *m_outputBuffer = NULL;
+    QFfmpegInputMedia *m_inputMedia = Q_NULLPTR;
+    QFfmpegBuffer *m_outputBuffer = Q_NULLPTR;
     qint64 m_posInMsec = 0;
 
     qint64 m_size = -1;

@@ -13,16 +13,16 @@ QFfmpegAudioEncoder::~QFfmpegAudioEncoder()
 
 void QFfmpegAudioEncoder::close()
 {
-    if (m_resampleCtx != NULL)
+    if (m_resampleCtx != Q_NULLPTR)
         swr_free(&m_resampleCtx);
 
-    if (m_audioFifo != NULL)
+    if (m_audioFifo != Q_NULLPTR)
     {
         if (av_audio_fifo_size(m_audioFifo) > 0)
             qWarning() << av_audio_fifo_size(m_audioFifo) << "samples remains in audio fifo of encoder" << format();
 
         av_audio_fifo_free(m_audioFifo);
-        m_audioFifo = NULL;
+        m_audioFifo = Q_NULLPTR;
     }
 
     QFfmpegEncoder::close();
@@ -66,7 +66,7 @@ bool QFfmpegAudioEncoder::init_audio_fifo()
 {
     /* Create the FIFO buffer based on the specified output sample format. */
     m_audioFifo = av_audio_fifo_alloc(sampleFormat(), channelCount(), 1);
-    if (m_audioFifo == NULL)
+    if (m_audioFifo == Q_NULLPTR)
     {
         qCritical() << "Could not allocate FIFO";
         close();
@@ -83,7 +83,7 @@ bool QFfmpegAudioEncoder::init_resampler(QFfmpegCodec *input)
     {
         AVCodecContext *inputCodecCtx = input->codecCtx();
 
-        if (inputCodecCtx != NULL)
+        if (inputCodecCtx != Q_NULLPTR)
         {
             if (inputCodecCtx->sample_rate != samplerate())
             {
@@ -92,15 +92,15 @@ bool QFfmpegAudioEncoder::init_resampler(QFfmpegCodec *input)
             }
 
             /* create resampler context */
-            m_resampleCtx = swr_alloc_set_opts(NULL,
+            m_resampleCtx = swr_alloc_set_opts(Q_NULLPTR,
                                                av_get_default_channel_layout(channelCount()),
                                                sampleFormat(),
                                                samplerate(),
                                                av_get_default_channel_layout(inputCodecCtx->channels),
                                                inputCodecCtx->sample_fmt,
                                                inputCodecCtx->sample_rate,
-                                               0, NULL);
-            if (m_resampleCtx == NULL)
+                                               0, Q_NULLPTR);
+            if (m_resampleCtx == Q_NULLPTR)
             {
                 qCritical() << "Could not allocate resampler context";
                 close();
@@ -141,27 +141,27 @@ bool QFfmpegAudioEncoder::init_resampler(QFfmpegCodec *input)
 
 QFfmpegFrame *QFfmpegAudioEncoder::resampleFrame(QFfmpegFrame *frame)
 {
-    if (m_resampleCtx != NULL and frame != NULL)
+    if (m_resampleCtx != Q_NULLPTR and frame != Q_NULLPTR)
     {
         QFfmpegFrame *newFrame = new QFfmpegFrame();
         if (!newFrame->isValid())
         {
             qCritical() << "Error allocation new frame.";
             delete newFrame;
-            return NULL;
+            return Q_NULLPTR;
         }
 
         if (!newFrame->init_frame(sampleFormat(), channelLayout(), samplerate(), swr_get_out_samples(m_resampleCtx, frame->ptr()->nb_samples)))
         {
             delete newFrame;
-            return NULL;
+            return Q_NULLPTR;
         }
 
         if (av_frame_make_writable(newFrame->ptr()) < 0)
         {
             qCritical() << "unable to create new frame for resampling." << newFrame->isValid();
             delete newFrame;
-            return NULL;
+            return Q_NULLPTR;
         }
 
         /* convert to destination format */
@@ -171,7 +171,7 @@ QFfmpegFrame *QFfmpegAudioEncoder::resampleFrame(QFfmpegFrame *frame)
         {
             qCritical() << "Error while converting";
             delete newFrame;
-            return NULL;
+            return Q_NULLPTR;
         }
 
         return newFrame;
@@ -179,7 +179,7 @@ QFfmpegFrame *QFfmpegAudioEncoder::resampleFrame(QFfmpegFrame *frame)
     else
     {
         qCritical() << "resample context is not initialised.";
-        return NULL;
+        return Q_NULLPTR;
     }
 }
 
@@ -222,13 +222,13 @@ bool QFfmpegAudioEncoder::encodeFrame(QFfmpegFrame *frame)
 
     if (isValid())
     {
-        if (frame == NULL)
+        if (frame == Q_NULLPTR)
         {
             // flush encoder
             if (av_audio_fifo_size(m_audioFifo) > 0 && !encodeFrameFromFifo(av_audio_fifo_size(m_audioFifo)))
                 return false;
 
-            return QFfmpegEncoder::encodeFrame(NULL);
+            return QFfmpegEncoder::encodeFrame(Q_NULLPTR);
         }
         else
         {
@@ -236,7 +236,7 @@ bool QFfmpegAudioEncoder::encodeFrame(QFfmpegFrame *frame)
 
             QFfmpegFrame *inputFrame = resampleFrame(frame);
 
-            if (inputFrame != NULL)
+            if (inputFrame != Q_NULLPTR)
             {
                 add_samples_to_fifo(inputFrame);
 

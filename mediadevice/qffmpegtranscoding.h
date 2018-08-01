@@ -13,8 +13,8 @@ class QFfmpegTranscoding : public TranscodeDevice
     Q_OBJECT
 
 public:
-    explicit QFfmpegTranscoding(QObject *parent = 0);
-    virtual ~QFfmpegTranscoding();
+    explicit QFfmpegTranscoding(QObject *parent = Q_NULLPTR);
+    virtual ~QFfmpegTranscoding() Q_DECL_OVERRIDE;
 
     virtual bool waitForFinished(int msecs = 30000) Q_DECL_OVERRIDE;
 

@@ -11,7 +11,7 @@ class QFfmpegVideoEncoder : public QFfmpegEncoder
 {
 public:
     QFfmpegVideoEncoder();
-    virtual ~QFfmpegVideoEncoder();
+    virtual ~QFfmpegVideoEncoder() Q_DECL_OVERRIDE;
 
     virtual void close() Q_DECL_OVERRIDE;
 
@@ -24,7 +24,7 @@ private:
     QFfmpegFrame *rescaleFrame(QFfmpegFrame *frame);
 
 private:
-    SwsContext *m_rescaleCtx = NULL;
+    SwsContext *m_rescaleCtx = Q_NULLPTR;
 };
 
 #endif // QFFMPEGVIDEOENCODER_H

@@ -7,7 +7,7 @@ QFfmpegBuffer::QFfmpegBuffer()
     objectCounter++;
 
     uint8_t * avio_ctx_buffer = (uint8_t*)av_malloc(avio_ctx_buffer_size);
-    if (avio_ctx_buffer != NULL)
+    if (avio_ctx_buffer != Q_NULLPTR)
     {
         avio_ctx = avio_alloc_context(avio_ctx_buffer, avio_ctx_buffer_size, 1, this,
                                       &QFfmpegBuffer::read_from_context, &QFfmpegBuffer::write_from_context, &QFfmpegBuffer::seek_from_context);
@@ -18,7 +18,7 @@ QFfmpegBuffer::~QFfmpegBuffer()
 {
     objectCounter--;
 
-    if (avio_ctx != NULL)
+    if (avio_ctx != Q_NULLPTR)
     {
         av_freep(&avio_ctx->buffer);
         av_freep(&avio_ctx);
@@ -27,7 +27,7 @@ QFfmpegBuffer::~QFfmpegBuffer()
 
 bool QFfmpegBuffer::isValid() const
 {
-    return avio_ctx != NULL && avio_ctx->buffer != NULL;
+    return avio_ctx != Q_NULLPTR && avio_ctx->buffer != Q_NULLPTR;
 }
 
 AVIOContext *QFfmpegBuffer::context() const
@@ -45,9 +45,9 @@ qint64 QFfmpegBuffer::bytesAvailable() const
     return m_buffer.size();
 }
 
-QByteArray QFfmpegBuffer::read(const int &maxlen)
+QByteArray QFfmpegBuffer::read(const qint64 &maxlen)
 {
-    qint64 bytesToRead = qMin(m_buffer.size(), maxlen);
+    qint64 bytesToRead = qMin((qint64)m_buffer.size(), maxlen);
     QByteArray res = m_buffer.left(bytesToRead);
     m_buffer.remove(0, res.size());
 
@@ -135,6 +135,6 @@ bool QFfmpegBuffer::seek(const qint64 &pos)
 
 void QFfmpegBuffer::flush()
 {
-    if (avio_ctx != NULL)
+    if (avio_ctx != Q_NULLPTR)
         avio_flush(avio_ctx);
 }

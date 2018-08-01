@@ -21,7 +21,7 @@ void QFfmpegInputStream::close()
     if (m_codec)
     {
         delete m_codec;
-        m_codec = NULL;
+        m_codec = Q_NULLPTR;
     }
 
     QFfmpegStream::close();
@@ -34,7 +34,7 @@ QFfmpegDecoder *QFfmpegInputStream::codec() const
 
 bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, AVMediaType type)
 {
-    if (format != NULL)
+    if (format != Q_NULLPTR)
     {
         AVCodec *codec;
         int index = av_find_best_stream(format, type, -1, -1, &codec, 0);
@@ -71,7 +71,7 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, AVMediaTy
 
 bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, int index)
 {
-    if (format != NULL && index >=0 && index < (int)format->nb_streams && format->streams[index] != NULL)
+    if (format != Q_NULLPTR && index >=0 && index < (int)format->nb_streams && format->streams[index] != Q_NULLPTR)
     {
         AVCodec *codec = avcodec_find_decoder(format->streams[index]->codecpar->codec_id);
 
@@ -118,7 +118,7 @@ QFfmpegFrame *QFfmpegInputStream::takeDecodedFrame()
     if (m_codec)
         return m_codec->takeDecodedFrame();
     else
-        return NULL;
+        return Q_NULLPTR;
 }
 
 bool QFfmpegInputStream::decodePacket(AVPacket *pkt)

@@ -9,7 +9,7 @@ class FfmpegTranscoding : public TranscodeProcess
     Q_OBJECT
 
 public:
-    explicit FfmpegTranscoding(QObject *parent = 0);
+    explicit FfmpegTranscoding(QObject *parent = Q_NULLPTR);
 
     static void setDirPath(const QString &folder);
 

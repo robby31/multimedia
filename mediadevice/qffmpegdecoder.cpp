@@ -40,7 +40,7 @@ QFfmpegFrame *QFfmpegDecoder::takeDecodedFrame()
     if (!m_decodedFrames.isEmpty())
         return m_decodedFrames.takeFirst();
     else
-        return NULL;
+        return Q_NULLPTR;
 }
 
 bool QFfmpegDecoder::decodePacket(AVPacket *pkt)
@@ -97,7 +97,7 @@ bool QFfmpegDecoder::decodePacket(AVPacket *pkt)
     }
     else
     {
-        if (codecCtx() == NULL)
+        if (codecCtx() == Q_NULLPTR)
             qCritical() << "invalid codec context in decodePacket";
         return false;
     }

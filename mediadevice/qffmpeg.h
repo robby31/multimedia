@@ -12,8 +12,8 @@ class QFfmpeg : public QObject
     Q_OBJECT
 
 public:
-    explicit QFfmpeg(QObject *parent = 0);
-    explicit QFfmpeg(const QString &filename, QObject *parent = 0);
+    explicit QFfmpeg(QObject *parent = Q_NULLPTR);
+    explicit QFfmpeg(const QString &filename, QObject *parent = Q_NULLPTR);
     virtual ~QFfmpeg() Q_DECL_OVERRIDE;
 
     bool isValid() const;

@@ -15,17 +15,17 @@ QFfmpegStream::~QFfmpegStream()
 
 void QFfmpegStream::close()
 {
-    m_stream = NULL;
+    m_stream = Q_NULLPTR;
 }
 
 bool QFfmpegStream::isValid() const
 {
-    return m_stream != NULL;
+    return m_stream != Q_NULLPTR;
 }
 
 bool QFfmpegStream::setStream(AVStream *stream)
 {
-    if (stream != NULL && m_stream == NULL)
+    if (stream != Q_NULLPTR && m_stream == Q_NULLPTR)
     {
         m_stream = stream;
         return true;
@@ -51,7 +51,7 @@ bool QFfmpegStream::setStream(AVStream *stream, int streamId)
 
 bool QFfmpegStream::setTimeBase(int num, int den)
 {
-    if (m_stream != NULL && den != 0)
+    if (m_stream != Q_NULLPTR && den != 0)
     {
         m_stream->time_base.num = num;
         m_stream->time_base.den = den;
@@ -65,7 +65,7 @@ bool QFfmpegStream::setTimeBase(int num, int den)
 
 int QFfmpegStream::streamIndex() const
 {
-    if (m_stream != NULL)
+    if (m_stream != Q_NULLPTR)
         return m_stream->index;
     else
         return -1;
@@ -105,7 +105,7 @@ uint64_t QFfmpegStream::channelLayout() const
     if (codec())
         return codec()->channelLayout();
     else
-        return -1;
+        return 0;
 }
 
 int QFfmpegStream::samplerate() const
@@ -134,10 +134,10 @@ QString QFfmpegStream::format() const
 
 AVPacket *QFfmpegStream::attached_pic() const
 {
-    if (m_stream != NULL && (m_stream->disposition & AV_DISPOSITION_ATTACHED_PIC))
+    if (m_stream != Q_NULLPTR && (m_stream->disposition & AV_DISPOSITION_ATTACHED_PIC))
         return &m_stream->attached_pic;
     else
-        return NULL;
+        return Q_NULLPTR;
 }
 
 QString QFfmpegStream::resolution() const
@@ -150,7 +150,7 @@ QString QFfmpegStream::resolution() const
 
 double QFfmpegStream::frameRate() const
 {
-    if (m_stream != NULL)
+    if (m_stream != Q_NULLPTR)
     {
         AVRational frame_rate = m_stream->avg_frame_rate;
         if (frame_rate.den != 0)
@@ -164,7 +164,7 @@ double QFfmpegStream::frameRate() const
 
 qint64 QFfmpegStream::getDuration() const
 {
-    if (m_stream != NULL)
+    if (m_stream != Q_NULLPTR)
         return 1000 * m_stream->time_base.num * m_stream->duration / m_stream->time_base.den;
     else
      return -1;
@@ -172,7 +172,7 @@ qint64 QFfmpegStream::getDuration() const
 
 bool QFfmpegStream::setDuration(const qint64 &estimated_duration_Msec)
 {
-    if (m_stream != NULL && m_stream->time_base.num != 0)
+    if (m_stream != Q_NULLPTR && m_stream->time_base.num != 0)
     {
         m_stream->duration = qCeil((double)(estimated_duration_Msec * m_stream->time_base.den) / (double)(1000 * m_stream->time_base.num));
         return true;
@@ -185,12 +185,12 @@ bool QFfmpegStream::setDuration(const qint64 &estimated_duration_Msec)
 
 QString QFfmpegStream::metaData(const QString &tagName) const
 {
-    if (m_stream != NULL)
+    if (m_stream != Q_NULLPTR)
     {
-        AVDictionaryEntry *entry = NULL;
+        AVDictionaryEntry *entry = Q_NULLPTR;
         while ((entry = av_dict_get(m_stream->metadata, "", entry, AV_DICT_IGNORE_SUFFIX)))
         {
-            if (entry != NULL && entry->key == tagName)
+            if (entry != Q_NULLPTR && entry->key == tagName)
                 return  entry->value;
         }
     }
@@ -200,7 +200,7 @@ QString QFfmpegStream::metaData(const QString &tagName) const
 
 qint64 QFfmpegStream::packetPosInMsec(AVPacket *pkt)
 {
-    if (m_stream && pkt != NULL && codec() && codec()->codecCtx() != NULL)
+    if (m_stream && pkt != Q_NULLPTR && codec() && codec()->codecCtx() != Q_NULLPTR)
     {
         AVRational time_base = m_stream->time_base;
         return (pkt->pts + codec()->codecCtx()->delay) * 1000 * time_base.num / time_base.den ;
@@ -213,7 +213,7 @@ qint64 QFfmpegStream::packetPosInMsec(AVPacket *pkt)
 
 qint64 QFfmpegStream::packetNextPosInMsec(AVPacket *pkt)
 {
-    if (m_stream && pkt != NULL && codec() && codec()->codecCtx() != NULL)
+    if (m_stream && pkt != Q_NULLPTR && codec() && codec()->codecCtx() != Q_NULLPTR)
     {
         AVRational time_base = m_stream->time_base;
         return (pkt->pts + pkt->duration + codec()->codecCtx()->delay) * 1000 * time_base.num / time_base.den ;

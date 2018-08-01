@@ -18,7 +18,7 @@ AVFormatContext *QFfmpegOutputMedia::context() const
 
 QString QFfmpegOutputMedia::getFormat() const
 {
-    if (pFormatCtx != NULL)
+    if (pFormatCtx != Q_NULLPTR)
         return pFormatCtx->oformat->name;
     else
         return QString();
@@ -26,7 +26,7 @@ QString QFfmpegOutputMedia::getFormat() const
 
 qint64 QFfmpegOutputMedia::getDuration() const
 {
-    if (m_inputMedia != NULL)
+    if (m_inputMedia != Q_NULLPTR)
         return m_inputMedia->getDuration();
     else
         return -1;
@@ -39,7 +39,7 @@ qint64 QFfmpegOutputMedia::getBitrate() const
     if (m_audioStream && m_audioStream->isValid())
         bit_rate += m_audioStream->bitrate() * overhead_factor();
 
-    if (m_videoStream && m_videoStream->isValid() && (!m_inputMedia or !m_inputMedia->videoStream() or m_inputMedia->videoStream()->attached_pic() == NULL))
+    if (m_videoStream && m_videoStream->isValid() && (!m_inputMedia or !m_inputMedia->videoStream() or m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR))
         bit_rate += m_videoStream->bitrate();
 
     return bit_rate;
@@ -56,7 +56,7 @@ qint64 QFfmpegOutputMedia::size() const
 
     if (m_videoStream && m_videoStream->isValid())
     {
-        if (!m_inputMedia or !m_inputMedia->videoStream() or m_inputMedia->videoStream()->attached_pic() == NULL)
+        if (!m_inputMedia or !m_inputMedia->videoStream() or m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR)
         {
             if (m_videoStream->getDuration() > 0 && m_videoStream->bitrate() > 0)
                 res += m_videoStream->getDuration() * m_videoStream->bitrate() / 8000;
@@ -92,11 +92,11 @@ bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &format
     // guess format based on pathname extension
     int ret = -1;
     if (formatName.isEmpty())
-        ret = avformat_alloc_output_context2(&pFormatCtx, NULL, NULL, filename.toStdString().c_str());
+        ret = avformat_alloc_output_context2(&pFormatCtx, Q_NULLPTR, Q_NULLPTR, filename.toStdString().c_str());
     else
-        ret = avformat_alloc_output_context2(&pFormatCtx, NULL, formatName.toStdString().c_str(), filename.toStdString().c_str());
+        ret = avformat_alloc_output_context2(&pFormatCtx, Q_NULLPTR, formatName.toStdString().c_str(), filename.toStdString().c_str());
 
-    if (ret < 0 or pFormatCtx == NULL or pFormatCtx->oformat == NULL)
+    if (ret < 0 or pFormatCtx == Q_NULLPTR or pFormatCtx->oformat == Q_NULLPTR)
     {
         setError(QString("unable to open %1").arg(filename));
         return false;
@@ -116,7 +116,7 @@ bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &format
         {
             setError(QString("unable to initialize stream in file %1").arg(filename));
             avformat_free_context(pFormatCtx);
-            pFormatCtx = NULL;
+            pFormatCtx = Q_NULLPTR;
             return false;
         }
         else
@@ -128,7 +128,7 @@ bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &format
 
 bool QFfmpegOutputMedia::openBuffer(const QString &format, QHash<AVMediaType, AVCodecID> mediaConfig)
 {
-    if (avformat_alloc_output_context2(&pFormatCtx, NULL, format.toStdString().c_str(), NULL) < 0 or pFormatCtx == NULL or pFormatCtx->oformat == NULL)
+    if (avformat_alloc_output_context2(&pFormatCtx, Q_NULLPTR, format.toStdString().c_str(), Q_NULLPTR) < 0 or pFormatCtx == Q_NULLPTR or pFormatCtx->oformat == Q_NULLPTR)
     {
         setError(QString("unable to open buffer for format %1").arg(format));
         return false;
@@ -148,7 +148,7 @@ bool QFfmpegOutputMedia::openBuffer(const QString &format, QHash<AVMediaType, AV
         {
             setError(QString("unable to initialize stream in buffer for format %1").arg(format));
             avformat_free_context(pFormatCtx);
-            pFormatCtx = NULL;
+            pFormatCtx = Q_NULLPTR;
             return false;
         }
         else
@@ -168,7 +168,7 @@ bool QFfmpegOutputMedia::setInputMedia(QFfmpegInputMedia *input)
     if (m_inputMedia == input)
         return true;
 
-    if (input != NULL)
+    if (input != Q_NULLPTR)
     {
         if (m_audioStream && input->audioStream() && input->audioStream()->isValid())
         {
@@ -204,22 +204,22 @@ bool QFfmpegOutputMedia::setInputMedia(QFfmpegInputMedia *input)
 
 bool QFfmpegOutputMedia::init_stream(QList<AVMediaType> l_mediaType)
 {
-    if (l_mediaType.contains(AVMEDIA_TYPE_AUDIO) && pFormatCtx != NULL && pFormatCtx->oformat != NULL && pFormatCtx->oformat->audio_codec != AV_CODEC_ID_NONE)
+    if (l_mediaType.contains(AVMEDIA_TYPE_AUDIO) && pFormatCtx != Q_NULLPTR && pFormatCtx->oformat != Q_NULLPTR && pFormatCtx->oformat->audio_codec != AV_CODEC_ID_NONE)
     {
         m_audioStream = new QFfmpegOutputStream();
         m_audioStream->init_encoding_stream(pFormatCtx->oformat->audio_codec, pFormatCtx);
     }
 
-    if (l_mediaType.contains(AVMEDIA_TYPE_VIDEO) && pFormatCtx != NULL && pFormatCtx->oformat != NULL && pFormatCtx->oformat->video_codec != AV_CODEC_ID_NONE)
+    if (l_mediaType.contains(AVMEDIA_TYPE_VIDEO) && pFormatCtx != Q_NULLPTR && pFormatCtx->oformat != Q_NULLPTR && pFormatCtx->oformat->video_codec != AV_CODEC_ID_NONE)
     {
         m_videoStream = new QFfmpegOutputStream();
         m_videoStream->init_encoding_stream(pFormatCtx->oformat->video_codec, pFormatCtx);
     }
 
-    if (m_audioStream == NULL && m_videoStream == NULL)
+    if (m_audioStream == Q_NULLPTR && m_videoStream == Q_NULLPTR)
     {
         avformat_free_context(pFormatCtx);
-        pFormatCtx = NULL;
+        pFormatCtx = Q_NULLPTR;
         return false;
     }
     else
@@ -251,7 +251,7 @@ bool QFfmpegOutputMedia::openCodec()
 //    av_dump_format(pFormatCtx, 0, pFormatCtx->filename, 1);
 
     /* open the output file, if needed */
-    if (pFormatCtx != NULL && !(pFormatCtx->flags & AVFMT_NOFILE))
+    if (pFormatCtx != Q_NULLPTR && !(pFormatCtx->flags & AVFMT_NOFILE))
     {
         QString pathname(pFormatCtx->filename);
         if (!pathname.isEmpty())
@@ -273,10 +273,10 @@ bool QFfmpegOutputMedia::openCodec()
     if (isOpen())
     {
         /* Write the stream header, if any. */
-        int ret = avformat_write_header(pFormatCtx, NULL);
+        int ret = avformat_write_header(pFormatCtx, Q_NULLPTR);
         if (ret < 0)
         {
-            if (pFormatCtx != NULL)
+            if (pFormatCtx != Q_NULLPTR)
                 qCritical() << "Error occurred when writing header" << pFormatCtx->filename;
             else
                 qCritical() << "Error occurred when writing header";
@@ -299,7 +299,7 @@ bool QFfmpegOutputMedia::openCodec()
 
 bool QFfmpegOutputMedia::close()
 {
-    if (isOpen() && pFormatCtx != NULL)
+    if (isOpen() && pFormatCtx != Q_NULLPTR)
     {
         QString pathname(pFormatCtx->filename);
         if (!(pFormatCtx->flags & AVFMT_NOFILE) && !pathname.isEmpty())
@@ -315,32 +315,32 @@ bool QFfmpegOutputMedia::close()
         m_headerWritten = false;
     }
 
-    if (m_outputBuffer != NULL)
+    if (m_outputBuffer != Q_NULLPTR)
     {
         delete m_outputBuffer;
-        m_outputBuffer = NULL;
+        m_outputBuffer = Q_NULLPTR;
     }
 
     if (m_audioStream)
     {
         delete m_audioStream;
-        m_audioStream = NULL;
+        m_audioStream = Q_NULLPTR;
     }
 
     if (m_videoStream)
     {
         delete m_videoStream;
-        m_videoStream = NULL;
+        m_videoStream = Q_NULLPTR;
     }
 
     if (m_subtitleStream)
     {
         delete m_subtitleStream;
-        m_subtitleStream = NULL;
+        m_subtitleStream = Q_NULLPTR;
     }
 
     avformat_free_context(pFormatCtx);
-    pFormatCtx = NULL;
+    pFormatCtx = Q_NULLPTR;
 
     return true;
 }
@@ -355,7 +355,7 @@ bool QFfmpegOutputMedia::seek_time(const qint64 &ms, const qint64 &min_ts, const
 
 bool QFfmpegOutputMedia::atEnd() const
 {
-    if (m_size >= 0 && pFormatCtx != NULL && pFormatCtx->pb && pFormatCtx->pb->pos > m_size)
+    if (m_size >= 0 && pFormatCtx != Q_NULLPTR && pFormatCtx->pb && pFormatCtx->pb->pos > m_size)
         return true;
 
     if (m_inputMedia && m_outputBuffer)
@@ -366,15 +366,15 @@ bool QFfmpegOutputMedia::atEnd() const
 
 qint64 QFfmpegOutputMedia::bytesAvailable() const
 {
-    if (m_outputBuffer != NULL)
+    if (m_outputBuffer != Q_NULLPTR)
         return m_outputBuffer->bytesAvailable();
     else
         return -1;
 }
 
-QByteArray QFfmpegOutputMedia::read(const int &maxlen)
+QByteArray QFfmpegOutputMedia::read(const qint64 &maxlen)
 {
-    if (m_outputBuffer != NULL)
+    if (m_outputBuffer != Q_NULLPTR)
     {
         while (bytesAvailable() < maxlen)
         {
@@ -398,7 +398,7 @@ QByteArray QFfmpegOutputMedia::read(const int &maxlen)
     }
 }
 
-void QFfmpegOutputMedia::demuxInputToBufferSize(const int &size)
+void QFfmpegOutputMedia::demuxInputToBufferSize(const qint64 &size)
 {
     while (bytesAvailable() < size)
     {
@@ -417,12 +417,12 @@ bool QFfmpegOutputMedia::demuxInput()
 
     bool frameDecoded = false;
 
-    if (m_inputMedia != NULL && !m_inputMedia->atEnd())
+    if (m_inputMedia != Q_NULLPTR && !m_inputMedia->atEnd())
     {
         while (!frameDecoded)
         {
             QFfmpegFrame *frame = m_inputMedia->readFrame(l_mediaType);
-            if (frame == NULL)
+            if (frame == Q_NULLPTR)
                 break;
 
             if (m_audioStream && m_audioStream->isValid() && frame->mediaType() == AVMEDIA_TYPE_AUDIO)
@@ -470,7 +470,7 @@ bool QFfmpegOutputMedia::encodeMedia()
 
 bool QFfmpegOutputMedia::writeFrame(QFfmpegOutputStream *stream)
 {
-    if (isOpen() && stream != NULL)
+    if (isOpen() && stream != Q_NULLPTR)
     {
         AVPacket *pkt = stream->takeEncodedPkt();
 
@@ -505,25 +505,25 @@ void QFfmpegOutputMedia::flush()
 {
     if (m_audioStream && m_audioStream->isValid())
     {
-        m_audioStream->encodeFrame(NULL);
+        m_audioStream->encodeFrame(Q_NULLPTR);
         while (m_audioStream->encodedPktAvailable() > 0)
             writeFrame(m_audioStream);
     }
 
     if (m_videoStream && m_videoStream->isValid())
     {
-        m_videoStream->encodeFrame(NULL);
+        m_videoStream->encodeFrame(Q_NULLPTR);
         while (m_videoStream->encodedPktAvailable() > 0)
             writeFrame(m_videoStream);
     }
 
     // flush muxer
-    av_interleaved_write_frame(pFormatCtx, NULL);
+    av_interleaved_write_frame(pFormatCtx, Q_NULLPTR);
 
     if (m_outputBuffer)
         m_outputBuffer->flush();
 
-    if (pFormatCtx != NULL && pFormatCtx->pb != NULL)
+    if (pFormatCtx != Q_NULLPTR && pFormatCtx->pb != Q_NULLPTR)
         avio_flush(pFormatCtx->pb);
 }
 
@@ -579,7 +579,7 @@ void QFfmpegOutputMedia::setSize(const qint64 &size)
 
 qint64 QFfmpegOutputMedia::headerSize() const
 {
-    if (pFormatCtx != NULL && pFormatCtx->oformat != NULL)
+    if (pFormatCtx != Q_NULLPTR && pFormatCtx->oformat != Q_NULLPTR)
     {
         QString formatName = QString(pFormatCtx->oformat->name);
         if (formatName == "mp3")

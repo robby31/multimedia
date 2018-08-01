@@ -21,7 +21,7 @@ void QFfmpegOutputStream::close()
     if (m_codec)
     {
         delete m_codec;
-        m_codec = NULL;
+        m_codec = Q_NULLPTR;
     }
 
     QFfmpegStream::close();
@@ -34,14 +34,14 @@ QFfmpegEncoder *QFfmpegOutputStream::codec() const
 
 bool QFfmpegOutputStream::init_encoding_stream(const AVCodecID id, AVFormatContext *fmtContext)
 {
-    if (id != AV_CODEC_ID_NONE && fmtContext != NULL)
+    if (id != AV_CODEC_ID_NONE && fmtContext != Q_NULLPTR)
     {
-        if (setStream(avformat_new_stream(fmtContext, NULL), fmtContext->nb_streams))
+        if (setStream(avformat_new_stream(fmtContext, Q_NULLPTR), fmtContext->nb_streams))
         {
             AVCodec *tmpCodec = avcodec_find_encoder(id);
-            if (tmpCodec != NULL && tmpCodec->type == AVMEDIA_TYPE_AUDIO)
+            if (tmpCodec != Q_NULLPTR && tmpCodec->type == AVMEDIA_TYPE_AUDIO)
                 m_codec = new QFfmpegAudioEncoder();
-            else if (tmpCodec != NULL && tmpCodec->type == AVMEDIA_TYPE_VIDEO)
+            else if (tmpCodec != Q_NULLPTR && tmpCodec->type == AVMEDIA_TYPE_VIDEO)
                 m_codec = new QFfmpegVideoEncoder();
 
             if (!m_codec or !m_codec->init_codec(id))
@@ -73,7 +73,7 @@ bool QFfmpegOutputStream::init_encoding_stream(const AVCodecID id, AVFormatConte
 
 bool QFfmpegOutputStream::openOutput()
 {
-    if (m_codec && m_codec->codecCtx() != NULL)
+    if (m_codec && m_codec->codecCtx() != Q_NULLPTR)
     {
         if (m_codec->type() == AVMEDIA_TYPE_AUDIO)
         {
@@ -144,13 +144,13 @@ qint64 QFfmpegOutputStream::encodedPktAvailable() const
 
 AVPacket *QFfmpegOutputStream::takeEncodedPkt()
 {
-    AVPacket *pkt = NULL;
+    AVPacket *pkt = Q_NULLPTR;
 
     if (isValid())
     {
         pkt = m_codec->takeEncodedPkt();
 
-        if (pkt != NULL)
+        if (pkt != Q_NULLPTR)
         {
             /* rescale output packet timestamp values from codec to stream timebase */
             av_packet_rescale_ts(pkt, m_codec->codecCtx()->time_base, stream()->time_base);

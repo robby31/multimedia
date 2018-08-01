@@ -9,7 +9,7 @@ class QFfmpegOutputStream : public QFfmpegStream
 {
 public:
     QFfmpegOutputStream();
-    virtual ~QFfmpegOutputStream();
+    virtual ~QFfmpegOutputStream() Q_DECL_OVERRIDE;
 
     virtual bool isValid() const Q_DECL_OVERRIDE;
 
@@ -35,7 +35,7 @@ public:
     bool encodeFrame(QFfmpegFrame *frame);
 
 private:
-    QFfmpegEncoder *m_codec = NULL;
+    QFfmpegEncoder *m_codec = Q_NULLPTR;
 };
 
 #endif // QFFMPEGOUTPUTSTREAM_H

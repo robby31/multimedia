@@ -29,7 +29,7 @@ public:
     static qint64 objectCounter;
 
 private:
-    AVFrame *m_frame = NULL;
+    AVFrame *m_frame = Q_NULLPTR;
     AVMediaType m_mediaType = AVMEDIA_TYPE_UNKNOWN;
 };
 

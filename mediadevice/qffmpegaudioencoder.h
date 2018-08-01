@@ -12,7 +12,7 @@ class QFfmpegAudioEncoder : public QFfmpegEncoder
 {
 public:
     QFfmpegAudioEncoder();
-    virtual ~QFfmpegAudioEncoder();
+    virtual ~QFfmpegAudioEncoder() Q_DECL_OVERRIDE;
 
     virtual void close() Q_DECL_OVERRIDE;
 
@@ -30,8 +30,8 @@ private:
     QFfmpegFrame *resampleFrame(QFfmpegFrame *frame);
 
 private:
-    SwrContext *m_resampleCtx = NULL;
-    AVAudioFifo *m_audioFifo = NULL;
+    SwrContext *m_resampleCtx = Q_NULLPTR;
+    AVAudioFifo *m_audioFifo = Q_NULLPTR;
 };
 
 #endif // QFFMPEGAUDIOENCODER_H

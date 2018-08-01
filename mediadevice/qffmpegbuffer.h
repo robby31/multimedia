@@ -20,7 +20,7 @@ public:
 
     bool atEnd() const;
     qint64 bytesAvailable() const;
-    QByteArray read(const int &maxlen);
+    QByteArray read(const qint64 &maxlen);
     void flush();
 
 private:
@@ -35,7 +35,7 @@ public:
     static qint64 objectCounter;
 
 private:
-    AVIOContext *avio_ctx = NULL;
+    AVIOContext *avio_ctx = Q_NULLPTR;
     size_t avio_ctx_buffer_size = 4096;
 
     QByteArray m_buffer;

@@ -9,7 +9,7 @@ class QFfmpegInputStream : public QFfmpegStream
 {
 public:
     QFfmpegInputStream();
-    virtual ~QFfmpegInputStream();
+    virtual ~QFfmpegInputStream() Q_DECL_OVERRIDE;
 
     virtual bool isValid() const Q_DECL_OVERRIDE;
 
@@ -28,7 +28,7 @@ public:
     bool decodePacket(AVPacket *pkt);
 
 private:
-    QFfmpegDecoder *m_codec = NULL;
+    QFfmpegDecoder *m_codec = Q_NULLPTR;
 };
 
 #endif // QFFMPEGINPUTSTREAM_H

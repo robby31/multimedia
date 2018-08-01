@@ -36,7 +36,7 @@ QString QFfmpegMedia::filename() const
 {
     QString res;
 
-    if (context() != NULL)
+    if (context() != Q_NULLPTR)
         res = QString(context()->filename);
 
     return res;
@@ -69,8 +69,8 @@ QString QFfmpegMedia::getVersion()
 
 bool QFfmpegMedia::isOpen()
 {
-    if (context() != NULL)
-        return context()->pb != NULL;
+    if (context() != Q_NULLPTR)
+        return context()->pb != Q_NULLPTR;
     else
         return false;
 }
@@ -79,15 +79,15 @@ QStringList QFfmpegMedia::getMetaDataStream(const AVMediaType &type, const QStri
 {
     QStringList res;
 
-    if (context() != NULL)
+    if (context() != Q_NULLPTR)
     {
         for (unsigned int i=0; i<context()->nb_streams; ++i)
         {
             AVStream *stream = context()->streams[i];
-            if (stream != NULL && stream->codecpar != NULL && stream->codecpar->codec_type == type)
+            if (stream != Q_NULLPTR && stream->codecpar != Q_NULLPTR && stream->codecpar->codec_type == type)
             {
                 bool tagFound = false;
-                AVDictionaryEntry *entry = NULL;
+                AVDictionaryEntry *entry = Q_NULLPTR;
                 while ((entry = av_dict_get(stream->metadata, "", entry, AV_DICT_IGNORE_SUFFIX)))
                 {
                     if (entry->key == param)
@@ -124,12 +124,12 @@ QStringList QFfmpegMedia::getSubtitleLanguages() const
 
 QString QFfmpegMedia::metaData(const QString &tagName) const
 {
-    if (context() != NULL)
+    if (context() != Q_NULLPTR)
     {
-        AVDictionaryEntry *entry = NULL;
+        AVDictionaryEntry *entry = Q_NULLPTR;
         while ((entry = av_dict_get(context()->metadata, "", entry, AV_DICT_IGNORE_SUFFIX)))
         {
-            if (entry != NULL && entry->key == tagName)
+            if (entry != Q_NULLPTR && entry->key == tagName)
                 return  entry->value;
         }
     }

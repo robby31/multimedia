@@ -51,7 +51,7 @@
 class WavFile : public QObject
 {
 public:
-    explicit WavFile(QObject *parent = 0);
+    explicit WavFile(QObject *parent = Q_NULLPTR);
 
     enum TypeError { NoError, InvalidFile, InvalidHeader };
 

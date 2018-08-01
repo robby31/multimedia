@@ -18,7 +18,7 @@ QFfmpegFrame::~QFfmpegFrame()
 
 bool QFfmpegFrame::isValid() const
 {
-    return m_frame != NULL;
+    return m_frame != Q_NULLPTR;
 }
 
 AVFrame *QFfmpegFrame::ptr() const
@@ -38,7 +38,7 @@ AVMediaType QFfmpegFrame::mediaType() const
 
 bool QFfmpegFrame::init_frame(AVSampleFormat format, uint64_t channel_layout, int sample_rate, int nb_samples)
 {
-    if (m_frame != NULL)
+    if (m_frame != Q_NULLPTR)
     {
         m_frame->format = format;
         m_frame->channel_layout = channel_layout;
@@ -63,7 +63,7 @@ bool QFfmpegFrame::init_frame(AVSampleFormat format, uint64_t channel_layout, in
 
 bool QFfmpegFrame::init_frame(AVPixelFormat format, int width, int height)
 {
-    if (m_frame != NULL)
+    if (m_frame != Q_NULLPTR)
     {
         m_frame->format = format;
         m_frame->width = width;
@@ -87,7 +87,7 @@ bool QFfmpegFrame::init_frame(AVPixelFormat format, int width, int height)
 
 bool QFfmpegFrame::makeWritable()
 {
-    if (m_frame != NULL)
+    if (m_frame != Q_NULLPTR)
         return av_frame_make_writable(m_frame) >= 0;
     else
         return false;

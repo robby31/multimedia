@@ -75,7 +75,7 @@ QByteArray StreamingFile::read(qint64 maxlen)
 
     if (!atEnd())
     {
-        int bytesToRead = size() - pos();
+        qint64 bytesToRead = size() - pos();
         if (bytesToRead>0 && bytesToRead<maxlen)
             res = m_file.read(bytesToRead);
         else if (maxlen>0)

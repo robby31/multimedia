@@ -13,7 +13,7 @@ class Device : public QObject
     Q_OBJECT
 
 public:
-    explicit Device(QObject *parent = 0);
+    explicit Device(QObject *parent = Q_NULLPTR);
     virtual ~Device() Q_DECL_OVERRIDE;
 
     virtual void setTimeSeek(qint64 start, qint64 end);

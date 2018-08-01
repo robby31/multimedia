@@ -43,7 +43,7 @@ public:
     static qint64 objectCounter;
 
 private:
-    AVCodecContext *m_codecCtx = NULL;
+    AVCodecContext *m_codecCtx = Q_NULLPTR;
 };
 
 #endif // QFFMPEGCODEC_H
