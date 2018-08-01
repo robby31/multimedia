@@ -10,8 +10,8 @@ class TranscodeProcess : public TranscodeDevice
     Q_OBJECT
 
 public:
-    explicit TranscodeProcess(QObject *parent = 0);
-    virtual ~TranscodeProcess();
+    explicit TranscodeProcess(QObject *parent = Q_NULLPTR);
+    virtual ~TranscodeProcess() Q_DECL_OVERRIDE;
 
     bool isKilled() const { return killTranscodeProcess; }
     virtual bool waitForFinished(int msecs = 30000) Q_DECL_OVERRIDE;

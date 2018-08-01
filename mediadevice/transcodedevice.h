@@ -8,7 +8,7 @@
 #include "device.h"
 
 // Format available for transcoding
-enum TranscodeFormatAvailable { UNKNOWN, COPY, MP3, LPCM, AAC, ALAC, WAV, MPEG2_AC3, H264_AAC, H264_AC3 };
+enum TranscodeFormatAvailable { UNKNOWN, COPY, MP3, LPCM_S16BE, LPCM_S16LE, AAC, ALAC, WAV, MPEG2_AC3, H264_AAC, H264_AC3 };
 
 class TranscodeDevice : public Device
 {
@@ -17,8 +17,8 @@ class TranscodeDevice : public Device
     Q_PROPERTY(TranscodeFormatAvailable format READ format WRITE setFormat NOTIFY formatChanged)
 
 public:
-    explicit TranscodeDevice(QObject *parent = 0);
-    virtual ~TranscodeDevice();
+    explicit TranscodeDevice(QObject *parent = Q_NULLPTR);
+    virtual ~TranscodeDevice() Q_DECL_OVERRIDE;
 
     void startTranscodingClock();
     qint64 transcodingElapsed();

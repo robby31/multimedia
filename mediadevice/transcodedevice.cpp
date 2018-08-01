@@ -164,7 +164,9 @@ double TranscodeDevice::overheadfactor() const
     {
     case MP3:
         return 1.0;
-    case LPCM:
+    case LPCM_S16BE:
+        return 1.00001;
+    case LPCM_S16LE:
         return 1.00001;
     case AAC:
         return 1.01;

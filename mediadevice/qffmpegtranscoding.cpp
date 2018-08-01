@@ -130,7 +130,7 @@ void QFfmpegTranscoding::readyForOpening()
 
     if (m_inputMedia)
     {
-        if (format() == WAV or format() == LPCM)
+        if (format() == WAV or format() == LPCM_S16BE or format() == LPCM_S16LE)
         {
             if (m_inputMedia && m_inputMedia->audioStream() && m_inputMedia->audioStream()->samplerate() == 44100)
                 setBitrate(1411200);
@@ -158,7 +158,7 @@ void QFfmpegTranscoding::_open()
             if (startByte() <= fullSize())
             {
                 double start_position = double(startByte())/double(fullSize())*double(lengthInSeconds());
-                if (!m_outputMedia->seek_time(start_position*1000))
+                if (!m_outputMedia->seek_time((qint64)start_position*1000))
                     setError(QString("unable to seek media %1").arg(start_position));
             }
             else
@@ -264,7 +264,7 @@ void QFfmpegTranscoding::close()
     {
         // reset output media
 
-        int tmpAudioBitRate = -1;
+        qint64 tmpAudioBitRate = -1;
         if (m_outputMedia->audioStream())
             tmpAudioBitRate = m_outputMedia->audioStream()->bitrate();
 
@@ -365,7 +365,27 @@ void QFfmpegTranscoding::formatHasChanged()
                 setError("unable to initialize audio stream");
             }
         }
-        else if (format() == LPCM)
+        else if (format() == LPCM_S16BE)
+        {
+            if (!m_outputMedia->openBuffer("s16be", mediaConfig))
+            {
+                setError("unable to open buffer LPCM");
+            }
+            else if (m_outputMedia->audioStream())
+            {
+                m_outputMedia->audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16);
+
+                if (m_inputMedia && m_inputMedia->audioStream() && m_inputMedia->audioStream()->samplerate() == 44100)
+                    setBitrate(1411200);
+                else
+                    setBitrate(1536000);
+            }
+            else
+            {
+                setError("unable to initialize audio stream");
+            }
+        }
+        else if (format() == LPCM_S16LE)
         {
             if (!m_outputMedia->openBuffer("s16le", mediaConfig))
             {

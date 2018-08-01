@@ -87,7 +87,17 @@ void FfmpegTranscoding::updateArguments()
         if (bitrate() > 0)
             arguments << "-b:a" << QString("%1").arg(bitrate());
     }
-    else if (format() == LPCM)
+    else if (format() == LPCM_S16BE)
+    {
+        arguments << "-map" <<  "0:a";
+        arguments << "-map_metadata" << "-1";
+
+        arguments << "-f" << "s16be";
+
+        if (bitrate() > 0)
+            arguments << "-b:a " << QString("%1").arg(bitrate());
+    }
+    else if (format() == LPCM_S16LE)
     {
         arguments << "-map" <<  "0:a";
         arguments << "-map_metadata" << "-1";
@@ -229,7 +239,7 @@ void FfmpegTranscoding::updateArguments()
         if (!variable_bitrate)
         {
             // constant bitrate
-            int video_bitrate = (bitrate()-audio_bitrate);
+            qint64 video_bitrate = (bitrate()-audio_bitrate);
 
             arguments << "-b:v" << QString("%1").arg(video_bitrate);
             arguments << "-minrate" << QString("%1").arg(video_bitrate);

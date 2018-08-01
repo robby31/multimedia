@@ -1178,7 +1178,7 @@ void mediadeviceTest::testQFfmpegTranscodingLPCM()
     QFETCH(int, time_end);
 
     QFfmpegTranscoding device;
-    device.setFormat(LPCM);
+    device.setFormat(LPCM_S16BE);
     device.setUrl(pathname);
 
     if (param_startByte != -1 or param_endByte != -1)
@@ -1193,7 +1193,7 @@ void mediadeviceTest::testQFfmpegTranscodingLPCM()
     QCOMPARE(device.pos(), 0);
     QCOMPARE(device.progress(), 0);
 
-    QCOMPARE(device.format() == LPCM, true);
+    QCOMPARE(device.format() == LPCM_S16BE, true);
     QCOMPARE(device.bitrate(), bitrate);
     QCOMPARE(device.size(), size);
     QCOMPARE(device.bytesAvailable(), -1);  /* device not open */
@@ -1293,7 +1293,7 @@ void mediadeviceTest::testQFfmpegTranscodingLPCM()
     QCOMPARE(device.pos(), 0);
     QCOMPARE(device.progress(), 0);
 
-    QCOMPARE(device.format() == LPCM, true);
+    QCOMPARE(device.format() == LPCM_S16BE, true);
     QCOMPARE(device.size(), size);
     QCOMPARE(device.bytesAvailable(), -1);  /* device not open */
 

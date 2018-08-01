@@ -98,7 +98,7 @@ void TestsspectrumanalyserTest::testMP3()
     QCOMPARE(analyser.isReady(), true);
 
     FfmpegTranscoding decode_audio;
-    decode_audio.setFormat(LPCM);
+    decode_audio.setFormat(LPCM_S16LE);
     decode_audio.setOriginalLengthInMSeconds(120000);
     decode_audio.setAudioSampleRate(format.sampleRate());
 
