@@ -1,14 +1,8 @@
 #include "qffmpeginputstream.h"
 
-QFfmpegInputStream::QFfmpegInputStream():
-    QFfmpegStream()
-{
-
-}
-
 QFfmpegInputStream::~QFfmpegInputStream()
 {
-    close();
+    _close();
 }
 
 bool QFfmpegInputStream::isValid() const
@@ -17,6 +11,11 @@ bool QFfmpegInputStream::isValid() const
 }
 
 void QFfmpegInputStream::close()
+{
+    _close();
+}
+
+void QFfmpegInputStream::_close()
 {
     if (m_codec)
     {
@@ -37,9 +36,9 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, AVMediaTy
     if (format != Q_NULLPTR)
     {
         AVCodec *codec;
-        int index = av_find_best_stream(format, type, -1, -1, &codec, 0);
+        auto index = static_cast<uint>(av_find_best_stream(format, type, -1, -1, &codec, 0));
 
-        if (index >= 0 && index < (int)format->nb_streams && setStream(format->streams[index]))
+        if (index < format->nb_streams && setStream(format->streams[index]))
         {
             if (type == AVMEDIA_TYPE_AUDIO)
                 m_codec = new QFfmpegAudioDecoder();
@@ -51,27 +50,18 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, AVMediaTy
                 close();
                 return false;
             }
-            else
-            {
-                return true;
-            }
-        }
-        else
-        {
-            close();
-            return false;
+
+            return true;
         }
     }
-    else
-    {
-        close();
-        return false;
-    }
+
+    close();
+    return false;
 }
 
-bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, int index)
+bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, uint index)
 {
-    if (format != Q_NULLPTR && index >=0 && index < (int)format->nb_streams && format->streams[index] != Q_NULLPTR)
+    if (format != Q_NULLPTR && index < format->nb_streams && format->streams[index] != Q_NULLPTR)
     {
         AVCodec *codec = avcodec_find_decoder(format->streams[index]->codecpar->codec_id);
 
@@ -82,51 +72,37 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, int index
             else if (codec->type == AVMEDIA_TYPE_VIDEO)
                 m_codec = new QFfmpegVideoDecoder();
 
-            if (!m_codec or !m_codec->init_codec(codec, stream()->codecpar))
-            {
-                close();
-                return false;
-            }
-            else
-            {
+            if (m_codec && m_codec->init_codec(codec, stream()->codecpar))
                 return true;
-            }
-        }
-        else
-        {
-            close();
-            return false;
         }
     }
-    else
-    {
-        close();
-        return false;
-    }
+
+    close();
+    return false;
 }
 
 qint64 QFfmpegInputStream::decodedFramesAvailable() const
 {
-    if (m_codec)
-        return m_codec->decodedFramesAvailable();
-    else
+    if (!m_codec)
         return 0;
+
+    return m_codec->decodedFramesAvailable();
 }
 
 QFfmpegFrame *QFfmpegInputStream::takeDecodedFrame()
 {
-    if (m_codec)
-        return m_codec->takeDecodedFrame();
-    else
+    if (!m_codec)
         return Q_NULLPTR;
+
+    return m_codec->takeDecodedFrame();
 }
 
 bool QFfmpegInputStream::decodePacket(AVPacket *pkt)
 {
-    if (m_codec)
-        return m_codec->decodePacket(pkt);
-    else
+    if (!m_codec)
         return false;
+
+    return m_codec->decodePacket(pkt);
 }
 
 void QFfmpegInputStream::flush()

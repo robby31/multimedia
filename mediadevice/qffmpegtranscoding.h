@@ -37,6 +37,7 @@ public:
     virtual qint64 progress() Q_DECL_OVERRIDE;
 
 private:
+    void _close();
     virtual qint64 originalLengthInMSeconds() const Q_DECL_OVERRIDE;
 
 signals:

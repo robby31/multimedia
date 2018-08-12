@@ -71,8 +71,8 @@ bool QFfmpegMedia::isOpen()
 {
     if (context() != Q_NULLPTR)
         return context()->pb != Q_NULLPTR;
-    else
-        return false;
+
+    return false;
 }
 
 QStringList QFfmpegMedia::getMetaDataStream(const AVMediaType &type, const QString &param) const
@@ -139,6 +139,7 @@ QString QFfmpegMedia::metaData(const QString &tagName) const
 
 QHash<QString, double> QFfmpegMedia::getVolumeInfo(const int timeout)
 {
+    Q_UNUSED(timeout)
     QHash<QString, double> res;
     return res;
 }
@@ -147,46 +148,46 @@ QString QFfmpegMedia::getAudioFormat() const
 {
     if (audioStream())
         return audioStream()->format();
-    else
-        return QString();
+
+    return QString();
 }
 
 int QFfmpegMedia::getAudioChannelCount() const
 {
     if (audioStream())
         return audioStream()->channelCount();
-    else
-        return -1;
+
+    return -1;
 }
 
 int QFfmpegMedia::getAudioSamplerate() const
 {
     if (audioStream())
         return audioStream()->samplerate();
-    else
-        return -1;
+
+    return -1;
 }
 
 qint64 QFfmpegMedia::getAudioBitrate() const
 {
     if (audioStream())
         return audioStream()->bitrate();
-    else
-        return -1;
+
+    return -1;
 }
 
 QString QFfmpegMedia::getVideoResolution() const
 {
     if (videoStream())
         return videoStream()->resolution();
-    else
-        return QString();
+
+    return QString();
 }
 
 double QFfmpegMedia::getVideoFrameRate() const
 {
     if (videoStream())
         return videoStream()->frameRate();
-    else
-        return 0.0;
+
+    return 0.0;
 }

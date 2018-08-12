@@ -57,6 +57,9 @@ public:
     qint64 packetPosInMsec(AVPacket *pkt);
     qint64 packetNextPosInMsec(AVPacket *pkt);
 
+private:
+    void _close();
+
 public:
     static qint64 objectCounter;
 

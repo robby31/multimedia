@@ -8,16 +8,16 @@
 class QFfmpegOutputStream : public QFfmpegStream
 {
 public:
-    QFfmpegOutputStream();
-    virtual ~QFfmpegOutputStream() Q_DECL_OVERRIDE;
+    QFfmpegOutputStream() = default;
+    ~QFfmpegOutputStream() Q_DECL_OVERRIDE;
 
-    virtual bool isValid() const Q_DECL_OVERRIDE;
+    bool isValid() const Q_DECL_OVERRIDE;
 
-    virtual void close() Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
 
-    virtual void flush() Q_DECL_OVERRIDE;
+    void flush() Q_DECL_OVERRIDE;
 
-    virtual QFfmpegEncoder *codec() const Q_DECL_OVERRIDE;
+    QFfmpegEncoder *codec() const Q_DECL_OVERRIDE;
 
     bool init_encoding_stream(const AVCodecID id, AVFormatContext *fmtContext);
 
@@ -33,6 +33,9 @@ public:
     qint64 encodedPktAvailable() const;
     AVPacket *takeEncodedPkt();
     bool encodeFrame(QFfmpegFrame *frame);
+
+private:
+    void _close();
 
 private:
     QFfmpegEncoder *m_codec = Q_NULLPTR;

@@ -25,19 +25,16 @@ QFfmpegTranscoding::~QFfmpegTranscoding()
         m_outputMedia = Q_NULLPTR;
     }
 
-    close();
+    _close();
 }
 
 bool QFfmpegTranscoding::atEnd() const
 {
     if (!isOpen() or !m_outputMedia)
-    {
         return true;
-    }
-    else if (m_outputMedia)
-    {
+
+    if (m_outputMedia)
         return m_outputMedia->atEnd();
-    }
 
     return true;
 }
@@ -46,8 +43,8 @@ qint64 QFfmpegTranscoding::bytesAvailable() const
 {
     if (m_outputMedia)
         return m_outputMedia->bytesAvailable();
-    else
-        return -1;
+
+    return -1;
 }
 
 bool QFfmpegTranscoding::isReadyToOpen() const
@@ -122,7 +119,7 @@ void QFfmpegTranscoding::readyForOpening()
 {
     if (!url().isEmpty() && !m_inputMedia)
     {
-        QFfmpegInputMedia *input = new QFfmpegInputMedia();
+        auto input = new QFfmpegInputMedia();
         input->setParent(this);
         input->open(url());
         setInput(input);
@@ -132,7 +129,7 @@ void QFfmpegTranscoding::readyForOpening()
     {
         if (format() == WAV or format() == LPCM_S16BE or format() == LPCM_S16LE)
         {
-            if (m_inputMedia && m_inputMedia->audioStream() && m_inputMedia->audioStream()->samplerate() == 44100)
+            if (m_inputMedia->audioStream() && m_inputMedia->audioStream()->samplerate() == 44100)
                 setBitrate(1411200);
             else
                 setBitrate(1536000);
@@ -158,7 +155,7 @@ void QFfmpegTranscoding::_open()
             if (startByte() <= fullSize())
             {
                 double start_position = double(startByte())/double(fullSize())*double(lengthInSeconds());
-                if (!m_outputMedia->seek_time((qint64)start_position*1000))
+                if (!m_outputMedia->seek_time(static_cast<qint64>(start_position)*1000))
                     setError(QString("unable to seek media %1").arg(start_position));
             }
             else
@@ -227,24 +224,24 @@ qint64 QFfmpegTranscoding::posInMsec() const
 {
     if (m_outputMedia)
         return m_outputMedia->posInMsec();
-    else
-        return -1;
+
+    return -1;
 }
 
 qint64 QFfmpegTranscoding::progress()
 {
     if (lengthInMSeconds() < 0)
         return 0;
-    else
-        return qRound(100.0 * (posInMsec() / 1000.0) / lengthInSeconds());
+
+    return qRound(100.0 * (posInMsec() / 1000.0) / lengthInSeconds());
 }
 
 int QFfmpegTranscoding::exitCode() const
 {
     if (m_error.isEmpty())
         return 0;
-    else
-        return -1;
+
+    return -1;
 }
 
 void QFfmpegTranscoding::setError(const QString &message)
@@ -259,6 +256,11 @@ QString QFfmpegTranscoding::error() const
 }
 
 void QFfmpegTranscoding::close()
+{
+    _close();
+}
+
+void QFfmpegTranscoding::_close()
 {
     if (m_outputMedia)
     {
@@ -283,10 +285,10 @@ void QFfmpegTranscoding::close()
 
 qint64 QFfmpegTranscoding::bitrate() const
 {
-    if (m_outputMedia)
-        return m_outputMedia->getBitrate();
-    else
-        return -1;
+    if (!m_outputMedia)
+       return -1;
+
+    return m_outputMedia->getBitrate();
 }
 
 void QFfmpegTranscoding::setBitrate(const qint64 &bitrate)
@@ -464,8 +466,8 @@ qint64 QFfmpegTranscoding::originalLengthInMSeconds() const
 {
     if (m_inputMedia)
         return m_inputMedia->getDuration();
-    else
-        return -1;
+
+    return -1;
 }
 
 void QFfmpegTranscoding::startDemux()

@@ -1,14 +1,8 @@
 #include "qffmpegoutputstream.h"
 
-QFfmpegOutputStream::QFfmpegOutputStream():
-    QFfmpegStream()
-{
-
-}
-
 QFfmpegOutputStream::~QFfmpegOutputStream()
 {
-    close();
+    _close();
 }
 
 bool QFfmpegOutputStream::isValid() const
@@ -17,6 +11,11 @@ bool QFfmpegOutputStream::isValid() const
 }
 
 void QFfmpegOutputStream::close()
+{
+    _close();
+}
+
+void QFfmpegOutputStream::_close()
 {
     if (m_codec)
     {
@@ -49,26 +48,17 @@ bool QFfmpegOutputStream::init_encoding_stream(const AVCodecID id, AVFormatConte
                 close();
                 return false;
             }
-            else
-            {
-                /* Some formats want stream headers to be separate. */
-                if (fmtContext->oformat->flags & AVFMT_GLOBALHEADER)
-                    m_codec->codecCtx()->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-                return true;
-            }
-        }
-        else
-        {
-            close();
-            return false;
+            /* Some formats want stream headers to be separate. */
+            if (fmtContext->oformat->flags & AVFMT_GLOBALHEADER)
+                m_codec->codecCtx()->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+
+            return true;
         }
     }
-    else
-    {
-        close();
-        return false;
-    }
+
+    close();
+    return false;
 }
 
 bool QFfmpegOutputStream::openOutput()
@@ -88,58 +78,56 @@ bool QFfmpegOutputStream::openOutput()
 
         return m_codec->open() && (avcodec_parameters_from_context(stream()->codecpar, m_codec->codecCtx()) >= 0);
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 bool QFfmpegOutputStream::setSampleFmt(const AVSampleFormat &format)
 {
     if (m_codec)
         return m_codec->setSampleFmt(format);
-    else
-        return false;
+
+    return false;
 }
 
 bool QFfmpegOutputStream::setPixelFormat(const AVPixelFormat &format)
 {
     if (m_codec)
         return m_codec->setPixelFormat(format);
-    else
-        return false;
+
+    return false;
 }
 
 bool QFfmpegOutputStream::setChannelLayout(const uint64_t &layout)
 {
     if (m_codec)
         return m_codec->setChannelLayout(layout);
-    else
-        return false;
+
+    return false;
 }
 
 bool QFfmpegOutputStream::setSampleRate(const int &rate)
 {
     if (m_codec)
         return m_codec->setSampleRate(rate);
-    else
-        return false;
+
+    return false;
 }
 
 bool QFfmpegOutputStream::setBitRate(const qint64 &bitrate)
 {
     if (m_codec)
         return m_codec->setBitRate(bitrate);
-    else
-        return false;
+
+    return false;
 }
 
 qint64 QFfmpegOutputStream::encodedPktAvailable() const
 {
     if (m_codec)
         return m_codec->encodedPktAvailable();
-    else
-        return 0;
+
+    return 0;
 }
 
 AVPacket *QFfmpegOutputStream::takeEncodedPkt()
@@ -165,8 +153,8 @@ bool QFfmpegOutputStream::encodeFrame(QFfmpegFrame *frame)
 {
     if (m_codec)
         return m_codec->encodeFrame(frame);
-    else
-        return false;
+
+    return false;
 }
 
 void QFfmpegOutputStream::flush()

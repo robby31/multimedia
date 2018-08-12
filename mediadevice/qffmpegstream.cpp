@@ -10,10 +10,15 @@ QFfmpegStream::QFfmpegStream()
 QFfmpegStream::~QFfmpegStream()
 {
     objectCounter--;
-    close();
+    _close();
 }
 
 void QFfmpegStream::close()
+{
+    _close();
+}
+
+void QFfmpegStream::_close()
 {
     m_stream = Q_NULLPTR;
 }
@@ -30,10 +35,8 @@ bool QFfmpegStream::setStream(AVStream *stream)
         m_stream = stream;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 bool QFfmpegStream::setStream(AVStream *stream, int streamId)
@@ -43,10 +46,8 @@ bool QFfmpegStream::setStream(AVStream *stream, int streamId)
         m_stream->id = streamId;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 bool QFfmpegStream::setTimeBase(int num, int den)
@@ -57,18 +58,16 @@ bool QFfmpegStream::setTimeBase(int num, int den)
         m_stream->time_base.den = den;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 int QFfmpegStream::streamIndex() const
 {
     if (m_stream != Q_NULLPTR)
         return m_stream->index;
-    else
-        return -1;
+
+    return -1;
 }
 
 AVStream *QFfmpegStream::stream() const
@@ -80,72 +79,72 @@ AVSampleFormat QFfmpegStream::sampleFormat() const
 {
     if (codec())
         return codec()->sampleFormat();
-    else
-        return AV_SAMPLE_FMT_NONE;
+
+    return AV_SAMPLE_FMT_NONE;
 }
 
 AVPixelFormat QFfmpegStream::pixelFormat() const
 {
     if (codec())
         return codec()->pixelFormat();
-    else
-        return AV_PIX_FMT_NONE;
+
+    return AV_PIX_FMT_NONE;
 }
 
 int QFfmpegStream::channelCount() const
 {
     if (codec())
         return codec()->channelCount();
-    else
-        return -1;
+
+    return -1;
 }
 
 uint64_t QFfmpegStream::channelLayout() const
 {
     if (codec())
         return codec()->channelLayout();
-    else
-        return 0;
+
+    return 0;
 }
 
 int QFfmpegStream::samplerate() const
 {
     if (codec())
         return codec()->samplerate();
-    else
-        return -1;
+
+    return -1;
 }
 
 qint64 QFfmpegStream::bitrate() const
 {
     if (codec())
         return codec()->bitrate();
-    else
-        return -1;
+
+    return -1;
 }
 
 QString QFfmpegStream::format() const
 {
     if (codec())
         return codec()->format();
-    else
-        return QString();
+
+    return QString();
 }
 
 AVPacket *QFfmpegStream::attached_pic() const
 {
     if (m_stream != Q_NULLPTR && (m_stream->disposition & AV_DISPOSITION_ATTACHED_PIC))
         return &m_stream->attached_pic;
-    else
-        return Q_NULLPTR;
+
+    return Q_NULLPTR;
 }
 
 QString QFfmpegStream::resolution() const
 {
     if (codec())
         return codec()->resolution();
-    else
-        return QString();
+
+    return QString();
 }
 
 double QFfmpegStream::frameRate() const
@@ -155,19 +154,16 @@ double QFfmpegStream::frameRate() const
         AVRational frame_rate = m_stream->avg_frame_rate;
         if (frame_rate.den != 0)
             return (double) frame_rate.num / (double) frame_rate.den;
-        else
-            return 0.0;
     }
-    else
-        return 0.0;
+
+    return 0.0;
 }
 
 qint64 QFfmpegStream::getDuration() const
 {
     if (m_stream != Q_NULLPTR)
         return 1000 * m_stream->time_base.num * m_stream->duration / m_stream->time_base.den;
-    else
-     return -1;
+    return -1;
 }
 
 bool QFfmpegStream::setDuration(const qint64 &estimated_duration_Msec)
@@ -177,10 +173,8 @@ bool QFfmpegStream::setDuration(const qint64 &estimated_duration_Msec)
         m_stream->duration = qCeil((double)(estimated_duration_Msec * m_stream->time_base.den) / (double)(1000 * m_stream->time_base.num));
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 QString QFfmpegStream::metaData(const QString &tagName) const
@@ -205,10 +199,8 @@ qint64 QFfmpegStream::packetPosInMsec(AVPacket *pkt)
         AVRational time_base = m_stream->time_base;
         return (pkt->pts + codec()->codecCtx()->delay) * 1000 * time_base.num / time_base.den ;
     }
-    else
-    {
-        return -1;
-    }
+
+    return -1;
 }
 
 qint64 QFfmpegStream::packetNextPosInMsec(AVPacket *pkt)
@@ -218,8 +210,6 @@ qint64 QFfmpegStream::packetNextPosInMsec(AVPacket *pkt)
         AVRational time_base = m_stream->time_base;
         return (pkt->pts + pkt->duration + codec()->codecCtx()->delay) * 1000 * time_base.num / time_base.den ;
     }
-    else
-    {
-        return -1;
-    }
+
+    return -1;
 }

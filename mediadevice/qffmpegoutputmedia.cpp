@@ -1,14 +1,8 @@
 #include "qffmpegoutputmedia.h"
 
-QFfmpegOutputMedia::QFfmpegOutputMedia():
-    QFfmpegMedia()
-{
-
-}
-
 QFfmpegOutputMedia::~QFfmpegOutputMedia()
 {
-    close();
+    _close();
 }
 
 AVFormatContext *QFfmpegOutputMedia::context() const
@@ -18,18 +12,18 @@ AVFormatContext *QFfmpegOutputMedia::context() const
 
 QString QFfmpegOutputMedia::getFormat() const
 {
-    if (pFormatCtx != Q_NULLPTR)
-        return pFormatCtx->oformat->name;
-    else
+    if (!pFormatCtx or !pFormatCtx->oformat)
         return QString();
+
+    return pFormatCtx->oformat->name;
 }
 
 qint64 QFfmpegOutputMedia::getDuration() const
 {
-    if (m_inputMedia != Q_NULLPTR)
-        return m_inputMedia->getDuration();
-    else
+    if (!m_inputMedia)
         return -1;
+
+    return m_inputMedia->getDuration();
 }
 
 qint64 QFfmpegOutputMedia::getBitrate() const
@@ -73,12 +67,12 @@ qint64 QFfmpegOutputMedia::size() const
     return res;
 }
 
-bool QFfmpegOutputMedia::openFile(const QString &filename, QList<AVMediaType> l_mediaType)
+bool QFfmpegOutputMedia::openFile(const QString &filename, const QList<AVMediaType> &l_mediaType)
 {
     return openFile(filename, QString(), l_mediaType);
 }
 
-bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &formatName, QList<AVMediaType> l_mediaType)
+bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &formatName, const QList<AVMediaType>& l_mediaType)
 {
     QHash<AVMediaType, AVCodecID> mediaConfig;
     foreach (AVMediaType mediaType, l_mediaType)
@@ -87,7 +81,7 @@ bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &format
     return openFile(filename, formatName, mediaConfig);
 }
 
-bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &formatName, QHash<AVMediaType, AVCodecID> mediaConfig)
+bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &formatName, const QHash<AVMediaType, AVCodecID>& mediaConfig)
 {
     // guess format based on pathname extension
     int ret = -1;
@@ -101,61 +95,53 @@ bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &format
         setError(QString("unable to open %1").arg(filename));
         return false;
     }
-    else
-    {
-        foreach (AVMediaType mediaType, mediaConfig.keys())
-        {
-            if (mediaType == AVMEDIA_TYPE_AUDIO && mediaConfig[mediaType] != AV_CODEC_ID_NONE)
-                pFormatCtx->oformat->audio_codec = mediaConfig[mediaType];
-            else if (mediaType == AVMEDIA_TYPE_VIDEO && mediaConfig[mediaType] != AV_CODEC_ID_NONE)
-                pFormatCtx->oformat->video_codec = mediaConfig[mediaType];
-        }
 
-        // initialize stream
-        if (!init_stream(mediaConfig.keys()))
-        {
-            setError(QString("unable to initialize stream in file %1").arg(filename));
-            avformat_free_context(pFormatCtx);
-            pFormatCtx = Q_NULLPTR;
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+    for (auto it = mediaConfig.constBegin(); it != mediaConfig.constEnd(); ++it)
+    {
+        if (it.key() == AVMEDIA_TYPE_AUDIO && it.value() != AV_CODEC_ID_NONE)
+            pFormatCtx->oformat->audio_codec = it.value();
+        else if (it.key() == AVMEDIA_TYPE_VIDEO && it.value() != AV_CODEC_ID_NONE)
+            pFormatCtx->oformat->video_codec = it.value();
     }
+
+    // initialize stream
+    if (!init_stream(mediaConfig.keys()))
+    {
+        setError(QString("unable to initialize stream in file %1").arg(filename));
+        avformat_free_context(pFormatCtx);
+        pFormatCtx = Q_NULLPTR;
+        return false;
+    }
+
+    return true;
 }
 
-bool QFfmpegOutputMedia::openBuffer(const QString &format, QHash<AVMediaType, AVCodecID> mediaConfig)
+bool QFfmpegOutputMedia::openBuffer(const QString &format, const QHash<AVMediaType, AVCodecID> &mediaConfig)
 {
     if (avformat_alloc_output_context2(&pFormatCtx, Q_NULLPTR, format.toStdString().c_str(), Q_NULLPTR) < 0 or pFormatCtx == Q_NULLPTR or pFormatCtx->oformat == Q_NULLPTR)
     {
         setError(QString("unable to open buffer for format %1").arg(format));
         return false;
     }
-    else
-    {
-        foreach (AVMediaType mediaType, mediaConfig.keys())
-        {
-            if (mediaType == AVMEDIA_TYPE_AUDIO && mediaConfig[mediaType] != AV_CODEC_ID_NONE)
-                pFormatCtx->oformat->audio_codec = mediaConfig[mediaType];
-            else if (mediaType == AVMEDIA_TYPE_VIDEO && mediaConfig[mediaType] != AV_CODEC_ID_NONE)
-                pFormatCtx->oformat->video_codec = mediaConfig[mediaType];
-        }
 
-        // initialize stream
-        if (!init_stream(mediaConfig.keys()))
-        {
-            setError(QString("unable to initialize stream in buffer for format %1").arg(format));
-            avformat_free_context(pFormatCtx);
-            pFormatCtx = Q_NULLPTR;
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+    for (auto it = mediaConfig.constBegin(); it != mediaConfig.constEnd(); ++it)
+    {
+        if (it.key() == AVMEDIA_TYPE_AUDIO && it.value() != AV_CODEC_ID_NONE)
+            pFormatCtx->oformat->audio_codec = it.value();
+        else if (it.key() == AVMEDIA_TYPE_VIDEO && it.value() != AV_CODEC_ID_NONE)
+            pFormatCtx->oformat->video_codec = it.value();
     }
+
+    // initialize stream
+    if (!init_stream(mediaConfig.keys()))
+    {
+        setError(QString("unable to initialize stream in buffer for format %1").arg(format));
+        avformat_free_context(pFormatCtx);
+        pFormatCtx = Q_NULLPTR;
+        return false;
+    }
+
+    return true;
 }
 
 QFfmpegInputMedia *QFfmpegOutputMedia::inputMedia()
@@ -188,21 +174,17 @@ bool QFfmpegOutputMedia::setInputMedia(QFfmpegInputMedia *input)
         {
             return true;
         }
-        else
-        {
-            qCritical() << "unable to open codec";
-            return false;
-        }
-    }
-    else
-    {
-        qCritical() << "invalid media input" << input;
+
+        qCritical() << "unable to open codec";
         return false;
     }
+
+    qCritical() << "invalid media input" << input;
+    return false;
 }
 
 
-bool QFfmpegOutputMedia::init_stream(QList<AVMediaType> l_mediaType)
+bool QFfmpegOutputMedia::init_stream(const QList<AVMediaType> &l_mediaType)
 {
     if (l_mediaType.contains(AVMEDIA_TYPE_AUDIO) && pFormatCtx != Q_NULLPTR && pFormatCtx->oformat != Q_NULLPTR && pFormatCtx->oformat->audio_codec != AV_CODEC_ID_NONE)
     {
@@ -222,10 +204,8 @@ bool QFfmpegOutputMedia::init_stream(QList<AVMediaType> l_mediaType)
         pFormatCtx = Q_NULLPTR;
         return false;
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }
 
 bool QFfmpegOutputMedia::openCodec()
@@ -283,10 +263,8 @@ bool QFfmpegOutputMedia::openCodec()
 
             return false;
         }
-        else
-        {
-            m_headerWritten = true;
-        }
+
+        m_headerWritten = true;
     }
     else
     {
@@ -298,6 +276,11 @@ bool QFfmpegOutputMedia::openCodec()
 }
 
 bool QFfmpegOutputMedia::close()
+{
+    return _close();
+}
+
+bool QFfmpegOutputMedia::_close()
 {
     if (isOpen() && pFormatCtx != Q_NULLPTR)
     {
@@ -349,8 +332,8 @@ bool QFfmpegOutputMedia::seek_time(const qint64 &ms, const qint64 &min_ts, const
 {
     if (m_inputMedia)
         return m_inputMedia->seek_time(ms, min_ts, max_ts);
-    else
-        return false;
+
+    return false;
 }
 
 bool QFfmpegOutputMedia::atEnd() const
@@ -360,16 +343,16 @@ bool QFfmpegOutputMedia::atEnd() const
 
     if (m_inputMedia && m_outputBuffer)
         return m_inputMedia->atEnd() && m_outputBuffer->atEnd();
-    else
-        return true;
+
+    return true;
 }
 
 qint64 QFfmpegOutputMedia::bytesAvailable() const
 {
     if (m_outputBuffer != Q_NULLPTR)
         return m_outputBuffer->bytesAvailable();
-    else
-        return -1;
+
+    return -1;
 }
 
 QByteArray QFfmpegOutputMedia::read(const qint64 &maxlen)
@@ -391,11 +374,9 @@ QByteArray QFfmpegOutputMedia::read(const qint64 &maxlen)
 
         return res;
     }
-    else
-    {
-        qCritical() << "buffer is not initialised, unable to read it.";
-        return QByteArray();
-    }
+
+    qCritical() << "buffer is not initialised, unable to read it.";
+    return QByteArray();
 }
 
 void QFfmpegOutputMedia::demuxInputToBufferSize(const qint64 &size)
@@ -461,11 +442,9 @@ bool QFfmpegOutputMedia::encodeMedia()
 
         return true;
     }
-    else
-    {
-        qCritical() << "invalid stream output, codec is not correctly initialised.";
-        return false;
-    }
+
+    qCritical() << "invalid stream output, codec is not correctly initialised.";
+    return false;
 }
 
 bool QFfmpegOutputMedia::writeFrame(QFfmpegOutputStream *stream)
@@ -489,11 +468,9 @@ bool QFfmpegOutputMedia::writeFrame(QFfmpegOutputStream *stream)
         delete pkt;
         return true;
     }
-    else
-    {
-        qCritical() << "unable to write frame in media which is not open.";
-        return false;
-    }
+
+    qCritical() << "unable to write frame in media which is not open.";
+    return false;
 }
 
 qint64 QFfmpegOutputMedia::posInMsec() const
@@ -531,8 +508,8 @@ qint64 QFfmpegOutputMedia::timeStartInMsec() const
 {
     if (m_inputMedia)
         return m_inputMedia->timeStartInMsec();
-    else
-        return -1;
+
+    return -1;
 }
 
 void QFfmpegOutputMedia::setTimeStartInMsec(const qint64 &msec)
@@ -547,8 +524,8 @@ qint64 QFfmpegOutputMedia::timeEndInMsec() const
 {
     if (m_inputMedia)
         return m_inputMedia->timeEndInMsec();
-    else
-        return -1;
+
+    return -1;
 }
 
 void QFfmpegOutputMedia::setTimeEndInMsec(const qint64 &msec)
@@ -584,15 +561,12 @@ qint64 QFfmpegOutputMedia::headerSize() const
         QString formatName = QString(pFormatCtx->oformat->name);
         if (formatName == "mp3")
             return 2000;
-        else if (formatName == "wav")
+
+        if (formatName == "wav")
             return 78;
-        else
-            return 0;
     }
-    else
-    {
-        return 0;
-    }
+
+    return 0;
 }
 
 qint64 QFfmpegOutputMedia::trailerSize() const
@@ -605,16 +579,11 @@ double QFfmpegOutputMedia::overhead_factor() const
     QString tmpFormat = getFormat();
 
     if (tmpFormat == "ipod")
-    {
         return 1.03;
-    }
-    else if (!tmpFormat.isEmpty())
-    {
+
+    if (!tmpFormat.isEmpty())
         return 1.0;
-    }
-    else
-    {
-        qWarning() << "format is empty, return default overhead factor : 1.0";
-        return 1.0;
-    }
+
+    qWarning() << "format is empty, return default overhead factor : 1.0";
+    return 1.0;
 }

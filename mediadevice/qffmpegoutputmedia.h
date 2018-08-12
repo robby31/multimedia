@@ -10,34 +10,34 @@ class QFfmpegOutputMedia : public QFfmpegMedia
 {
 
 public:
-    QFfmpegOutputMedia();
-    virtual ~QFfmpegOutputMedia() Q_DECL_OVERRIDE;
+    QFfmpegOutputMedia() = default;
+    ~QFfmpegOutputMedia() Q_DECL_OVERRIDE;
 
-    virtual AVFormatContext *context() const Q_DECL_OVERRIDE;
+    AVFormatContext *context() const Q_DECL_OVERRIDE;
 
-    virtual QFfmpegOutputStream *audioStream() const Q_DECL_OVERRIDE;
-    virtual QFfmpegOutputStream *videoStream() const Q_DECL_OVERRIDE;
-    virtual QFfmpegOutputStream *subtitleStream() const Q_DECL_OVERRIDE;
+    QFfmpegOutputStream *audioStream() const Q_DECL_OVERRIDE;
+    QFfmpegOutputStream *videoStream() const Q_DECL_OVERRIDE;
+    QFfmpegOutputStream *subtitleStream() const Q_DECL_OVERRIDE;
 
-    virtual QString getFormat() const Q_DECL_OVERRIDE;
-    virtual qint64 getDuration() const Q_DECL_OVERRIDE;
-    virtual qint64 getBitrate() const Q_DECL_OVERRIDE;
-    virtual qint64 size() const Q_DECL_OVERRIDE;
+    QString getFormat() const Q_DECL_OVERRIDE;
+    qint64 getDuration() const Q_DECL_OVERRIDE;
+    qint64 getBitrate() const Q_DECL_OVERRIDE;
+    qint64 size() const Q_DECL_OVERRIDE;
 
     void setSize(const qint64 &size);
 
-    bool openFile(const QString &filename, QList<AVMediaType> l_mediaType);
-    bool openFile(const QString &filename, const QString &formatName, QList<AVMediaType> l_mediaType);
-    bool openFile(const QString &filename, const QString &formatName, QHash<AVMediaType, AVCodecID> mediaConfig);
+    bool openFile(const QString &filename, const QList<AVMediaType>& l_mediaType);
+    bool openFile(const QString &filename, const QString &formatName, const QList<AVMediaType>& l_mediaType);
+    bool openFile(const QString &filename, const QString &formatName, const QHash<AVMediaType, AVCodecID>& mediaConfig);
 
-    bool openBuffer(const QString &format, QHash<AVMediaType, AVCodecID> mediaConfig);
-    virtual bool close() Q_DECL_OVERRIDE;
+    bool openBuffer(const QString &format, const QHash<AVMediaType, AVCodecID>& mediaConfig);
+    bool close() Q_DECL_OVERRIDE;
     bool seek_time(const qint64 &ms, const qint64 &min_ts = INT64_MIN, const qint64 &max_ts = INT64_MAX);
 
     QFfmpegInputMedia *inputMedia();
     bool setInputMedia(QFfmpegInputMedia *input);
 
-    virtual bool atEnd() const Q_DECL_OVERRIDE;
+    bool atEnd() const Q_DECL_OVERRIDE;
     qint64 bytesAvailable() const;
     QByteArray read(const qint64 &maxlen);
 
@@ -49,14 +49,16 @@ public:
 
     qint64 posInMsec() const;
 
-    virtual void setTimeStartInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
-    virtual qint64 timeStartInMsec() const Q_DECL_OVERRIDE;
+    void setTimeStartInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
+    qint64 timeStartInMsec() const Q_DECL_OVERRIDE;
 
-    virtual void setTimeEndInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
-    virtual qint64 timeEndInMsec() const Q_DECL_OVERRIDE;
+    void setTimeEndInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
+    qint64 timeEndInMsec() const Q_DECL_OVERRIDE;
 
 private:
-    bool init_stream(QList<AVMediaType> l_mediaType);
+    bool _close();
+
+    bool init_stream(const QList<AVMediaType>& l_mediaType);
 
     bool openCodec();
 
