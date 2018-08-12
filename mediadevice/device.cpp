@@ -27,8 +27,8 @@ qint64 Device::progress()
 {
     if (size() <= 0)
         return 0;
-    else
-        return qCeil(100.0*double(pos())/double(size()));
+
+    return qCeil(100.0*double(pos())/double(size()));
 }
 
 qint64 Device::timeSeekStart() const
@@ -166,7 +166,7 @@ void Device::requestData(qint64 maxlen)
     }
 }
 
-bool Device::waitReadyToOpen(const int &timeout)
+bool Device::waitReadyToOpen(const unsigned long &timeout)
 {
     QMutexLocker locker(&mutex);
 
@@ -175,10 +175,8 @@ bool Device::waitReadyToOpen(const int &timeout)
         qDebug() << "wait device is ready to open" << this;
         return readyToOpenCondition.wait(locker.mutex(), timeout);
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }
 
 void Device::deviceReadyToOpen()
@@ -195,8 +193,6 @@ bool Device::waitOpen(const int &timeout)
         qDebug() << "wait device until open" << this;
         return isopenedCondition.wait(locker.mutex(), timeout);
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }

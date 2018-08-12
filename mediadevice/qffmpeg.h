@@ -14,7 +14,7 @@ class QFfmpeg : public QObject
 public:
     explicit QFfmpeg(QObject *parent = Q_NULLPTR);
     explicit QFfmpeg(const QString &filename, QObject *parent = Q_NULLPTR);
-    virtual ~QFfmpeg() Q_DECL_OVERRIDE;
+    ~QFfmpeg() Q_DECL_OVERRIDE;
 
     bool isValid() const;
 
@@ -28,7 +28,7 @@ public:
     int getAudioSamplerate() const;
     int getAudioBitrate() const;
     QString getAudioFormat() const;
-    QHash<QString, double> getVolumeInfo(const int timeout = 30000);
+    QHash<QString, double> getVolumeInfo(const int& timeout = 30000);
 
     QString getVideoResolution() const;
     double getVideoFrameRate() const;
@@ -63,13 +63,13 @@ private slots:
 
 private:
     static QString EXE_DIRPATH;
-    QProcess *programFfmpegProbe;
-    QProcess *programFfmpegPicture;
+    QProcess *programFfmpegProbe = Q_NULLPTR;
+    QProcess *programFfmpegPicture = Q_NULLPTR;
     QString filename;
     QDomDocument xmlResProbe;
     QDomNode audioStream;
     QDomNode videoStream;
-    QByteArray *picture;
+    QByteArray *picture = Q_NULLPTR;
 };
 
 #endif // QFFMPEG_H

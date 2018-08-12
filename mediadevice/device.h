@@ -14,7 +14,7 @@ class Device : public QObject
 
 public:
     explicit Device(QObject *parent = Q_NULLPTR);
-    virtual ~Device() Q_DECL_OVERRIDE;
+    ~Device() Q_DECL_OVERRIDE;
 
     virtual void setTimeSeek(qint64 start, qint64 end);
     qint64 timeSeekStart() const;
@@ -44,7 +44,7 @@ public:
     void appendLog(const QString &msg);
 
     virtual bool isReadyToOpen() const = 0;
-    bool waitReadyToOpen(const int &timeout=30000);
+    bool waitReadyToOpen(const unsigned long &timeout=30000);
     bool waitOpen(const int &timeout=30000);
 
     virtual QByteArray read(qint64 maxlen) = 0;

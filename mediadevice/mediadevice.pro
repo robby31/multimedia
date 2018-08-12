@@ -11,6 +11,8 @@ TARGET = $$qtLibraryTarget(mediadevice)
 TEMPLATE = lib
 CONFIG += staticlib
 
+CONFIG += c++14
+
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 !exists($$(MYLIBRARY)) {

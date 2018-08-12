@@ -25,26 +25,14 @@ QString QFfmpeg::getVersion()
             QByteArray data = process.readLine();
             return data;
         }
-        else
-        {
-            return QString();
-        }
     }
-    else
-    {
-        return QString();
-    }
+
+    return QString();
 }
 
 QFfmpeg::QFfmpeg(QObject *parent):
     QObject(parent),
-    programFfmpegProbe(Q_NULLPTR),
-    programFfmpegPicture(Q_NULLPTR),
-    filename(),
-    xmlResProbe(),
-    audioStream(),
-    videoStream(),
-    picture(Q_NULLPTR)
+    filename()
 {
     ANALYZER
 
@@ -66,13 +54,7 @@ QFfmpeg::QFfmpeg(QObject *parent):
 
 QFfmpeg::QFfmpeg(const QString &filename, QObject *parent):
     QObject(parent),
-    programFfmpegProbe(Q_NULLPTR),
-    programFfmpegPicture(Q_NULLPTR),
-    filename(),
-    xmlResProbe(),
-    audioStream(),
-    videoStream(),
-    picture(Q_NULLPTR)
+    filename()
 {
     ANALYZER
 
@@ -116,14 +98,10 @@ QFfmpeg::~QFfmpeg()
 bool QFfmpeg::isValid() const
 {
     if (EXE_DIRPATH.isEmpty())
-    {
         return false;
-    }
-    else
-    {
-        QDir folder(EXE_DIRPATH);
-        return folder.exists();
-    }
+
+    QDir folder(EXE_DIRPATH);
+    return folder.exists();
 }
 
 void QFfmpeg::probeFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -136,7 +114,7 @@ void QFfmpeg::probeFinished(int exitCode, QProcess::ExitStatus exitStatus)
     audioStream.clear();
     videoStream.clear();
 
-    QProcess *process = qobject_cast<QProcess*>(sender());
+    auto process = qobject_cast<QProcess*>(sender());
 
     if (process && exitStatus == QProcess::NormalExit)
     {
@@ -205,10 +183,8 @@ QString QFfmpeg::getFormat() const
         QDomNode format = xmlResProbe.elementsByTagName("format").at(0);
         return format.attributes().namedItem("format_name").nodeValue();
     }
-    else
-    {
-        return QString();
-    }
+
+    return QString();
 }
 
 qint64 QFfmpeg::size() const
@@ -218,10 +194,8 @@ qint64 QFfmpeg::size() const
         QDomNode format = xmlResProbe.elementsByTagName("format").at(0);
         return format.attributes().namedItem("size").nodeValue().toLongLong();
     }
-    else
-    {
-        return -1;
-    }
+
+    return -1;
 }
 
 int QFfmpeg::getBitrate() const
@@ -231,10 +205,8 @@ int QFfmpeg::getBitrate() const
         QDomNode format = xmlResProbe.elementsByTagName("format").at(0);
         return format.attributes().namedItem("bit_rate").nodeValue().toInt();
     }
-    else
-    {
-        return -1;
-    }
+
+    return -1;
 }
 
 QString QFfmpeg::getAudioFormat() const
@@ -296,7 +268,7 @@ QString QFfmpeg::getVideoResolution() const
         QString width = videoStream.attributes().namedItem("width").nodeValue();
         QString height = videoStream.attributes().namedItem("height").nodeValue();
         if (!width.isEmpty() && !height.isEmpty())
-            return QString("%1x%2").arg(width).arg(height);
+            return QString("%1x%2").arg(width, height);
     }
     return QString();
 }
@@ -310,13 +282,9 @@ double QFfmpeg::getVideoFrameRate() const
         QString strFrameRate = videoStream.attributes().namedItem("avg_frame_rate").nodeValue();
         if (pattern.indexIn(strFrameRate) != -1 && pattern.cap(2).toDouble() != 0.0)
             return pattern.cap(1).toDouble()/pattern.cap(2).toDouble();
-        else
-            return 0.0;
     }
-    else
-    {
-        return 0.0;
-    }
+
+    return 0.0;
 }
 
 QStringList QFfmpeg::getStreamsTag(const QString &codec_type, const QString &tagName) const
@@ -392,7 +360,7 @@ void QFfmpeg::pictureFinished(int exitCode, QProcess::ExitStatus exitStatus)
 
     Q_UNUSED(exitCode)
 
-    QProcess *process = qobject_cast<QProcess*>(sender());
+    auto process = qobject_cast<QProcess*>(sender());
 
     if (process && exitStatus == QProcess::NormalExit)
     {
@@ -435,11 +403,9 @@ QByteArray QFfmpeg::getPicture() const {
                 ANALYZER_RETURN
                 return QByteArray();
             }
-            else
-            {
-                ANALYZER_RETURN
-                return *picture;
-            }
+
+            ANALYZER_RETURN
+            return *picture;
         }
 
         ANALYZER_RETURN
@@ -450,7 +416,7 @@ QByteArray QFfmpeg::getPicture() const {
     return QByteArray();
 }
 
-QHash<QString, double> QFfmpeg::getVolumeInfo(const int timeout)
+QHash<QString, double> QFfmpeg::getVolumeInfo(const int& timeout)
 {
     ANALYZER
 
@@ -477,7 +443,7 @@ QHash<QString, double> QFfmpeg::getVolumeInfo(const int timeout)
             }
             else
             {
-                QRegularExpression pattern("\\[Parsed_volumedetect_0.*\\]\\s*(\\w+):\\s*([\\+\\-\\.\\w]+)");
+                QRegularExpression pattern(R"(\[Parsed_volumedetect_0.*\]\s*(\w+):\s*([\+\-\.\w]+))");
 
                 QString data = process.readAllStandardError();
 
@@ -560,17 +526,10 @@ bool QFfmpeg::waitProbeFinished() const
             ANALYZER_RETURN
             return res;
         }
-        else
-        {
-            ANALYZER_RETURN
-            return true;
-        }
     }
-    else
-    {
-        ANALYZER_RETURN
-        return true;
-    }
+
+    ANALYZER_RETURN
+    return true;
 }
 
 void QFfmpeg::probeDestroyed()
@@ -584,13 +543,9 @@ bool QFfmpeg::waitPictureFinished() const
     {
         if (programFfmpegPicture->state() != QProcess::NotRunning)
             return programFfmpegPicture->waitForFinished();
-        else
-            return true;
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }
 
 void QFfmpeg::pictureDestroyed()
