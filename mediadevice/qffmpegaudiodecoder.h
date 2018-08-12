@@ -6,7 +6,7 @@
 class QFfmpegAudioDecoder : public QFfmpegDecoder
 {
 public:
-    QFfmpegAudioDecoder();
+    QFfmpegAudioDecoder() = default;
 };
 
 #endif // QFFMPEGAUDIODECODER_H

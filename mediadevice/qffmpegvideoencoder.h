@@ -10,16 +10,17 @@ extern "C" {
 class QFfmpegVideoEncoder : public QFfmpegEncoder
 {
 public:
-    QFfmpegVideoEncoder();
-    virtual ~QFfmpegVideoEncoder() Q_DECL_OVERRIDE;
+    QFfmpegVideoEncoder() = default;
+    ~QFfmpegVideoEncoder() Q_DECL_OVERRIDE;
 
-    virtual void close() Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
 
-    virtual bool setInput(QFfmpegCodec *codec_input) Q_DECL_OVERRIDE;
+    bool setInput(QFfmpegCodec *codec_input) Q_DECL_OVERRIDE;
 
-    virtual bool encodeFrame(QFfmpegFrame *frame) Q_DECL_OVERRIDE;
+    bool encodeFrame(QFfmpegFrame *frame) Q_DECL_OVERRIDE;
 
 private:
+    void _close();
     bool init_rescale(QFfmpegCodec *input);
     QFfmpegFrame *rescaleFrame(QFfmpegFrame *frame);
 

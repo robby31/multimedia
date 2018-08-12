@@ -12,7 +12,7 @@ class StreamingFile : public Device
     Q_OBJECT
 
 public:
-    explicit StreamingFile(QString filename, QObject *parent = Q_NULLPTR);
+    explicit StreamingFile(const QString& filename, QObject *parent = Q_NULLPTR);
 
     virtual void setTimeSeek(qint64 start, qint64 end) Q_DECL_OVERRIDE;
     virtual void setRange(qint64 startByte, qint64 endByte) Q_DECL_OVERRIDE;

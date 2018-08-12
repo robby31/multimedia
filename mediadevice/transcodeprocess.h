@@ -11,22 +11,22 @@ class TranscodeProcess : public TranscodeDevice
 
 public:
     explicit TranscodeProcess(QObject *parent = Q_NULLPTR);
-    virtual ~TranscodeProcess() Q_DECL_OVERRIDE;
+    ~TranscodeProcess() Q_DECL_OVERRIDE;
 
     bool isKilled() const { return killTranscodeProcess; }
-    virtual bool waitForFinished(int msecs = 30000) Q_DECL_OVERRIDE;
+    bool waitForFinished(int msecs = 30000) Q_DECL_OVERRIDE;
 
-    virtual int exitCode() const Q_DECL_OVERRIDE { return m_process.exitCode(); }
+    int exitCode() const Q_DECL_OVERRIDE { return m_process.exitCode(); }
 
-    void setOriginalLengthInMSeconds(const qint64 duration);
+    void setOriginalLengthInMSeconds(const qint64& duration);
 
-    virtual qint64 bitrate() const Q_DECL_OVERRIDE;  // bitrate in kbits/sec
-    virtual void setBitrate(const qint64 &bitrate) Q_DECL_OVERRIDE;
+    qint64 bitrate() const Q_DECL_OVERRIDE;  // bitrate in kbits/sec
+    void setBitrate(const qint64 &bitrate) Q_DECL_OVERRIDE;
 
-    virtual bool atEnd() const Q_DECL_OVERRIDE;
-    virtual qint64 bytesAvailable() const Q_DECL_OVERRIDE  { return m_process.bytesAvailable(); }
+    bool atEnd() const Q_DECL_OVERRIDE;
+    qint64 bytesAvailable() const Q_DECL_OVERRIDE  { return m_process.bytesAvailable(); }
 
-    virtual QByteArray read(qint64 maxlen) Q_DECL_OVERRIDE;
+    QByteArray read(qint64 maxlen) Q_DECL_OVERRIDE;
 
 protected:
     void setProgram(const QString &program)         { m_process.setProgram(program);        }
@@ -37,13 +37,13 @@ private:
     virtual void updateArguments() = 0;
     qint64 transcodedPos() const { return pos() + bytesAvailable(); }  // position in bytes of transcoded data
     qint64 transcodedProgress() const;
-    virtual qint64 originalLengthInMSeconds() const Q_DECL_OVERRIDE;
+    qint64 originalLengthInMSeconds() const Q_DECL_OVERRIDE;
 
 public slots:
-    virtual void close() Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
 
 private slots:
-    virtual void _open() Q_DECL_OVERRIDE;
+    void _open() Q_DECL_OVERRIDE;
     void processStarted();
     void dataAvailable();
     void errorTrancodedData(const QProcess::ProcessError &error);

@@ -1,6 +1,6 @@
 #include "streamingfile.h"
 
-StreamingFile::StreamingFile(QString filename, QObject *parent) :
+StreamingFile::StreamingFile(const QString &filename, QObject *parent) :
     Device(parent),
     m_file(filename, parent)
 {
@@ -57,8 +57,8 @@ qint64 StreamingFile::pos() const
 {
     if (startByte() != -1 && m_file.pos() >= startByte())
         return m_file.pos() - startByte();
-    else
-        return m_file.pos();
+
+    return m_file.pos();
 }
 
 bool StreamingFile::atEnd() const

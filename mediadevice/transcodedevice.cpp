@@ -5,24 +5,25 @@ TranscodeDevice::TranscodeDevice(QObject *parent) :
     m_opened(false),
     m_pos(0),
     m_url(),
-    transcodeClock(),
     m_format(UNKNOWN),
-    m_audioLanguages(),
-    m_subtitleLanguages(),
     m_frameRate(""),
     m_audioChannelCount(-1),
-    m_audioSampleRate(-1),
-    m_volumeInfo()
+    m_audioSampleRate(-1)
 {
     connect(this, SIGNAL(openSignal()), this, SLOT(_open()));
 }
 
 TranscodeDevice::~TranscodeDevice()
 {
-    close();
+    _close();
 }
 
 void TranscodeDevice::close()
+{
+    _close();
+}
+
+void TranscodeDevice::_close()
 {
     m_opened = false;
     m_pos = 0;
@@ -59,11 +60,9 @@ qint64 TranscodeDevice::size() const
 
         return tmp_size;
     }
-    else
-    {
-        qWarning() << "length or bitrate is invalid" << lengthInMSeconds() << bitrate() << "full size = " << tmp_size << url();
-        return -1;
-    }
+
+    qWarning() << "length or bitrate is invalid" << lengthInMSeconds() << bitrate() << "full size = " << tmp_size << url();
+    return -1;
 }
 
 qint64 TranscodeDevice::lengthInSeconds() const
@@ -77,27 +76,25 @@ qint64 TranscodeDevice::lengthInMSeconds() const
     {
         if (timeSeekEnd() > timeSeekStart() && (timeSeekEnd()*1000) < originalLengthInMSeconds())
             return (timeSeekEnd() - timeSeekStart())*1000;
-        else
-            return originalLengthInMSeconds() - timeSeekStart()*1000;
+
+        return originalLengthInMSeconds() - timeSeekStart()*1000;
     }
-    else
-    {
-        if (timeSeekEnd() > 0 && (timeSeekEnd()*1000) < originalLengthInMSeconds())
-            return timeSeekEnd()*1000;
-        else
-            return originalLengthInMSeconds();
-    }
+
+    if (timeSeekEnd() > 0 && (timeSeekEnd()*1000) < originalLengthInMSeconds())
+        return timeSeekEnd()*1000;
+
+    return originalLengthInMSeconds();
 }
 
 qint64 TranscodeDevice::transcodedProgress() const
 {
     if (size()==0)
         return 0;
-    else
-        return qint64(100.0*double(transcodedPos())/double(size()));
+
+    return qint64(100.0*double(transcodedPos())/double(size()));
 }
 
-void TranscodeDevice::setVolumeInfo(const QHash<QString, double> info)
+void TranscodeDevice::setVolumeInfo(const QHash<QString, double>& info)
 {
     m_volumeInfo = info;
 }
@@ -126,11 +123,9 @@ bool TranscodeDevice::open()
         qCritical() << "url is not defined";
         return false;
     }
-    else
-    {
-        emit openSignal();
-        return true;
-    }
+
+    emit openSignal();
+    return true;
 }
 
 bool TranscodeDevice::isReadyToOpen() const
@@ -144,13 +139,11 @@ qint64 TranscodeDevice::fullSize() const
     {
         if (format() == MP3)
             return (double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0 + 2000;   // header size = 2000 bytes
-        else
-            return overheadfactor()*(double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0;
+
+        return overheadfactor()*(double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0;
     }
-    else
-    {
-        return -1;
-    }
+
+    return -1;
 }
 
 void TranscodeDevice::setRange(qint64 startByte, qint64 endByte)

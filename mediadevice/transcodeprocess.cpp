@@ -15,8 +15,8 @@ TranscodeProcess::TranscodeProcess(QObject *parent) :
 
 TranscodeProcess::~TranscodeProcess()
 {
-    QString msg = QString("DESTROY TranscodeProcess, bytes available:%1, state:%2, paused?%3, durationBuffer:%4, maxBufferSize:%5").arg(bytesAvailable()).arg(m_process.state()).arg(m_paused).arg(durationBuffer()).arg(maxBufferSize());
-    qDebug() << msg;
+//    QString msg = QString("DESTROY TranscodeProcess, bytes available:%1, state:%2, paused?%3, durationBuffer:%4, maxBufferSize:%5").arg(bytesAvailable()).arg(m_process.state()).arg(m_paused).arg(durationBuffer()).arg(maxBufferSize());
+//    qDebug() << msg;
 
     m_process.deleteLater();
 }
@@ -66,8 +66,8 @@ bool TranscodeProcess::atEnd() const
 
     if (!isOpen() || bytesAvailable()>0 || m_process.state() == QProcess::Running)
         return false;
-    else
-        return m_process.atEnd();
+
+    return m_process.atEnd();
 }
 
 QByteArray TranscodeProcess::read(qint64 maxlen)
@@ -105,7 +105,7 @@ void TranscodeProcess::appendTranscodingLogMessage()
 void TranscodeProcess::errorTrancodedData(const QProcess::ProcessError &error)
 {
     // trancoding failed
-    if (isKilled() == false)
+    if (!isKilled())
     {
         // an error occured
         appendLog(QString("ERROR Transcoding at %3% : error n°%2 - %1.").arg(m_process.errorString()).arg(error).arg(transcodedProgress()));
@@ -137,7 +137,7 @@ void TranscodeProcess::finishedTranscodeData(const int &exitCode, const QProcess
     appendLog(QString("finished transcoding, %1 remaining bytes.").arg(bytesAvailable()));
     #endif
 
-    if (isKilled() == false)
+    if (!isKilled())
     {
         if (exitCode != 0)
         {
@@ -158,7 +158,7 @@ void TranscodeProcess::finishedTranscodeData(const int &exitCode, const QProcess
 
 void TranscodeProcess::processStarted()
 {
-    qDebug() << QString("Transcoding process %1 %2").arg(m_process.program()).arg(m_process.arguments().join(' '));
+    qDebug() << QString("Transcoding process %1 %2").arg(m_process.program(), m_process.arguments().join(' '));
     appendLog(m_process.program()+' ');
     appendLog(m_process.arguments().join(' '));
 
@@ -228,10 +228,10 @@ void TranscodeProcess::resume()
 
 qint64 TranscodeProcess::transcodedProgress() const
 {
-    if (size()==0)
+    if (size() == 0)
         return 0;
-    else
-        return qint64(100.0*double(transcodedPos())/double(size()));
+
+    return qint64(100.0*double(transcodedPos())/double(size()));
 }
 
 bool TranscodeProcess::waitForFinished(int msecs)
@@ -245,13 +245,11 @@ qint64 TranscodeProcess::fullSize() const
     {
         if (format() == MP3)
             return (double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0 + 2000;   // header size = 2000 bytes
-        else
-            return overheadfactor()*(double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0;
+
+        return overheadfactor()*(double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0;
     }
-    else
-    {
-        return -1;
-    }
+
+    return -1;
 }
 
 qint64 TranscodeProcess::bitrate() const
@@ -272,7 +270,7 @@ void TranscodeProcess::setBitrate(const qint64 &bitrate)
     }
 }
 
-void TranscodeProcess::setOriginalLengthInMSeconds(const qint64 duration)
+void TranscodeProcess::setOriginalLengthInMSeconds(const qint64& duration)
 {
     m_durationMSecs = duration;
 }

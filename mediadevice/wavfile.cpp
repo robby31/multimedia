@@ -121,7 +121,7 @@ bool WavFile::openLocalFile(const QString &fileName)
         {
             decode_audio.startRequestData();
             decode_audio.waitForFinished();
-            QBuffer *buffer = new QBuffer(this);
+            auto buffer = new QBuffer(this);
 
             m_device = buffer;
             if (!m_device->open(QIODevice::ReadWrite))
@@ -180,7 +180,6 @@ bool WavFile::readHeader()
                     && (header.wave.audioFormat == 1 || header.wave.audioFormat == 0)) {
 
                 // Read off remaining header information
-                DATAHeader dataHeader;
 
                 if (qFromLittleEndian<quint32>(header.wave.descriptor.size) > sizeof(WAVEHeader)) {
                     // Extended data available
@@ -192,6 +191,7 @@ bool WavFile::readHeader()
                         return false;
                 }
 
+                DATAHeader dataHeader;
                 if (m_device->read((char*)&dataHeader, sizeof(DATAHeader)) != sizeof(DATAHeader))
                     return false;
 
@@ -230,24 +230,24 @@ qint64 WavFile::bytesAvailable() const
 {
     if (m_device)
         return m_device->bytesAvailable();
-    else
-        return 0;
+
+    return 0;
 }
 
 qint64 WavFile::samplesAvailable() const
 {
     if (bytesPerSample() != 0)
         return bytesAvailable() / bytesPerSample();
-    else
-        return 0;
+
+    return 0;
 }
 
 QByteArray WavFile::readSamples(const qint64 &nbSamples)
 {
     if (m_device)
         return m_device->read(nbSamples*bytesPerSample());
-    else
-        return QByteArray();
+
+    return QByteArray();
 }
 
 QByteArray WavFile::readSamplesAtPosMsec(const qint64 &posMsec, const qint64 &nbSamples)
@@ -272,24 +272,24 @@ bool WavFile::seek(const qint64 &posMsec)
 {
     if (m_device)
         return m_device->seek(m_headerLength + posMsec);
-    else
-        return false;
+
+    return false;
 }
 
 qint64 WavFile::pos() const
 {
     if (m_device)
         return m_device->pos();
-    else
-        return 0;
+
+    return 0;
 }
 
 qint64 WavFile::size() const
 {
     if (m_device)
         return m_device->size();
-    else
-        return 0;
+
+    return 0;
 }
 
 qint64 WavFile::durationMsec() const

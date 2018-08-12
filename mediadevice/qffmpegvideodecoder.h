@@ -6,7 +6,7 @@
 class QFfmpegVideoDecoder: public QFfmpegDecoder
 {
 public:
-    QFfmpegVideoDecoder();
+    QFfmpegVideoDecoder() = default;
 };
 
 #endif // QFFMPEGVIDEODECODER_H

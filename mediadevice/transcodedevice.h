@@ -18,7 +18,7 @@ class TranscodeDevice : public Device
 
 public:
     explicit TranscodeDevice(QObject *parent = Q_NULLPTR);
-    virtual ~TranscodeDevice() Q_DECL_OVERRIDE;
+    ~TranscodeDevice() Q_DECL_OVERRIDE;
 
     void startTranscodingClock();
     qint64 transcodingElapsed();
@@ -29,7 +29,7 @@ public:
 
     QString url() const { return m_url; }
 
-    virtual qint64 size() const Q_DECL_OVERRIDE;
+    qint64 size() const Q_DECL_OVERRIDE;
 
     qint64 lengthInSeconds() const;
     qint64 lengthInMSeconds() const;
@@ -38,7 +38,7 @@ public:
 
     virtual void setBitrate(const qint64 &bitrate) = 0;
 
-    virtual void setRange(qint64 startByte, qint64 endByte) Q_DECL_OVERRIDE;
+    void setRange(qint64 startByte, qint64 endByte) Q_DECL_OVERRIDE;
 
     TranscodeFormatAvailable format() const;
     void setFormat(const TranscodeFormatAvailable &format);
@@ -58,21 +58,22 @@ public:
     int audioSampleRate() const                         { return m_audioSampleRate; }
     void setAudioSampleRate(const int &rate)            { m_audioSampleRate = rate; }
 
-    void setVolumeInfo(const QHash<QString, double> info);
+    void setVolumeInfo(const QHash<QString, double>& info);
     QHash<QString, double> volumeInfo() const { return m_volumeInfo; }
 
-    virtual qint64 pos() const  Q_DECL_OVERRIDE            { return m_pos; }    // position in bytes of read data
+    qint64 pos() const  Q_DECL_OVERRIDE            { return m_pos; }    // position in bytes of read data
 
-    virtual bool open() Q_DECL_OVERRIDE;
-    virtual bool isOpen() const Q_DECL_OVERRIDE { return m_opened; }
+    bool open() Q_DECL_OVERRIDE;
+    bool isOpen() const Q_DECL_OVERRIDE { return m_opened; }
 
-    virtual bool isReadyToOpen() const Q_DECL_OVERRIDE;
+    bool isReadyToOpen() const Q_DECL_OVERRIDE;
 
 
 protected:
     qint64 fullSize() const;
 
 private:
+    void _close();
     qint64 transcodedPos() const { return pos() + bytesAvailable(); }  // position in bytes of transcoded data
     qint64 transcodedProgress() const;
     virtual qint64 originalLengthInMSeconds() const = 0;
@@ -84,7 +85,7 @@ signals:
 public slots:
     void setUrl(const QString &url);
     void urlError(const QString &message);
-    virtual void close() Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
 
 private slots:
     virtual void _open() = 0;
