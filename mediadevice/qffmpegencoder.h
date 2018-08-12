@@ -6,10 +6,10 @@
 class QFfmpegEncoder : public QFfmpegCodec
 {
 public:
-    QFfmpegEncoder();
-    virtual ~QFfmpegEncoder();
+    QFfmpegEncoder() = default;
+    ~QFfmpegEncoder() Q_DECL_OVERRIDE;
 
-    virtual void close();
+    void close() Q_DECL_OVERRIDE;
 
     virtual bool setInput(QFfmpegCodec *codec_input) = 0;
 
@@ -31,6 +31,9 @@ public:
     qint64 encodedPktAvailable() const;
     AVPacket *takeEncodedPkt();
     virtual bool encodeFrame(QFfmpegFrame *frame);
+
+private:
+    void _close();
 
 private:
     QList<AVPacket*> m_encodedPkt;

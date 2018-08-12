@@ -1,22 +1,21 @@
 #include "qffmpegencoder.h"
 
-QFfmpegEncoder::QFfmpegEncoder():
-    QFfmpegCodec()
-{
-
-}
-
 QFfmpegEncoder::~QFfmpegEncoder()
 {
-    close();
+    _close();
 }
 
 void QFfmpegEncoder::close()
 {
+    _close();
+}
+
+void QFfmpegEncoder::_close()
+{
     if (codecCtx() != Q_NULLPTR)
         qDebug() << format() << codecCtx()->frame_number << "frames encoded.";
 
-    if (m_encodedPkt.size() > 0)
+    if (!m_encodedPkt.isEmpty())
         qWarning() << m_encodedPkt.size() << "frames not encoded remains in encoder" << format();
 
     clear();
@@ -101,8 +100,8 @@ AVPacket *QFfmpegEncoder::takeEncodedPkt()
 {
     if (!m_encodedPkt.isEmpty())
         return m_encodedPkt.takeFirst();
-    else
-        return Q_NULLPTR;
+
+    return Q_NULLPTR;
 }
 
 QByteArray QFfmpegEncoder::getRawData()
@@ -125,10 +124,8 @@ bool QFfmpegEncoder::setSampleFmt(const AVSampleFormat &format)
         codecCtx()->sample_fmt = format;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 bool QFfmpegEncoder::setPixelFormat(const AVPixelFormat &format)
@@ -138,10 +135,8 @@ bool QFfmpegEncoder::setPixelFormat(const AVPixelFormat &format)
         codecCtx()->pix_fmt = format;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 
@@ -153,10 +148,8 @@ bool QFfmpegEncoder::setChannelLayout(const uint64_t &layout)
         codecCtx()->channels = av_get_channel_layout_nb_channels(layout);
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 bool QFfmpegEncoder::setChannelCount(const int &nb)
@@ -167,10 +160,8 @@ bool QFfmpegEncoder::setChannelCount(const int &nb)
         codecCtx()->channels = nb;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 bool QFfmpegEncoder::setSampleRate(const int &rate) const
@@ -180,10 +171,8 @@ bool QFfmpegEncoder::setSampleRate(const int &rate) const
         codecCtx()->sample_rate = rate;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 bool QFfmpegEncoder::setBitRate(const qint64 &bitrate)
@@ -193,10 +182,8 @@ bool QFfmpegEncoder::setBitRate(const qint64 &bitrate)
         codecCtx()->bit_rate = bitrate;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 qint64 QFfmpegEncoder::nextPts() const
@@ -211,7 +198,7 @@ void QFfmpegEncoder::incrNextPts(const int &duration)
 
 void QFfmpegEncoder::clear()
 {
-    while (m_encodedPkt.size() > 0)
+    while (!m_encodedPkt.isEmpty())
     {
         AVPacket *pkt = m_encodedPkt.takeFirst();
         av_packet_free(&pkt);

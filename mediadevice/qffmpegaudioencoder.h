@@ -11,16 +11,18 @@ extern "C" {
 class QFfmpegAudioEncoder : public QFfmpegEncoder
 {
 public:
-    QFfmpegAudioEncoder();
-    virtual ~QFfmpegAudioEncoder() Q_DECL_OVERRIDE;
+    QFfmpegAudioEncoder() = default;
+    ~QFfmpegAudioEncoder() Q_DECL_OVERRIDE;
 
-    virtual void close() Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
 
-    virtual bool setInput(QFfmpegCodec *codec_input) Q_DECL_OVERRIDE;
+    bool setInput(QFfmpegCodec *codec_input) Q_DECL_OVERRIDE;
 
-    virtual bool encodeFrame(QFfmpegFrame *frame) Q_DECL_OVERRIDE;
+    bool encodeFrame(QFfmpegFrame *frame) Q_DECL_OVERRIDE;
 
 private:
+    void _close();
+
     bool init_audio_fifo();
     bool init_resampler(QFfmpegCodec *input);
 

@@ -9,42 +9,43 @@ class QFfmpegInputMedia : public QFfmpegMedia
 {
 
 public:
-    QFfmpegInputMedia();
-    virtual ~QFfmpegInputMedia() Q_DECL_OVERRIDE;
+    QFfmpegInputMedia() = default;
+    ~QFfmpegInputMedia() Q_DECL_OVERRIDE;
 
-    virtual AVFormatContext *context() const Q_DECL_OVERRIDE;
+    AVFormatContext *context() const Q_DECL_OVERRIDE;
 
-    QFfmpegInputStream *getStream(const int &index);
-    virtual QFfmpegInputStream *audioStream() const Q_DECL_OVERRIDE;
-    virtual QFfmpegInputStream *videoStream() const Q_DECL_OVERRIDE;
-    virtual QFfmpegInputStream *subtitleStream() const Q_DECL_OVERRIDE;
+    QFfmpegInputStream *getStream(const uint &index);
+    QFfmpegInputStream *audioStream() const Q_DECL_OVERRIDE;
+    QFfmpegInputStream *videoStream() const Q_DECL_OVERRIDE;
+    QFfmpegInputStream *subtitleStream() const Q_DECL_OVERRIDE;
 
-    bool setAudioStream(const int &streamIndex);
+    bool setAudioStream(const uint &streamIndex);
 
-    virtual QString getFormat() const Q_DECL_OVERRIDE;
-    virtual qint64 getDuration() const Q_DECL_OVERRIDE;
-    virtual qint64 getBitrate() const Q_DECL_OVERRIDE;
-    virtual qint64 size() const Q_DECL_OVERRIDE;
+    QString getFormat() const Q_DECL_OVERRIDE;
+    qint64 getDuration() const Q_DECL_OVERRIDE;
+    qint64 getBitrate() const Q_DECL_OVERRIDE;
+    qint64 size() const Q_DECL_OVERRIDE;
 
     bool open(const QString &filename, const bool &flag_readPicture = false);
-    virtual bool close() Q_DECL_OVERRIDE;
+    bool close() Q_DECL_OVERRIDE;
     bool seek_time(const qint64 &ms, const qint64 &min_ts = INT64_MIN, const qint64 &max_ts = INT64_MAX);
     bool reset();
 
-    virtual bool atEnd() const Q_DECL_OVERRIDE;
-    QFfmpegFrame *readFrame(QList<AVMediaType> l_mediaType);
+    bool atEnd() const Q_DECL_OVERRIDE;
+    QFfmpegFrame *readFrame(const QList<AVMediaType>& l_mediaType);
 
-    virtual void setTimeStartInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
-    virtual qint64 timeStartInMsec() const Q_DECL_OVERRIDE;
+    void setTimeStartInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
+    qint64 timeStartInMsec() const Q_DECL_OVERRIDE;
 
-    virtual void setTimeEndInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
-    virtual qint64 timeEndInMsec() const Q_DECL_OVERRIDE;
+    void setTimeEndInMsec(const qint64 &msec) Q_DECL_OVERRIDE;
+    qint64 timeEndInMsec() const Q_DECL_OVERRIDE;
 
     QByteArray getPicture() const;
 
 private:
+    bool _close();
     int readPacketFromInput(AVPacket *pkt);
-    QFfmpegFrame *decodePacket(AVPacket *pkt, QList<AVMediaType> l_mediaType);
+    QFfmpegFrame *decodePacket(AVPacket *pkt, const QList<AVMediaType>& l_mediaType);
 
     void readPicture();
 

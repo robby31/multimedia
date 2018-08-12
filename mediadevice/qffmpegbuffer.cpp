@@ -6,7 +6,7 @@ QFfmpegBuffer::QFfmpegBuffer()
 {
     objectCounter++;
 
-    uint8_t * avio_ctx_buffer = (uint8_t*)av_malloc(avio_ctx_buffer_size);
+    auto avio_ctx_buffer = (uint8_t*)av_malloc(avio_ctx_buffer_size);
     if (avio_ctx_buffer != Q_NULLPTR)
     {
         avio_ctx = avio_alloc_context(avio_ctx_buffer, avio_ctx_buffer_size, 1, this,
@@ -59,7 +59,7 @@ QByteArray QFfmpegBuffer::read(const qint64 &maxlen)
 
 int QFfmpegBuffer::read_from_context(void *opaque, uint8_t *buf, int buf_size)
 {
-    QFfmpegBuffer *buffer = (QFfmpegBuffer *)opaque;
+    auto buffer = static_cast<QFfmpegBuffer *>(opaque);
     QByteArray *bd = &buffer->m_buffer;
 
     if (buffer && bd)
@@ -69,45 +69,35 @@ int QFfmpegBuffer::read_from_context(void *opaque, uint8_t *buf, int buf_size)
         bd->remove(0, buf_size);
         return buf_size;
     }
-    else
-    {
-        return 0;
-    }
+
+    return 0;
 }
 
 int QFfmpegBuffer::write_from_context(void *opaque, uint8_t *buf, int buf_size)
 {
-    QFfmpegBuffer *buffer = (QFfmpegBuffer *)opaque;
+    auto buffer = static_cast<QFfmpegBuffer *>(opaque);
 
     if (buffer)
     {
         if (buffer->write(QByteArray::fromRawData((char *)buf, buf_size)))
             return buf_size;
-        else
-            return 0;
     }
-    else
-    {
-        return 0;
-    }
+
+    return 0;
 }
 
 int64_t QFfmpegBuffer::seek_from_context(void *opaque, int64_t offset, int whence)
 {
-    QFfmpegBuffer *buffer = (QFfmpegBuffer *)opaque;
+    auto buffer = static_cast<QFfmpegBuffer *>(opaque);
 
     if (buffer)
     {
         if (buffer->seek(whence + offset))
             return whence + offset;
-        else
-            return -1;
     }
-    else
-    {
-        qCritical() << "unable to seek" << offset << whence;
-        return -1;
-    }
+
+    qCritical() << "unable to seek" << offset << whence;
+    return -1;
 }
 
 bool QFfmpegBuffer::write(const QByteArray &data)
@@ -119,12 +109,10 @@ bool QFfmpegBuffer::write(const QByteArray &data)
         m_endPos += data.size();
         return true;
     }
-    else
-    {
-        // position is out of buffer data
-        qWarning() << "unable to write" << data.size() << "bytes data because position" << m_pos << "is invalid, start pos =" << m_startPos << "end pos = " << m_endPos;
-        return false;
-    }
+
+    // position is out of buffer data
+    qWarning() << "unable to write" << data.size() << "bytes data because position" << m_pos << "is invalid, start pos =" << m_startPos << "end pos = " << m_endPos;
+    return false;
 }
 
 bool QFfmpegBuffer::seek(const qint64 &pos)

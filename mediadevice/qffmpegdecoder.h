@@ -6,10 +6,10 @@
 class QFfmpegDecoder : public QFfmpegCodec
 {
 public:
-    QFfmpegDecoder();
-    virtual ~QFfmpegDecoder();
+    QFfmpegDecoder() = default;
+    ~QFfmpegDecoder() Q_DECL_OVERRIDE;
 
-    virtual void close();
+    void close() Q_DECL_OVERRIDE;
 
     void clear();
 
@@ -17,6 +17,9 @@ public:
     qint64 decodedFramesAvailable() const;
     QFfmpegFrame *takeDecodedFrame();
     bool decodePacket(AVPacket *pkt);
+
+private:
+    void _close();
 
 private:
     QList<QFfmpegFrame*> m_decodedFrames;

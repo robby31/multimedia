@@ -1,13 +1,8 @@
 #include "qffmpeginputmedia.h"
 
-QFfmpegInputMedia::QFfmpegInputMedia():
-    QFfmpegMedia()
-{
-}
-
 QFfmpegInputMedia::~QFfmpegInputMedia()
 {
-    close();
+    _close();
 }
 
 AVFormatContext *QFfmpegInputMedia::context() const
@@ -19,24 +14,24 @@ QString QFfmpegInputMedia::getFormat() const
 {
     if (pFormatCtx != Q_NULLPTR && pFormatCtx->iformat != Q_NULLPTR)
         return pFormatCtx->iformat->name;
-    else
-        return QString();
+
+    return QString();
 }
 
 qint64 QFfmpegInputMedia::getDuration() const
 {
     if (pFormatCtx != Q_NULLPTR && pFormatCtx->duration != AV_NOPTS_VALUE)
         return 1000 * pFormatCtx->duration / AV_TIME_BASE;
-    else
-        return -1;
+
+    return -1;
 }
 
 qint64 QFfmpegInputMedia::getBitrate() const
 {
     if (pFormatCtx != Q_NULLPTR)
         return pFormatCtx->bit_rate;
-    else
-        return -1;
+
+    return -1;
 }
 
 qint64 QFfmpegInputMedia::size() const
@@ -48,20 +43,16 @@ qint64 QFfmpegInputMedia::size() const
         size = avio_size(pFormatCtx->pb);
         if (size >= 0)
             return size;
-        else
-            return -1;
     }
-    else
-    {
-        return -1;
-    }
+
+    return -1;
 }
 
-QFfmpegInputStream *QFfmpegInputMedia::getStream(const int &index)
+QFfmpegInputStream *QFfmpegInputMedia::getStream(const uint &index)
 {
-    if (index >= 0 && index < (int)pFormatCtx->nb_streams)
+    if (index < pFormatCtx->nb_streams)
     {
-        QFfmpegInputStream *stream = new QFfmpegInputStream();
+        auto stream = new QFfmpegInputStream();
         if (stream->init_decoding_stream(pFormatCtx, index))
             return stream;
     }
@@ -69,9 +60,9 @@ QFfmpegInputStream *QFfmpegInputMedia::getStream(const int &index)
     return Q_NULLPTR;
 }
 
-bool QFfmpegInputMedia::setAudioStream(const int &streamIndex)
+bool QFfmpegInputMedia::setAudioStream(const uint &streamIndex)
 {
-    if (streamIndex >= 0 && streamIndex < (int)pFormatCtx->nb_streams)
+    if (streamIndex < pFormatCtx->nb_streams)
     {
         AVStream *stream = pFormatCtx->streams[streamIndex];
         if (stream && stream->codecpar && stream->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
@@ -89,20 +80,14 @@ bool QFfmpegInputMedia::setAudioStream(const int &streamIndex)
                 m_audioStream = Q_NULLPTR;
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
+
         return false;
     }
+
+    return false;
 }
 
 bool QFfmpegInputMedia::open(const QString &filename, const bool &flag_readPicture)
@@ -113,50 +98,49 @@ bool QFfmpegInputMedia::open(const QString &filename, const bool &flag_readPictu
         setError(QString("unable to open %1").arg(filename));
         return false;
     }
-    else
+
+    m_eof = false;
+
+    if (avformat_find_stream_info(pFormatCtx, Q_NULLPTR) < 0)
     {
-        m_eof = false;
-
-        if (avformat_find_stream_info(pFormatCtx, Q_NULLPTR) < 0)
-        {
-            close();
-            setError(QString("unable to open %1").arg(filename));
-            return false;
-        }
-        else
-        {
-            m_audioStream = new QFfmpegInputStream();
-            if (!m_audioStream->init_decoding_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO))
-            {
-                delete m_audioStream;
-                m_audioStream = Q_NULLPTR;
-            }
-
-            m_videoStream = new QFfmpegInputStream();
-            if (!m_videoStream->init_decoding_stream(pFormatCtx, AVMEDIA_TYPE_VIDEO))
-            {
-                delete m_videoStream;
-                m_videoStream = Q_NULLPTR;
-            }
-
-            if ((!m_audioStream or !m_audioStream->isValid()) && (!m_videoStream && !m_videoStream->isValid()))
-            {
-                close();
-                setError(QString("unable to find stream audio or video in %1").arg(filename));
-                return false;
-            }
-            else
-            {
-                if (flag_readPicture)
-                    readPicture();
-
-                return true;
-            }
-        }
+        close();
+        setError(QString("unable to open %1").arg(filename));
+        return false;
     }
+
+    m_audioStream = new QFfmpegInputStream();
+    if (!m_audioStream->init_decoding_stream(pFormatCtx, AVMEDIA_TYPE_AUDIO))
+    {
+        delete m_audioStream;
+        m_audioStream = Q_NULLPTR;
+    }
+
+    m_videoStream = new QFfmpegInputStream();
+    if (!m_videoStream->init_decoding_stream(pFormatCtx, AVMEDIA_TYPE_VIDEO))
+    {
+        delete m_videoStream;
+        m_videoStream = Q_NULLPTR;
+    }
+
+    if ((!m_audioStream or !m_audioStream->isValid()) && (!m_videoStream or !m_videoStream->isValid()))
+    {
+        close();
+        setError(QString("unable to find stream audio or video in %1").arg(filename));
+        return false;
+    }
+
+    if (flag_readPicture)
+        readPicture();
+
+    return true;
 }
 
 bool QFfmpegInputMedia::close()
+{
+    return _close();
+}
+
+bool QFfmpegInputMedia::_close()
 {
     if (m_audioStream)
     {
@@ -183,14 +167,7 @@ bool QFfmpegInputMedia::close()
 
 bool QFfmpegInputMedia::reset()
 {
-    if (seek_time(0))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return seek_time(0);
 }
 
 bool QFfmpegInputMedia::seek_time(const qint64 &ms, const qint64 &min_ts, const qint64 &max_ts)
@@ -203,26 +180,22 @@ bool QFfmpegInputMedia::seek_time(const qint64 &ms, const qint64 &min_ts, const 
             qCritical() << "unable to seek file at position" << time / AV_TIME_BASE;
             return false;
         }
-        else
-        {
-            m_eof = false;
 
-            if (audioStream())
-                audioStream()->flush();
+        m_eof = false;
 
-            if (videoStream())
-                videoStream()->flush();
+        if (audioStream())
+            audioStream()->flush();
 
-            return true;
-        }
+        if (videoStream())
+            videoStream()->flush();
+
+        return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
-QFfmpegFrame *QFfmpegInputMedia::readFrame(QList<AVMediaType> l_mediaType)
+QFfmpegFrame *QFfmpegInputMedia::readFrame(const QList<AVMediaType> &l_mediaType)
 {
     QFfmpegFrame *frame = Q_NULLPTR;
 
@@ -257,42 +230,41 @@ QFfmpegFrame *QFfmpegInputMedia::readFrame(QList<AVMediaType> l_mediaType)
 
             break;
         }
-        else if (ret < 0)
+
+        if (ret < 0)
         {
             qCritical() << "readFrame get an error" << ret;
             break;
         }
-        else
-        {
-            // pkt read correctly
-            frame = decodePacket(pkt, l_mediaType);
-            if (frame != Q_NULLPTR)
-            {
-                if (m_timeEndMsec > 0)
-                {
-                    if (m_audioStream && pkt->stream_index == m_audioStream->streamIndex() && l_mediaType.contains(AVMEDIA_TYPE_AUDIO))
-                    {
-                        if (m_audioStream->packetNextPosInMsec(pkt) > m_timeEndMsec)
-                        {
-                            m_eof = true;
-                            delete frame;
-                            frame = Q_NULLPTR;
-                        }
-                    }
 
-                    if (m_videoStream && pkt->stream_index == m_videoStream->streamIndex() && l_mediaType.contains(AVMEDIA_TYPE_VIDEO))
+        // pkt read correctly
+        frame = decodePacket(pkt, l_mediaType);
+        if (frame != Q_NULLPTR)
+        {
+            if (m_timeEndMsec > 0)
+            {
+                if (m_audioStream && pkt->stream_index == m_audioStream->streamIndex() && l_mediaType.contains(AVMEDIA_TYPE_AUDIO))
+                {
+                    if (m_audioStream->packetNextPosInMsec(pkt) > m_timeEndMsec)
                     {
-                        if (m_videoStream->packetNextPosInMsec(pkt) > m_timeEndMsec)
-                        {
-                            m_eof = true;
-                            delete frame;
-                            frame = Q_NULLPTR;
-                        }
+                        m_eof = true;
+                        delete frame;
+                        frame = Q_NULLPTR;
                     }
                 }
 
-                break;
+                if (m_videoStream && pkt->stream_index == m_videoStream->streamIndex() && l_mediaType.contains(AVMEDIA_TYPE_VIDEO))
+                {
+                    if (m_videoStream->packetNextPosInMsec(pkt) > m_timeEndMsec)
+                    {
+                        m_eof = true;
+                        delete frame;
+                        frame = Q_NULLPTR;
+                    }
+                }
             }
+
+            break;
         }
 
         av_packet_unref(pkt);
@@ -303,7 +275,7 @@ QFfmpegFrame *QFfmpegInputMedia::readFrame(QList<AVMediaType> l_mediaType)
     return frame;
 }
 
-QFfmpegFrame *QFfmpegInputMedia::decodePacket(AVPacket *pkt, QList<AVMediaType> l_mediaType)
+QFfmpegFrame *QFfmpegInputMedia::decodePacket(AVPacket *pkt, const QList<AVMediaType> &l_mediaType)
 {
     QFfmpegFrame *frame = Q_NULLPTR;
 
@@ -333,8 +305,8 @@ bool QFfmpegInputMedia::atEnd() const
 {
     if (pFormatCtx != Q_NULLPTR)
         return m_eof;
-    else
-        return true;
+
+    return true;
 }
 
 QByteArray QFfmpegInputMedia::getPicture() const
@@ -421,10 +393,10 @@ void QFfmpegInputMedia::readPicture()
 
 int QFfmpegInputMedia::readPacketFromInput(AVPacket *pkt)
 {
-    if (pFormatCtx != Q_NULLPTR)
+    if (pFormatCtx)
         return av_read_frame(pFormatCtx, pkt);
-    else
-        return -1;
+
+    return -1;
 }
 
 qint64 QFfmpegInputMedia::timeStartInMsec() const

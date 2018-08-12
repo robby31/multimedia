@@ -1,17 +1,16 @@
 #include "qffmpegaudioencoder.h"
 
-QFfmpegAudioEncoder::QFfmpegAudioEncoder():
-    QFfmpegEncoder()
-{
-
-}
-
 QFfmpegAudioEncoder::~QFfmpegAudioEncoder()
 {
-    close();
+    _close();
 }
 
 void QFfmpegAudioEncoder::close()
+{
+    _close();
+}
+
+void QFfmpegAudioEncoder::_close()
 {
     if (m_resampleCtx != Q_NULLPTR)
         swr_free(&m_resampleCtx);
@@ -50,16 +49,12 @@ bool QFfmpegAudioEncoder::setInput(QFfmpegCodec *codec_input)
             close();
             return false;
         }
-        else
-        {
-            return init_audio_fifo();
-        }
+
+        return init_audio_fifo();
     }
-    else
-    {
-        qCritical() << "invalid input codec" << codec_input;
-        return false;
-    }
+
+    qCritical() << "invalid input codec" << codec_input;
+    return false;
 }
 
 bool QFfmpegAudioEncoder::init_audio_fifo()
@@ -72,10 +67,8 @@ bool QFfmpegAudioEncoder::init_audio_fifo()
         close();
         return false;
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }
 bool QFfmpegAudioEncoder::init_resampler(QFfmpegCodec *input)
 {
@@ -106,44 +99,36 @@ bool QFfmpegAudioEncoder::init_resampler(QFfmpegCodec *input)
                 close();
                 return false;
             }
-            else
-            {
-                /* initialize the resampling context */
-                if (swr_init(m_resampleCtx) < 0)
-                {
-                    qCritical() << "Failed to initialize the resampling context";
-                    close();
-                    return false;
-                }
-                else
-                {
-                    qDebug() << "resampling initialised:";
-                    qDebug() << "   channel count  :" << inputCodecCtx->channels << "-->" << channelCount();
-                    qDebug() << "   sample rate    :" << inputCodecCtx->sample_rate << "-->" << samplerate();
-                    qDebug() << "   sample format  :" << av_get_sample_fmt_name(inputCodecCtx->sample_fmt) << "-->" << av_get_sample_fmt_name(sampleFormat());
 
-                    return true;
-                }
+            /* initialize the resampling context */
+            if (swr_init(m_resampleCtx) < 0)
+            {
+                qCritical() << "Failed to initialize the resampling context";
+                close();
+                return false;
             }
+
+            qDebug() << "resampling initialised:";
+            qDebug() << "   channel count  :" << inputCodecCtx->channels << "-->" << channelCount();
+            qDebug() << "   sample rate    :" << inputCodecCtx->sample_rate << "-->" << samplerate();
+            qDebug() << "   sample format  :" << av_get_sample_fmt_name(inputCodecCtx->sample_fmt) << "-->" << av_get_sample_fmt_name(sampleFormat());
+
+            return true;
         }
-        else
-        {
-            qCritical() << "invalid input codec context in resampler initialisation :" << inputCodecCtx;
-            return false;
-        }
-    }
-    else
-    {
-        qCritical() << "invalid input in resampler initialisation :" << input;
+
+        qCritical() << "invalid input codec context in resampler initialisation :" << inputCodecCtx;
         return false;
     }
+
+    qCritical() << "invalid input in resampler initialisation :" << input;
+    return false;
 }
 
 QFfmpegFrame *QFfmpegAudioEncoder::resampleFrame(QFfmpegFrame *frame)
 {
     if (m_resampleCtx != Q_NULLPTR and frame != Q_NULLPTR)
     {
-        QFfmpegFrame *newFrame = new QFfmpegFrame();
+        auto newFrame = new QFfmpegFrame();
         if (!newFrame->isValid())
         {
             qCritical() << "Error allocation new frame.";
@@ -176,16 +161,14 @@ QFfmpegFrame *QFfmpegAudioEncoder::resampleFrame(QFfmpegFrame *frame)
 
         return newFrame;
     }
-    else
-    {
-        qCritical() << "resample context is not initialised.";
-        return Q_NULLPTR;
-    }
+
+    qCritical() << "resample context is not initialised.";
+    return Q_NULLPTR;
 }
 
 bool QFfmpegAudioEncoder::encodeFrameFromFifo(const int &frame_size)
 {
-    QFfmpegFrame *newFrame = new QFfmpegFrame();
+    auto newFrame = new QFfmpegFrame();
     if (!newFrame->isValid() or !newFrame->init_frame(sampleFormat(), channelLayout(), samplerate(), swr_get_out_samples(m_resampleCtx, frame_size)))
     {
         qCritical() << "Error allocation new frame.";
@@ -209,11 +192,9 @@ bool QFfmpegAudioEncoder::encodeFrameFromFifo(const int &frame_size)
         delete newFrame;
         return false;
     }
-    else
-    {
-        delete newFrame;
-        return true;
-    }
+
+    delete newFrame;
+    return true;
 }
 
 bool QFfmpegAudioEncoder::encodeFrame(QFfmpegFrame *frame)
@@ -230,34 +211,30 @@ bool QFfmpegAudioEncoder::encodeFrame(QFfmpegFrame *frame)
 
             return QFfmpegEncoder::encodeFrame(Q_NULLPTR);
         }
-        else
+
+        int frameSize = codecCtx()->frame_size;
+
+        QFfmpegFrame *inputFrame = resampleFrame(frame);
+
+        if (inputFrame != Q_NULLPTR)
         {
-            int frameSize = codecCtx()->frame_size;
+            add_samples_to_fifo(inputFrame);
 
-            QFfmpegFrame *inputFrame = resampleFrame(frame);
+            if (frameSize <= 0)
+                frameSize = inputFrame->ptr()->nb_samples;
 
-            if (inputFrame != Q_NULLPTR)
+            delete inputFrame;
+        }
+
+        while (av_audio_fifo_size(m_audioFifo) >= frameSize)
+        {
+            if (!encodeFrameFromFifo(frameSize))
             {
-                add_samples_to_fifo(inputFrame);
-
-                if (frameSize <= 0)
-                    frameSize = inputFrame->ptr()->nb_samples;
-
-                delete inputFrame;
+                result = false;
+                break;
             }
 
-            while (av_audio_fifo_size(m_audioFifo) >= frameSize)
-            {
-                if (!encodeFrameFromFifo(frameSize))
-                {
-                    result = false;
-                    break;
-                }
-                else
-                {
-                    result = true;
-                }
-            }
+            result = true;
         }
     }
     else
@@ -289,9 +266,7 @@ bool QFfmpegAudioEncoder::add_samples_to_fifo(QFfmpegFrame *frame)
 
         return true;
     }
-    else
-    {
-        qCritical() << "invalid frame" << frame << "cannot add samples to audio fifo.";
-        return false;
-    }
+
+    qCritical() << "invalid frame" << frame << "cannot add samples to audio fifo.";
+    return false;
 }
