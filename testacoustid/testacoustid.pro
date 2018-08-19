@@ -29,9 +29,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += tst_acoustidtest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/usr/local/include
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
 LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(acoustid)
 LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(chromaprintwrapper)
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION/usr/local/lib -lchromaprint
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION/lib -lchromaprint
 

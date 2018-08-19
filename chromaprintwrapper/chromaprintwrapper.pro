@@ -36,7 +36,7 @@ SOURCES += \
 HEADERS += \
     chromaprint_wrapper.h
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/usr/local/include
+INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include
 
 installPath = $$(MYLIBRARY)/$$QT_VERSION
 target.path = $$installPath
