@@ -88,7 +88,6 @@ DISTFILES +=
 
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/analyzer
 
-DEFINES += USE_AVRESAMPLE
 INCLUDEPATH += /opt/local/include
 
 installPath = $$(MYLIBRARY)/$$QT_VERSION
