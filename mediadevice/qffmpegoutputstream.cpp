@@ -43,7 +43,7 @@ bool QFfmpegOutputStream::init_encoding_stream(const AVCodecID id, AVFormatConte
             else if (tmpCodec != Q_NULLPTR && tmpCodec->type == AVMEDIA_TYPE_VIDEO)
                 m_codec = new QFfmpegVideoEncoder();
 
-            if (!m_codec or !m_codec->init_codec(id))
+            if (!m_codec || !m_codec->init_codec(id))
             {
                 close();
                 return false;

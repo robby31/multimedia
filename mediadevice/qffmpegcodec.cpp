@@ -33,7 +33,7 @@ bool QFfmpegCodec::init_codec(AVCodec *codec, AVCodecParameters *codecpar)
     if (codec != Q_NULLPTR && codecpar != Q_NULLPTR)
     {
         m_codecCtx = avcodec_alloc_context3(codec);
-        if (m_codecCtx == Q_NULLPTR or avcodec_parameters_to_context(m_codecCtx, codecpar) != 0)
+        if (m_codecCtx == Q_NULLPTR || avcodec_parameters_to_context(m_codecCtx, codecpar) != 0)
         {
             qCritical() << "unable to init codec";
             close();

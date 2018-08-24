@@ -115,7 +115,7 @@ void TranscodeDevice::urlError(const QString &message)
 
 bool TranscodeDevice::open()
 {
-    if (startByte() != -1 or endByte() != -1)
+    if (startByte() != -1 || endByte() != -1)
         qWarning() << "range not applicable for TranscodeDevice" << startByte() << endByte();
 
     if (!isReadyToOpen())

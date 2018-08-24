@@ -12,7 +12,7 @@ AVFormatContext *QFfmpegOutputMedia::context() const
 
 QString QFfmpegOutputMedia::getFormat() const
 {
-    if (!pFormatCtx or !pFormatCtx->oformat)
+    if (!pFormatCtx || !pFormatCtx->oformat)
         return QString();
 
     return pFormatCtx->oformat->name;
@@ -33,7 +33,7 @@ qint64 QFfmpegOutputMedia::getBitrate() const
     if (m_audioStream && m_audioStream->isValid())
         bit_rate += m_audioStream->bitrate() * overhead_factor();
 
-    if (m_videoStream && m_videoStream->isValid() && (!m_inputMedia or !m_inputMedia->videoStream() or m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR))
+    if (m_videoStream && m_videoStream->isValid() && (!m_inputMedia || !m_inputMedia->videoStream() || m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR))
         bit_rate += m_videoStream->bitrate();
 
     return bit_rate;
@@ -50,7 +50,7 @@ qint64 QFfmpegOutputMedia::size() const
 
     if (m_videoStream && m_videoStream->isValid())
     {
-        if (!m_inputMedia or !m_inputMedia->videoStream() or m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR)
+        if (!m_inputMedia || !m_inputMedia->videoStream() || m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR)
         {
             if (m_videoStream->getDuration() > 0 && m_videoStream->bitrate() > 0)
                 res += m_videoStream->getDuration() * m_videoStream->bitrate() / 8000;
@@ -90,7 +90,7 @@ bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &format
     else
         ret = avformat_alloc_output_context2(&pFormatCtx, Q_NULLPTR, formatName.toStdString().c_str(), filename.toStdString().c_str());
 
-    if (ret < 0 or pFormatCtx == Q_NULLPTR or pFormatCtx->oformat == Q_NULLPTR)
+    if (ret < 0 || pFormatCtx == Q_NULLPTR || pFormatCtx->oformat == Q_NULLPTR)
     {
         setError(QString("unable to open %1").arg(filename));
         return false;
@@ -118,7 +118,7 @@ bool QFfmpegOutputMedia::openFile(const QString &filename, const QString &format
 
 bool QFfmpegOutputMedia::openBuffer(const QString &format, const QHash<AVMediaType, AVCodecID> &mediaConfig)
 {
-    if (avformat_alloc_output_context2(&pFormatCtx, Q_NULLPTR, format.toStdString().c_str(), Q_NULLPTR) < 0 or pFormatCtx == Q_NULLPTR or pFormatCtx->oformat == Q_NULLPTR)
+    if (avformat_alloc_output_context2(&pFormatCtx, Q_NULLPTR, format.toStdString().c_str(), Q_NULLPTR) < 0 || pFormatCtx == Q_NULLPTR || pFormatCtx->oformat == Q_NULLPTR)
     {
         setError(QString("unable to open buffer for format %1").arg(format));
         return false;

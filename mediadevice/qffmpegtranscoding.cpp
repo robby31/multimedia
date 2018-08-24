@@ -30,7 +30,7 @@ QFfmpegTranscoding::~QFfmpegTranscoding()
 
 bool QFfmpegTranscoding::atEnd() const
 {
-    if (!isOpen() or !m_outputMedia)
+    if (!isOpen() || !m_outputMedia)
         return true;
 
     if (m_outputMedia)
@@ -49,7 +49,7 @@ qint64 QFfmpegTranscoding::bytesAvailable() const
 
 bool QFfmpegTranscoding::isReadyToOpen() const
 {
-    return !url().isEmpty() or m_inputMedia;
+    return !url().isEmpty() || m_inputMedia;
 }
 
 void QFfmpegTranscoding::setInput(QFfmpegInputMedia *input)
@@ -127,7 +127,7 @@ void QFfmpegTranscoding::readyForOpening()
 
     if (m_inputMedia)
     {
-        if (format() == WAV or format() == LPCM_S16BE or format() == LPCM_S16LE)
+        if (format() == WAV || format() == LPCM_S16BE || format() == LPCM_S16LE)
         {
             if (m_inputMedia->audioStream() && m_inputMedia->audioStream()->samplerate() == 44100)
                 setBitrate(1411200);

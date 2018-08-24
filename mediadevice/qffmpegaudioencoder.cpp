@@ -126,7 +126,7 @@ bool QFfmpegAudioEncoder::init_resampler(QFfmpegCodec *input)
 
 QFfmpegFrame *QFfmpegAudioEncoder::resampleFrame(QFfmpegFrame *frame)
 {
-    if (m_resampleCtx != Q_NULLPTR and frame != Q_NULLPTR)
+    if (m_resampleCtx != Q_NULLPTR && frame != Q_NULLPTR)
     {
         auto newFrame = new QFfmpegFrame();
         if (!newFrame->isValid())
@@ -169,7 +169,7 @@ QFfmpegFrame *QFfmpegAudioEncoder::resampleFrame(QFfmpegFrame *frame)
 bool QFfmpegAudioEncoder::encodeFrameFromFifo(const int &frame_size)
 {
     auto newFrame = new QFfmpegFrame();
-    if (!newFrame->isValid() or !newFrame->init_frame(sampleFormat(), channelLayout(), samplerate(), swr_get_out_samples(m_resampleCtx, frame_size)))
+    if (!newFrame->isValid() || !newFrame->init_frame(sampleFormat(), channelLayout(), samplerate(), swr_get_out_samples(m_resampleCtx, frame_size)))
     {
         qCritical() << "Error allocation new frame.";
         delete newFrame;
@@ -184,7 +184,10 @@ bool QFfmpegAudioEncoder::encodeFrameFromFifo(const int &frame_size)
         return false;
     }
 
-    newFrame->ptr()->pts = av_rescale_q(nextPts(), (AVRational){1, samplerate()}, codecCtx()->time_base);
+    AVRational bq;
+    bq.num = 1;
+    bq.den = samplerate();
+    newFrame->ptr()->pts = av_rescale_q(nextPts(), bq, codecCtx()->time_base);
     incrNextPts(newFrame->ptr()->nb_samples);
 
     if (!QFfmpegEncoder::encodeFrame(newFrame))

@@ -43,10 +43,10 @@ bool QFfmpegVideoEncoder::init_rescale(QFfmpegCodec *input)
 
 QFfmpegFrame *QFfmpegVideoEncoder::rescaleFrame(QFfmpegFrame *frame)
 {
-    if (codecCtx() != Q_NULLPTR && m_rescaleCtx != Q_NULLPTR and frame != Q_NULLPTR and frame->isValid())
+    if (codecCtx() != Q_NULLPTR && m_rescaleCtx != Q_NULLPTR && frame != Q_NULLPTR && frame->isValid())
     {
         auto newFrame = new QFfmpegFrame();
-        if (!newFrame or !newFrame->isValid() or !newFrame->init_frame(pixelFormat(), codecCtx()->width, codecCtx()->height) or !newFrame->makeWritable())
+        if (!newFrame || !newFrame->isValid() || !newFrame->init_frame(pixelFormat(), codecCtx()->width, codecCtx()->height) || !newFrame->makeWritable())
         {
             qCritical() << "Error allocation new frame.";
             delete newFrame;

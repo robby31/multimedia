@@ -45,7 +45,7 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, AVMediaTy
             else if (type == AVMEDIA_TYPE_VIDEO)
                 m_codec = new QFfmpegVideoDecoder();
 
-            if (!m_codec or !m_codec->init_codec(codec, stream()->codecpar))
+            if (!m_codec || !m_codec->init_codec(codec, stream()->codecpar))
             {
                 close();
                 return false;

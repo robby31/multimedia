@@ -122,7 +122,7 @@ bool QFfmpegInputMedia::open(const QString &filename, const bool &flag_readPictu
         m_videoStream = Q_NULLPTR;
     }
 
-    if ((!m_audioStream or !m_audioStream->isValid()) && (!m_videoStream or !m_videoStream->isValid()))
+    if ((!m_audioStream || !m_audioStream->isValid()) && (!m_videoStream || !m_videoStream->isValid()))
     {
         close();
         setError(QString("unable to find stream audio or video in %1").arg(filename));
