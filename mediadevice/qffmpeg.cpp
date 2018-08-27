@@ -34,7 +34,7 @@ QFfmpeg::QFfmpeg(QObject *parent):
     QObject(parent),
     filename()
 {
-    ANALYZER
+    ANALYZER;
 
     if (EXE_DIRPATH.isEmpty())
     {
@@ -48,15 +48,13 @@ QFfmpeg::QFfmpeg(QObject *parent):
             qCritical() << "QFFmpeg, invalid installation path where are located FFMPEG binaries:" << folder;
         }
     }
-
-    ANALYZER_RETURN
 }
 
 QFfmpeg::QFfmpeg(const QString &filename, QObject *parent):
     QObject(parent),
     filename()
 {
-    ANALYZER
+    ANALYZER;
 
     if (EXE_DIRPATH.isEmpty())
     {
@@ -74,8 +72,6 @@ QFfmpeg::QFfmpeg(const QString &filename, QObject *parent):
             setFilename(filename, true);
         }
     }
-
-    ANALYZER_RETURN
 }
 
 QFfmpeg::~QFfmpeg()
@@ -106,7 +102,7 @@ bool QFfmpeg::isValid() const
 
 void QFfmpeg::probeFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    ANALYZER
+    ANALYZER;
 
     Q_UNUSED(exitCode)
 
@@ -149,13 +145,11 @@ void QFfmpeg::probeFinished(int exitCode, QProcess::ExitStatus exitStatus)
         process->deleteLater();
 
     emit mediaReady();
-
-    ANALYZER_RETURN
 }
 
 QString QFfmpeg::metaData(const QString &tagName) const
 {
-    ANALYZER
+    ANALYZER;
 
     if (waitProbeFinished())
     {
@@ -166,13 +160,11 @@ QString QFfmpeg::metaData(const QString &tagName) const
             QDomNode tag = tagList.at(index);
             if (tag.nodeName() == "tag" && tag.attributes().namedItem("key").nodeValue() == tagName)
             {
-                ANALYZER_RETURN
-                        return tag.attributes().namedItem("value").nodeValue();
+                return tag.attributes().namedItem("value").nodeValue();
             }
         }
     }
 
-    ANALYZER_RETURN
     return QString();
 }
 
@@ -211,53 +203,49 @@ int QFfmpeg::getBitrate() const
 
 QString QFfmpeg::getAudioFormat() const
 {
-    ANALYZER
+    ANALYZER;
 
     QString res;
 
     if (waitProbeFinished())
         res = audioStream.attributes().namedItem("codec_name").nodeValue();
 
-    ANALYZER_RETURN
     return res;
 }
 
 int QFfmpeg::getAudioBitrate() const
 {
-    ANALYZER
+    ANALYZER;
 
     int res = -1;
 
     if (waitProbeFinished())
         res = audioStream.attributes().namedItem("bit_rate").nodeValue().toInt();
 
-    ANALYZER_RETURN
     return res;
 }
 
 int QFfmpeg::getAudioChannelCount() const
 {
-    ANALYZER
+    ANALYZER;
 
     int res = -1;
 
     if (waitProbeFinished())
         res = audioStream.attributes().namedItem("channels").nodeValue().toInt();
 
-    ANALYZER_RETURN
     return res;
 }
 
 int QFfmpeg::getAudioSamplerate() const
 {
-    ANALYZER
+    ANALYZER;
 
     int res = -1;
 
     if (waitProbeFinished())
         res = audioStream.attributes().namedItem("sample_rate").nodeValue().toInt();
 
-    ANALYZER_RETURN
     return res;
 }
 
@@ -320,20 +308,19 @@ QStringList QFfmpeg::getStreamsTag(const QString &codec_type, const QString &tag
 
 qint64 QFfmpeg::getDuration() const
 {
-    ANALYZER
+    ANALYZER;
 
     qint64 res = -1;
 
     if (waitProbeFinished())
         res = xmlResProbe.elementsByTagName("format").at(0).attributes().namedItem("duration").nodeValue().toDouble()*1000.0;
 
-    ANALYZER_RETURN
     return res;
 }
 
 void QFfmpeg::parsePicture()
 {
-    ANALYZER
+    ANALYZER;
 
     picture->clear();
 
@@ -351,12 +338,11 @@ void QFfmpeg::parsePicture()
         programFfmpegPicture->start();
     }
 
-    ANALYZER_RETURN
 }
 
 void QFfmpeg::pictureFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    ANALYZER
+    ANALYZER;
 
     Q_UNUSED(exitCode)
 
@@ -383,42 +369,36 @@ void QFfmpeg::pictureFinished(int exitCode, QProcess::ExitStatus exitStatus)
     if (process)
         process->deleteLater();
 
-    ANALYZER_RETURN
 }
 
 QByteArray QFfmpeg::getPicture() const {
-    ANALYZER
+    ANALYZER;
 
     if (waitPictureFinished())
     {
         if (!picture)
         {
-            ANALYZER_RETURN
             return QByteArray();
         }
 
         if (!picture->isNull()) {
             if (picture->isEmpty())
             {
-                ANALYZER_RETURN
                 return QByteArray();
             }
 
-            ANALYZER_RETURN
             return *picture;
         }
 
-        ANALYZER_RETURN
         return *picture;
     }
 
-    ANALYZER_RETURN
     return QByteArray();
 }
 
 QHash<QString, double> QFfmpeg::getVolumeInfo(const int& timeout)
 {
-    ANALYZER
+    ANALYZER;
 
     QHash<QString, double> result;
 
@@ -462,13 +442,12 @@ QHash<QString, double> QFfmpeg::getVolumeInfo(const int& timeout)
         }
     }
 
-    ANALYZER_RETURN
     return result;
 }
 
 bool QFfmpeg::setFilename(const QString &filename, const bool &readPicture)
 {
-    ANALYZER
+    ANALYZER;
 
     xmlResProbe.clear();
     audioStream.clear();
@@ -511,24 +490,21 @@ bool QFfmpeg::setFilename(const QString &filename, const bool &readPicture)
         }
     }
 
-    ANALYZER_RETURN
     return true;
 }
 
 bool QFfmpeg::waitProbeFinished() const
 {
-    ANALYZER
+    ANALYZER;
     if (programFfmpegProbe)
     {
         if (programFfmpegProbe->state() != QProcess::NotRunning)
         {
             bool res = programFfmpegProbe->waitForFinished();
-            ANALYZER_RETURN
             return res;
         }
     }
 
-    ANALYZER_RETURN
     return true;
 }
 

@@ -14,31 +14,31 @@ class QFfmpegTranscoding : public TranscodeDevice
 
 public:
     explicit QFfmpegTranscoding(QObject *parent = Q_NULLPTR);
-    virtual ~QFfmpegTranscoding() Q_DECL_OVERRIDE;
+    ~QFfmpegTranscoding() Q_DECL_OVERRIDE;
 
-    virtual bool waitForFinished(int msecs = 30000) Q_DECL_OVERRIDE;
+    bool waitForFinished(int msecs = 30000) Q_DECL_OVERRIDE;
 
     void setError(const QString &message);
     QString error() const;
-    virtual int exitCode() const Q_DECL_OVERRIDE;
+    int exitCode() const Q_DECL_OVERRIDE;
 
     void setInput(QFfmpegInputMedia *input);
-    virtual bool isReadyToOpen() const Q_DECL_OVERRIDE;
+    bool isReadyToOpen() const Q_DECL_OVERRIDE;
 
-    virtual qint64 bitrate() const Q_DECL_OVERRIDE;  // bitrate in kbits/sec
-    virtual void setBitrate(const qint64 &bitrate) Q_DECL_OVERRIDE;
+    qint64 bitrate() const Q_DECL_OVERRIDE;  // bitrate in kbits/sec
+    void setBitrate(const qint64 &bitrate) Q_DECL_OVERRIDE;
     void setAudioBitrate(const qint64 &bitrate);
 
-    virtual bool atEnd() const Q_DECL_OVERRIDE;
-    virtual qint64 bytesAvailable() const Q_DECL_OVERRIDE;
-    virtual QByteArray read(qint64 maxlen) Q_DECL_OVERRIDE;
+    bool atEnd() const Q_DECL_OVERRIDE;
+    qint64 bytesAvailable() const Q_DECL_OVERRIDE;
+    QByteArray read(qint64 maxlen) Q_DECL_OVERRIDE;
 
     qint64 posInMsec() const;
-    virtual qint64 progress() Q_DECL_OVERRIDE;
+    qint64 progress() Q_DECL_OVERRIDE;
 
 private:
     void _close();
-    virtual qint64 originalLengthInMSeconds() const Q_DECL_OVERRIDE;
+    qint64 originalLengthInMSeconds() const Q_DECL_OVERRIDE;
 
 signals:
 

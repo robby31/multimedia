@@ -160,7 +160,7 @@ void ffmpegTest::testQFfmpeg()
     QCOMPARE(media.metaData("TLEN"), TLEN);
     QCOMPARE(media.metaData("date"), date);
 
-    ANALYZER_DISPLAY_RESULTS
+    ANALYZER_DISPLAY_RESULTS;
 }
 
 void ffmpegTest::testQFfmpegMedia_data()
@@ -323,7 +323,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileWAV()
     l_mediaType << AVMEDIA_TYPE_VIDEO;
 
     QFfmpegOutputMedia outputMedia;
-    QCOMPARE(outputMedia.openFile(QString("%1_%2.wav").arg(media.getFormat()).arg(encoded_filename), l_mediaType), true);
+    QCOMPARE(outputMedia.openFile(QString("%1_%2.wav").arg(media.getFormat(), encoded_filename), l_mediaType), true);
     QCOMPARE(outputMedia.isValid(), true);
     QVERIFY(outputMedia.videoStream() == NULL);
     QCOMPARE(outputMedia.getFormat(), QString("wav"));
@@ -334,7 +334,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileWAV()
 
     QCOMPARE(outputMedia.context()->pb->pos, 78);  /* header written */
 
-    QCOMPARE(outputMedia.filename(), QString("%1_%2.wav").arg(media.getFormat()).arg(encoded_filename));
+    QCOMPARE(outputMedia.filename(), QString("%1_%2.wav").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("wav"));
     QCOMPARE(outputMedia.getDuration(), duration);
@@ -406,7 +406,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3()
     l_mediaType << AVMEDIA_TYPE_AUDIO;
 
     QFfmpegOutputMedia outputMedia;
-    QCOMPARE(outputMedia.openFile(QString("%1_%2.mp3").arg(media.getFormat()).arg(encoded_filename), l_mediaType), true);
+    QCOMPARE(outputMedia.openFile(QString("%1_%2.mp3").arg(media.getFormat(), encoded_filename), l_mediaType), true);
     QCOMPARE(outputMedia.isValid(), true);
     QVERIFY(outputMedia.videoStream() == NULL);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
@@ -419,7 +419,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3()
 
     QCOMPARE(outputMedia.context()->pb->pos, 0);  /* header written */
 
-    QCOMPARE(outputMedia.filename(), QString("%1_%2.mp3").arg(media.getFormat()).arg(encoded_filename));
+    QCOMPARE(outputMedia.filename(), QString("%1_%2.mp3").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
     QCOMPARE(outputMedia.getDuration(), duration);
@@ -486,7 +486,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
     l_mediaType << AVMEDIA_TYPE_VIDEO;
 
     QFfmpegOutputMedia outputMedia;
-    QCOMPARE(outputMedia.openFile(QString("%1_%2.mp3").arg(media.getFormat()).arg(encoded_filename), l_mediaType), true);
+    QCOMPARE(outputMedia.openFile(QString("%1_%2.mp3").arg(media.getFormat(), encoded_filename), l_mediaType), true);
     QCOMPARE(outputMedia.isValid(), true);
     QVERIFY(outputMedia.audioStream() != NULL);
     QVERIFY(outputMedia.videoStream() != NULL);
@@ -505,7 +505,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
 
     QCOMPARE(outputMedia.context()->pb->pos, 0);  /* header written */
 
-    QCOMPARE(outputMedia.filename(), QString("%1_%2.mp3").arg(media.getFormat()).arg(encoded_filename));
+    QCOMPARE(outputMedia.filename(), QString("%1_%2.mp3").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
     QCOMPARE(outputMedia.getDuration(), duration);
@@ -756,7 +756,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
     mediaConfig[AVMEDIA_TYPE_AUDIO] = AV_CODEC_ID_AAC;
 
     QFfmpegOutputMedia outputMedia;
-    QCOMPARE(outputMedia.openFile(QString("%1_%2.m4a").arg(media.getFormat()).arg(encoded_filename), QString("ipod"), mediaConfig), true);
+    QCOMPARE(outputMedia.openFile(QString("%1_%2.m4a").arg(media.getFormat(), encoded_filename), QString("ipod"), mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
     QVERIFY(outputMedia.videoStream() == NULL);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
@@ -767,7 +767,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
 
     QCOMPARE(outputMedia.context()->pb->pos, 0);  /* header written */
 
-    QCOMPARE(outputMedia.filename(), QString("%1_%2.m4a").arg(media.getFormat()).arg(encoded_filename));
+    QCOMPARE(outputMedia.filename(), QString("%1_%2.m4a").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
     QCOMPARE(outputMedia.getDuration(), duration);
@@ -925,7 +925,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileLPCM()
     l_mediaType << AVMEDIA_TYPE_VIDEO;
 
     QFfmpegOutputMedia outputMedia;
-    QCOMPARE(outputMedia.openFile(QString("%1_%2.pcm").arg(media.getFormat()).arg(encoded_filename), QString("s16le"), l_mediaType), true);
+    QCOMPARE(outputMedia.openFile(QString("%1_%2.pcm").arg(media.getFormat(), encoded_filename), QString("s16le"), l_mediaType), true);
     QCOMPARE(outputMedia.isValid(), true);
     QVERIFY(outputMedia.videoStream() == NULL);
     QCOMPARE(outputMedia.getFormat(), QString("s16le"));
@@ -936,7 +936,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileLPCM()
 
     QCOMPARE(outputMedia.context()->pb->pos, 0);  /* header written */
 
-    QCOMPARE(outputMedia.filename(), QString("%1_%2.pcm").arg(media.getFormat()).arg(encoded_filename));
+    QCOMPARE(outputMedia.filename(), QString("%1_%2.pcm").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("s16le"));
     QCOMPARE(outputMedia.getDuration(), duration);
@@ -1101,7 +1101,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
     mediaConfig[AVMEDIA_TYPE_AUDIO] = AV_CODEC_ID_ALAC;
 
     QFfmpegOutputMedia outputMedia;
-    QCOMPARE(outputMedia.openFile(QString("%1_%2.alac").arg(media.getFormat()).arg(encoded_filename), QString("ipod"), mediaConfig), true);
+    QCOMPARE(outputMedia.openFile(QString("%1_%2.alac").arg(media.getFormat(), encoded_filename), QString("ipod"), mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
     QVERIFY(outputMedia.videoStream() == NULL);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
@@ -1113,7 +1113,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
 
     QCOMPARE(outputMedia.context()->pb->pos, 0);  /* no header written */
 
-    QCOMPARE(outputMedia.filename(), QString("%1_%2.alac").arg(media.getFormat()).arg(encoded_filename));
+    QCOMPARE(outputMedia.filename(), QString("%1_%2.alac").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
     QCOMPARE(outputMedia.getDuration(), duration);
