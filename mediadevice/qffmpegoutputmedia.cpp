@@ -233,13 +233,13 @@ bool QFfmpegOutputMedia::openCodec()
     /* open the output file, if needed */
     if (pFormatCtx != Q_NULLPTR && !(pFormatCtx->flags & AVFMT_NOFILE))
     {
-        QString pathname(pFormatCtx->filename);
+        QString pathname(pFormatCtx->url);
         if (!pathname.isEmpty())
         {
-            int ret = avio_open(&pFormatCtx->pb, pFormatCtx->filename, AVIO_FLAG_WRITE);
+            int ret = avio_open(&pFormatCtx->pb, pFormatCtx->url, AVIO_FLAG_WRITE);
             if (ret < 0)
             {
-                qCritical() << "unable to open output" << pFormatCtx->filename;
+                qCritical() << "unable to open output" << pFormatCtx->url;
                 return false;
             }
         }
@@ -257,7 +257,7 @@ bool QFfmpegOutputMedia::openCodec()
         if (ret < 0)
         {
             if (pFormatCtx != Q_NULLPTR)
-                qCritical() << "Error occurred when writing header" << pFormatCtx->filename;
+                qCritical() << "Error occurred when writing header" << pFormatCtx->url;
             else
                 qCritical() << "Error occurred when writing header";
 
@@ -284,7 +284,7 @@ bool QFfmpegOutputMedia::_close()
 {
     if (isOpen() && pFormatCtx != Q_NULLPTR)
     {
-        QString pathname(pFormatCtx->filename);
+        QString pathname(pFormatCtx->url);
         if (!(pFormatCtx->flags & AVFMT_NOFILE) && !pathname.isEmpty())
         {
             // write trailer when header is written and when we write in file not when we write in buffer

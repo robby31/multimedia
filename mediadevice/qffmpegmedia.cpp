@@ -27,7 +27,6 @@ void QFfmpegMedia::init()
 
     if (!m_initialised)
     {
-        av_register_all();
         m_initialised = true;
     }
 }
@@ -37,7 +36,7 @@ QString QFfmpegMedia::filename() const
     QString res;
 
     if (context() != Q_NULLPTR)
-        res = QString(context()->filename);
+        res = QString(context()->url);
 
     return res;
 }
@@ -137,7 +136,7 @@ QString QFfmpegMedia::metaData(const QString &tagName) const
     return QString();
 }
 
-QHash<QString, double> QFfmpegMedia::getVolumeInfo(const int timeout)
+QHash<QString, double> QFfmpegMedia::getVolumeInfo(const int &timeout)
 {
     Q_UNUSED(timeout)
     QHash<QString, double> res;
