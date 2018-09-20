@@ -16,7 +16,7 @@ public:
     void setVariableBitrate(const bool &flag);
 
 private:
-    virtual void updateArguments() Q_DECL_OVERRIDE;
+    void updateArguments() Q_DECL_OVERRIDE;
 
 signals:
 

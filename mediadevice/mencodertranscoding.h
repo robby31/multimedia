@@ -11,7 +11,7 @@ public:
     explicit MencoderTranscoding(QObject *parent = Q_NULLPTR);
 
 private:
-    virtual void updateArguments();
+    void updateArguments() Q_DECL_OVERRIDE;
 
 signals:
 

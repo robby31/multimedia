@@ -43,12 +43,12 @@ private:
 signals:
 
 public slots:
-    virtual void close() Q_DECL_OVERRIDE;
+    void close() Q_DECL_OVERRIDE;
 
 private slots:
     void formatHasChanged();
     void readyForOpening();
-    virtual void _open() Q_DECL_OVERRIDE;
+    void _open() Q_DECL_OVERRIDE;
 
     void startDemux();
     void demux();

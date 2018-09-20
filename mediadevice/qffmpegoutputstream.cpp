@@ -31,7 +31,7 @@ QFfmpegEncoder *QFfmpegOutputStream::codec() const
     return m_codec;
 }
 
-bool QFfmpegOutputStream::init_encoding_stream(const AVCodecID id, AVFormatContext *fmtContext)
+bool QFfmpegOutputStream::init_encoding_stream(const AVCodecID &id, AVFormatContext *fmtContext)
 {
     if (id != AV_CODEC_ID_NONE && fmtContext != Q_NULLPTR)
     {

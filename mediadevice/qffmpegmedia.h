@@ -44,7 +44,7 @@ public:
     QString getVideoResolution() const;
     double getVideoFrameRate() const;
 
-    QHash<QString, double> getVolumeInfo(const int timeout = 30000);
+    QHash<QString, double> getVolumeInfo(const int &timeout = 30000);
 
     QStringList getAudioLanguages() const;
     QStringList getVideoLanguages() const;
