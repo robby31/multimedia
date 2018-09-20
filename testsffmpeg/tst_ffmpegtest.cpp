@@ -84,14 +84,14 @@ void ffmpegTest::testQFfmpeg_data()
     QTest::addColumn<QString>("TLEN");
     QTest::addColumn<QString>("date");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << "mp3" << 159373 << "mp3" << 2 << 44100 << 189255 << 192808 << "500x500" << 0.0 << QStringList("") << QStringList("") << QStringList() << 4556 << QString("Phébus") << QString("-M-") << QString("Mister Mystère") << QString("2/13") << QString("1/2") << QString("Rock  Français") << QString("159320") << QString("2009-09-07");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << "mov,mp4,m4a,3gp,3g2,mj2" << 188987 << "aac" << 2 << 44100 << 124436 << 135074 << "300x300" << 0.0 << QStringList("") << QStringList("und") << QStringList() << 20407 << QString("Monde virtuel") << QString("-M-") << QString("Je dis aime") << QString("1/15") << QString("1/1") << QString("Pop") << QString("") << QString("1999-10-25");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << "mov,mp4,m4a,3gp,3g2,mj2" << 275387 << "alac" << 2 << 48000 << 963753 << 964994 << "600x600" << 0.0 << QStringList("") << QStringList("und") << QStringList() << 8447 << "Give Life Back To Music" << "Daft Punk" << "Random Access Memories" << "1" << "" << "Euro House" << "" << "2013";
-    QTest::newRow("Video_MKV") << QString("/Users/doudou/Movies/Films/District.9.2009.720p.BrRip.YIFY.mkv") << "matroska,webm" << 6735830 << "aac" << 2 << 48000 << 0 << 871427 << "1280x688" << 23.976023976023978 << QStringList("") << QStringList("") << QStringList("eng") << 763 << QString("District 9 - YIFY") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << "mp3" << 159373 << "mp3" << 2 << 44100 << 189255 << 192808 << "500x500" << 0.0 << QStringList("") << QStringList("") << QStringList() << 4555 << QString("Phébus") << QString("-M-") << QString("Mister Mystère") << QString("2/13") << QString("1/2") << QString("Rock  Français") << QString("159320") << QString("2009-09-07");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << "mov,mp4,m4a,3gp,3g2,mj2" << 188987 << "aac" << 2 << 44100 << 124436 << 135074 << "300x300" << 0.0 << QStringList("") << QStringList("und") << QStringList() << 20406 << QString("Monde virtuel") << QString("-M-") << QString("Je dis aime") << QString("1/15") << QString("1/1") << QString("Pop") << QString("") << QString("1999-10-25");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << "mov,mp4,m4a,3gp,3g2,mj2" << 275387 << "alac" << 2 << 48000 << 963753 << 964994 << "600x600" << 0.0 << QStringList("") << QStringList("und") << QStringList() << 8446 << "Give Life Back To Music" << "Daft Punk" << "Random Access Memories" << "1" << "" << "Euro House" << "" << "2013";
+    QTest::newRow("Video_MKV") << QString("/Users/doudou/Movies/Films/District.9.2009.720p.BrRip.YIFY.mkv") << "matroska,webm" << 6735830 << "aac" << 2 << 48000 << 0 << 871427 << "1280x688" << 23.976023976023978 << QStringList("") << QStringList("") << QStringList("eng") << 762 << QString("District 9 - YIFY") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
 
     QStringList tmp;
     tmp << "spa" << "eng" << "fre";
-    QTest::newRow("Video_MKV2") << QString("/Users/doudou/Movies/Films/Margin Call [BDrip m-1080p AC3 Esp-Eng-Fr+subs].mkv") << QString("matroska,webm") << 6419022 << "ac3" << 2 << 48000 << 112000 << 4293543 << QString("1920x1080") << 24.0 << QStringList("spa") << QStringList(tmp) << QStringList(tmp) << 3121 << QString("Margin Call m-1080p.guerrero36") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
+    QTest::newRow("Video_MKV2") << QString("/Users/doudou/Movies/Films/Margin Call [BDrip m-1080p AC3 Esp-Eng-Fr+subs].mkv") << QString("matroska,webm") << 6419022 << "ac3" << 2 << 48000 << 112000 << 4293543 << QString("1920x1080") << 24.0 << QStringList("spa") << QStringList(tmp) << QStringList(tmp) << 3120 << QString("Margin Call m-1080p.guerrero36") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
 
 }
 
@@ -190,9 +190,9 @@ void ffmpegTest::testQFfmpegMedia_data()
     QTest::addColumn<QString>("TLEN");
     QTest::addColumn<QString>("date");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << QString("mp3") << 159373 << (qint64)3841064 << "mp3" << 2 << 44100 << 189255 << 192808 << QString("500x500") << 0.0 << QStringList("") << QStringList("") << QStringList() << 4538 << true << QString("Phébus") << QString("-M-") << QString("Mister Mystère") << QString("2/13") << QString("1/2") << QString("Rock  Français") << QString("159320") << QString("2009-09-07");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << QString("mov,mp4,m4a,3gp,3g2,mj2") << 188987 << (qint64)3190914 << "aac" << 2 << 44100 << 124436 << 135074 << QString("300x300") << 0.0 << QStringList("") << QStringList("und") << QStringList() << 20389 << true << QString("Monde virtuel") << QString("-M-") << QString("Je dis aime") << QString("1/15") << QString("1/1") << QString("Pop") << QString("") << QString("1999-10-25");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << "mov,mp4,m4a,3gp,3g2,mj2" << 275387 << (qint64)33218372 << "alac" << 2 << 48000 << 963753 << 964994 << "600x600" << 0.0 << QStringList("") << QStringList("und") << QStringList() << 8429 << true << "Give Life Back To Music" << "Daft Punk" << "Random Access Memories" << "1" << "" << "Euro House" << "" << "2013";
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << QString("mp3") << 159373 << (qint64)3841064 << "mp3" << 2 << 44100 << 189255 << 192808 << QString("500x500") << 0.0 << QStringList("") << QStringList("") << QStringList() << 4537 << true << QString("Phébus") << QString("-M-") << QString("Mister Mystère") << QString("2/13") << QString("1/2") << QString("Rock  Français") << QString("159320") << QString("2009-09-07");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << QString("mov,mp4,m4a,3gp,3g2,mj2") << 188987 << (qint64)3190914 << "aac" << 2 << 44100 << 124436 << 135074 << QString("300x300") << 0.0 << QStringList("") << QStringList("und") << QStringList() << 20388 << true << QString("Monde virtuel") << QString("-M-") << QString("Je dis aime") << QString("1/15") << QString("1/1") << QString("Pop") << QString("") << QString("1999-10-25");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << "mov,mp4,m4a,3gp,3g2,mj2" << 275387 << (qint64)33218372 << "alac" << 2 << 48000 << 963753 << 964994 << "600x600" << 0.0 << QStringList("") << QStringList("und") << QStringList() << 8428 << true << "Give Life Back To Music" << "Daft Punk" << "Random Access Memories" << "1" << "" << "Euro House" << "" << "2013";
     QTest::newRow("Video_MKV") << QString("/Users/doudou/Movies/Films/District.9.2009.720p.BrRip.YIFY.mkv") << QString("matroska,webm") << 6735830 << (qint64)733723671 << "aac" << 2 << 48000 << 0 << 871427 << QString("1280x688") << 23.976023976023978 << QStringList("") << QStringList("") << QStringList("eng") << 0 << false << QString("District 9 - YIFY") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
 
     QStringList tmp;
@@ -730,9 +730,9 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<QString>("encoded_filename");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 2620281 << QString("Audio_MP3_Phebus");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 3094576 << QString("Audio_M4A_Monde_Virtuel");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 4610155 << QString("Audio_M4A_Daft_Punk");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 2593525 << QString("Audio_MP3_Phebus");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 3034329 << QString("Audio_M4A_Monde_Virtuel");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 4494029 << QString("Audio_M4A_Daft_Punk");
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
@@ -765,7 +765,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
     QCOMPARE(outputMedia.setInputMedia(&media), true);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
 
-    QCOMPARE(outputMedia.context()->pb->pos, 0);  /* header written */
+    QCOMPARE(outputMedia.context()->pb->pos, 40);  /* header written */
 
     QCOMPARE(outputMedia.filename(), QString("%1_%2.m4a").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
@@ -809,9 +809,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferAAC_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<int>("header_size");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 2592034 << 0;
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 3061229 << 0;
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 4557688 << 0;
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 2565278 << 40;
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 3000982 << 40;
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 4441562 << 40;
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeBufferAAC()
@@ -1075,7 +1075,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<QString>("encoded_filename");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 15616000 << QString("Audio_MP3_Phebus");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 15593061 << QString("Audio_MP3_Phebus");
     QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 21335483 << QString("Audio_M4A_Monde_Virtuel");
     QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 33189737 << QString("Audio_M4A_Daft_Punk");
 }
@@ -1111,7 +1111,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
     QCOMPARE(outputMedia.setInputMedia(&media), true);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
 
-    QCOMPARE(outputMedia.context()->pb->pos, 0);  /* no header written */
+    QCOMPARE(outputMedia.context()->pb->pos, 40);  /* header written */
 
     QCOMPARE(outputMedia.filename(), QString("%1_%2.alac").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
@@ -1153,7 +1153,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC_data()
     QTest::addColumn<int>("encoded_size");
 
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 15608221;
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 15585306;
     QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 21326356;
     QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 33175662;
 }
@@ -1190,7 +1190,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC()
     QCOMPARE(outputMedia.setInputMedia(&media), true);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
 
-    QCOMPARE(outputMedia.bytesAvailable(), 0);  /* no header written */
+    QCOMPARE(outputMedia.bytesAvailable(), 40);  /* header written */
 
     QCOMPARE(outputMedia.filename(), QString(""));
     QCOMPARE(outputMedia.isValid(), true);

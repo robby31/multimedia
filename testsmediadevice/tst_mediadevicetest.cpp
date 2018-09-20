@@ -41,6 +41,9 @@ private Q_SLOTS:
 
     void testFfmpegTranscoding_data();
     void testFfmpegTranscoding();
+
+    void testQFfmpegTranscodingCOPY_data();
+    void testQFfmpegTranscodingCOPY();
 };
 
 mediadeviceTest::mediadeviceTest()
@@ -421,12 +424,18 @@ void mediadeviceTest::testQFfmpegTranscodingMP3_data()
     QTest::addColumn<int>("time_end");
 
     QTest::newRow("MP3 bitrate=320000") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 320000 << 6376920 << 800000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
-    QTest::newRow("MP3 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 320000 << 5976920 << 800000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
-    QTest::newRow("MP3 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 320000 << 402000 << 800000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
-    QTest::newRow("MP3 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 320000 << 1202000 << 800000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
-    QTest::newRow("MP3 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 320000 << 802000 << 800000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
+    QTest::newRow("MP3 bitrate=320000 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 320000 << 5976920 << 800000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
+    QTest::newRow("MP3 bitrate=320000 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 320000 << 402000 << 800000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
+    QTest::newRow("MP3 bitrate=320000 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 320000 << 1202000 << 800000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
+    QTest::newRow("MP3 bitrate=320000 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 320000 << 802000 << 800000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
 
     QTest::newRow("MP3 bitrate=192000") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 192000 << 3826952 << 480000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
+
+    QTest::newRow("MP3 bitrate=189255") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 189255 << 3772267 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
+    QTest::newRow("MP3 bitrate=189255 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 189255 << 3535698 << 473120 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
+    QTest::newRow("MP3 bitrate=189255 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 189255 << 238568 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
+    QTest::newRow("MP3 bitrate=189255 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 189255 << 711706 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
+    QTest::newRow("MP3 bitrate=189255 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 189255 << 475137 << 473120 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
 }
 
 void mediadeviceTest::testQFfmpegTranscodingMP3()
@@ -978,7 +987,7 @@ void mediadeviceTest::testQFfmpegTranscodingAAC()
 
     QCOMPARE(device.bitrate(), bitrate);
     QCOMPARE(device.size(), size);
-    QCOMPARE(device.bytesAvailable() == 0, true);  /* no header */
+    QCOMPARE(device.bytesAvailable() > 0, true);  /* header written */
 
     QCOMPARE(device.timeSeekStart(), time_start);
     QCOMPARE(device.timeSeekEnd(), time_end);
@@ -1076,7 +1085,7 @@ void mediadeviceTest::testQFfmpegTranscodingAAC()
     QCOMPARE(device.posInMsec(), 0);
 
     QCOMPARE(device.size(), size);
-    QCOMPARE(device.bytesAvailable() == 0, true);  /* no header */
+    QCOMPARE(device.bytesAvailable() > 0, true);  /* header  written */
 
     QCOMPARE(device.timeSeekStart(), time_start);
     QCOMPARE(device.timeSeekEnd(), time_end);
@@ -1465,7 +1474,7 @@ void mediadeviceTest::testQFfmpegTranscodingALAC()
 
     QCOMPARE(device.bitrate(), bitrate);
     QCOMPARE(device.size(), size);
-    QCOMPARE(device.bytesAvailable() == 0, true);  /* no header written */
+    QCOMPARE(device.bytesAvailable() > 0, true);  /* header written */
 
     QCOMPARE(device.timeSeekStart(), time_start);
     QCOMPARE(device.timeSeekEnd(), time_end);
@@ -1563,7 +1572,7 @@ void mediadeviceTest::testQFfmpegTranscodingALAC()
     QCOMPARE(device.posInMsec(), 0);
 
     QCOMPARE(device.size(), size);
-    QCOMPARE(device.bytesAvailable() == 0, true);  /* no header written */
+    QCOMPARE(device.bytesAvailable() > 0, true);  /* header written */
 
     QCOMPARE(device.timeSeekStart(), time_start);
     QCOMPARE(device.timeSeekEnd(), time_end);
@@ -1621,6 +1630,251 @@ void mediadeviceTest::testQFfmpegTranscodingALAC()
 
 }
 
+void mediadeviceTest::testQFfmpegTranscodingCOPY_data()
+{
+    QTest::addColumn<QString>("pathname");
+    QTest::addColumn<int>("durationInMSeconds");
+    QTest::addColumn<int>("bitrate");
+    QTest::addColumn<int>("size");
+    QTest::addColumn<int>("maxBufferSize");
+    QTest::addColumn<int>("durationBuffer");
+    QTest::addColumn<int>("param_startByte");
+    QTest::addColumn<int>("param_endByte");
+    QTest::addColumn<int>("startByte");
+    QTest::addColumn<int>("endByte");
+    QTest::addColumn<int>("param_time_start");
+    QTest::addColumn<int>("time_start");
+    QTest::addColumn<int>("param_time_end");
+    QTest::addColumn<int>("time_end");
+
+    QTest::newRow("COPY") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 189255 << 3770267 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
+    QTest::newRow("COPY TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 189255 << 3533698 << 473120 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
+    QTest::newRow("COPY TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 189255 << 236568 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
+    QTest::newRow("COPY TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 189255 << 709706 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
+    QTest::newRow("COPY TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 189255 << 473137 << 473120 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
+    QTest::newRow("COPY RANGE=3000-") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 189255 << 3770267-3000 << 473120 << 20 << 3000 << -1 << 3000 << -1 << -1 << -1 << -1 << -1;
+    QTest::newRow("COPY RANGE=0-5000") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 189255 << 5001 << 473120 << 20 << 0 << 5000 << 0 << 5000 << -1 << -1 << -1 << -1;
+
+    QTest::newRow("COPY") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 128169 << 3027784 << 320420 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
+}
+
+void mediadeviceTest::testQFfmpegTranscodingCOPY()
+{
+    QFETCH(QString, pathname);
+    QFETCH(int, durationInMSeconds);
+    QFETCH(int, bitrate);
+    QFETCH(int, size);
+    QFETCH(int, maxBufferSize);
+    QFETCH(int, durationBuffer);
+    QFETCH(int, param_startByte);
+    QFETCH(int, param_endByte);
+    QFETCH(int, startByte);
+    QFETCH(int, endByte);
+    QFETCH(int, param_time_start);
+    QFETCH(int, time_start);
+    QFETCH(int, param_time_end);
+    QFETCH(int, time_end);
+
+    QFfmpegTranscoding device;
+    device.setFormat(COPY);
+    device.setUrl(pathname);
+
+    if (param_startByte != -1 or param_endByte != -1)
+        device.setRange(param_startByte, param_endByte);
+    if (param_time_start != -1 or param_time_end != -1)
+        device.setTimeSeek(param_time_start, param_time_end);
+
+    QCOMPARE(device.isOpen(), false);
+    QCOMPARE(device.isReadyToOpen(), true);
+    QCOMPARE(device.atEnd(), true);
+
+    QCOMPARE(device.pos(), 0);
+    QCOMPARE(device.progress(), 0);
+
+    QCOMPARE(device.format() == COPY, true);
+    QCOMPARE(device.bitrate(), bitrate);
+    QCOMPARE(device.size(), size);
+    QCOMPARE(device.bytesAvailable(), -1);  /* device not open */
+
+    QCOMPARE(device.timeSeekStart(), time_start);
+    QCOMPARE(device.timeSeekEnd(), time_end);
+
+    QCOMPARE(device.startByte(), startByte);
+    QCOMPARE(device.endByte(), endByte);
+
+    QCOMPARE(device.maxBufferSize(), maxBufferSize);
+    QCOMPARE(device.durationBuffer(), durationBuffer);
+    QCOMPARE(device.lengthInMSeconds(), durationInMSeconds);
+    QCOMPARE(device.lengthInSeconds(), durationInMSeconds/1000);
+
+    /* OPEN DEVICE */
+    QCOMPARE(device.open(), true);
+
+    QCOMPARE(device.isOpen(), true);
+    QCOMPARE(device.isReadyToOpen(), true);
+    QCOMPARE(device.atEnd(), false);
+
+    QCOMPARE(device.pos(), 0);
+    QCOMPARE(device.progress(), 0);
+    QCOMPARE(device.posInMsec(), 0);
+
+    QCOMPARE(device.bitrate(), bitrate);
+    QCOMPARE(device.size(), size);
+    QCOMPARE(device.bytesAvailable() > 0, true);
+
+    QCOMPARE(device.timeSeekStart(), time_start);
+    QCOMPARE(device.timeSeekEnd(), time_end);
+
+    QCOMPARE(device.startByte(), startByte);
+    QCOMPARE(device.endByte(), endByte);
+
+    QCOMPARE(device.maxBufferSize(), maxBufferSize);
+    QCOMPARE(device.durationBuffer(), durationBuffer);
+    QCOMPARE(device.bitrate(), bitrate);
+    QCOMPARE(device.lengthInMSeconds(), durationInMSeconds);
+    QCOMPARE(device.lengthInSeconds(), durationInMSeconds/1000);
+
+    QElapsedTimer timer;
+
+    /* READ DEVICE UNTIL END */
+    timer.start();
+    qint64 readBytes = 0;
+    while (!device.atEnd())
+    {
+        QByteArray data;
+        data += device.read(1000000);
+        readBytes += data.size();
+        QVERIFY(data.size() <= 1000000);
+    }
+
+    qInfo() << "transcoding done in" << timer.elapsed() << "ms.";
+    double delta_size = (double)(size-readBytes)/(double)size*100.0;
+    qInfo() << "delta size" << delta_size;
+    qInfo() << "bytes read" << readBytes << size;
+    //    if (durationInMSeconds > 20000)
+    //        QCOMPARE(delta_size < 0.07, true);
+    QVERIFY2(readBytes<=size, QString("%1 > %2").arg(readBytes).arg(size).toUtf8());
+
+    QCOMPARE(device.isOpen(), true);
+    QCOMPARE(device.isReadyToOpen(), true);
+    QCOMPARE(device.atEnd(), true);
+
+    QCOMPARE(qRound(device.posInMsec()/1000.0), qRound(durationInMSeconds/1000.0));
+    QCOMPARE(device.pos(), readBytes);
+    QCOMPARE(device.progress(), 100);
+
+    QCOMPARE(device.size(), size);
+    QCOMPARE(device.bytesAvailable(), 0);
+
+    QCOMPARE(device.timeSeekStart(), time_start);
+    QCOMPARE(device.timeSeekEnd(), time_end);
+
+    QCOMPARE(device.startByte(), startByte);
+    QCOMPARE(device.endByte(), endByte);
+
+    QCOMPARE(device.maxBufferSize(), maxBufferSize);
+    QCOMPARE(device.durationBuffer(), durationBuffer);
+    QCOMPARE(device.bitrate(), bitrate);
+    QCOMPARE(device.lengthInMSeconds(), durationInMSeconds);
+    QCOMPARE(device.lengthInSeconds(), durationInMSeconds/1000);
+
+    device.close();
+    /*
+          transcode second time after closing device
+    */
+
+    QCOMPARE(device.isOpen(), false);
+    QCOMPARE(device.isReadyToOpen(), true);
+    QCOMPARE(device.atEnd(), true);
+
+    QCOMPARE(device.pos(), 0);
+    QCOMPARE(device.progress(), 0);
+
+    QCOMPARE(device.format() == COPY, true);
+    QCOMPARE(device.size(), size);
+    QCOMPARE(device.bytesAvailable(), -1);  /* device not open */
+
+    QCOMPARE(device.timeSeekStart(), time_start);
+    QCOMPARE(device.timeSeekEnd(), time_end);
+
+    QCOMPARE(device.startByte(), startByte);
+    QCOMPARE(device.endByte(), endByte);
+
+    QCOMPARE(device.maxBufferSize(), maxBufferSize);
+    QCOMPARE(device.durationBuffer(), durationBuffer);
+    QCOMPARE(device.bitrate(), bitrate);
+    QCOMPARE(device.lengthInMSeconds(), durationInMSeconds);
+    QCOMPARE(device.lengthInSeconds(), durationInMSeconds/1000);
+
+    /* OPEN DEVICE  */
+    QCOMPARE(device.open(), true);
+
+    QCOMPARE(device.isOpen(), true);
+    QCOMPARE(device.isReadyToOpen(), true);
+    QCOMPARE(device.atEnd(), false);
+
+    QCOMPARE(device.pos(), 0);
+    QCOMPARE(device.progress(), 0);
+    QCOMPARE(device.posInMsec(), 0);
+
+    QCOMPARE(device.size(), size);
+//    QCOMPARE(device.bytesAvailable() == 0, true);  /* no header written */
+
+    QCOMPARE(device.timeSeekStart(), time_start);
+    QCOMPARE(device.timeSeekEnd(), time_end);
+
+    QCOMPARE(device.startByte(), startByte);
+    QCOMPARE(device.endByte(), endByte);
+
+    QCOMPARE(device.maxBufferSize(), maxBufferSize);
+    QCOMPARE(device.durationBuffer(), durationBuffer);
+    QCOMPARE(device.bitrate(), bitrate);
+    QCOMPARE(device.lengthInMSeconds(), durationInMSeconds);
+    QCOMPARE(device.lengthInSeconds(), durationInMSeconds/1000);
+
+    /* READ DEVICE UNTIL END */
+    timer.start();
+    readBytes = 0;
+    while (!device.atEnd())
+    {
+        QByteArray data;
+        data += device.read(1000000);
+        readBytes += data.size();
+        QVERIFY(data.size() <= 1000000);
+    }
+
+    qInfo() << "transcoding done in" << timer.elapsed() << "ms.";
+    delta_size = (double)(size-readBytes)/(double)size*100.0;
+    qInfo() << "delta size" << delta_size;
+    qInfo() << "bytes read" << readBytes << size;
+    //    if (durationInMSeconds > 20000)
+    //        QCOMPARE(delta_size < 0.07, true);
+    QCOMPARE(readBytes<=size, true);
+
+    QCOMPARE(device.isOpen(), true);
+    QCOMPARE(device.isReadyToOpen(), true);
+    QCOMPARE(device.atEnd(), true);
+
+    QCOMPARE(qRound(device.posInMsec()/1000.0), qRound(durationInMSeconds/1000.0));
+    QCOMPARE(device.pos(), readBytes);
+    QCOMPARE(device.progress(), 100);
+
+    QCOMPARE(device.size(), size);
+    QCOMPARE(device.bytesAvailable(), 0);
+
+    QCOMPARE(device.timeSeekStart(), time_start);
+    QCOMPARE(device.timeSeekEnd(), time_end);
+
+    QCOMPARE(device.startByte(), startByte);
+    QCOMPARE(device.endByte(), endByte);
+
+    QCOMPARE(device.maxBufferSize(), maxBufferSize);
+    QCOMPARE(device.durationBuffer(), durationBuffer);
+    QCOMPARE(device.bitrate(), bitrate);
+    QCOMPARE(device.lengthInMSeconds(), durationInMSeconds);
+    QCOMPARE(device.lengthInSeconds(), durationInMSeconds/1000);
+
+}
 QTEST_MAIN(mediadeviceTest)
 
 #include "tst_mediadevicetest.moc"
