@@ -18,12 +18,27 @@ QString QFfmpegInputMedia::getFormat() const
     return QString();
 }
 
-qint64 QFfmpegInputMedia::getDuration() const
+qint64 QFfmpegInputMedia::getStartTimeInMicroSec() const
 {
-    if (pFormatCtx != Q_NULLPTR && pFormatCtx->duration != AV_NOPTS_VALUE)
-        return 1000 * pFormatCtx->duration / AV_TIME_BASE;
+    if (pFormatCtx != Q_NULLPTR && pFormatCtx->start_time != AV_NOPTS_VALUE)
+        return pFormatCtx->start_time * 1000000 / AV_TIME_BASE;
 
-    return -1;
+    return 0.0;
+}
+
+double QFfmpegInputMedia::getDurationInSec() const
+{
+    return QVariant::fromValue(getDurationInMicroSec()).toDouble() / 1000000.0;
+}
+
+qint64 QFfmpegInputMedia::getDurationInMicroSec() const
+{
+    if (pFormatCtx != Q_NULLPTR)
+        if (pFormatCtx->duration != AV_NOPTS_VALUE)
+
+            return pFormatCtx->duration * 1000000 / AV_TIME_BASE;
+
+    return 0.0;
 }
 
 qint64 QFfmpegInputMedia::getBitrate() const
@@ -36,10 +51,9 @@ qint64 QFfmpegInputMedia::getBitrate() const
 
 qint64 QFfmpegInputMedia::size() const
 {
-    qint64 size = -1;
-
-    if (pFormatCtx != Q_NULLPTR && pFormatCtx->pb != Q_NULLPTR)
+    if (pFormatCtx && pFormatCtx->pb)
     {
+        qint64 size = -1;
         size = avio_size(pFormatCtx->pb);
         if (size >= 0)
             return size;

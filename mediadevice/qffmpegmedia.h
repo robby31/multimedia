@@ -33,7 +33,9 @@ public:
 
     virtual qint64 size() const = 0;
     virtual QString getFormat() const = 0;
-    virtual qint64 getDuration() const = 0;
+    virtual qint64 getStartTimeInMicroSec() const = 0;
+    virtual double getDurationInSec() const = 0;
+    virtual qint64 getDurationInMicroSec() const = 0;
     virtual qint64 getBitrate() const = 0;
 
     QString getAudioFormat() const;

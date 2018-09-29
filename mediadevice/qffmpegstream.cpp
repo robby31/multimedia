@@ -39,7 +39,7 @@ bool QFfmpegStream::setStream(AVStream *stream)
     return false;
 }
 
-bool QFfmpegStream::setStream(AVStream *stream, int streamId)
+bool QFfmpegStream::setStream(AVStream *stream, uint streamId)
 {
     if (setStream(stream))
     {
@@ -159,18 +159,32 @@ double QFfmpegStream::frameRate() const
     return 0.0;
 }
 
-qint64 QFfmpegStream::getDuration() const
+qint64 QFfmpegStream::getStartTimeInMicroSec() const
 {
-    if (m_stream != Q_NULLPTR)
-        return 1000 * m_stream->time_base.num * m_stream->duration / m_stream->time_base.den;
-    return -1;
+    if (m_stream && m_stream->start_time != AV_NOPTS_VALUE)
+        return m_stream->start_time * 1000000 / AV_TIME_BASE;
+
+    return 0;
 }
 
-bool QFfmpegStream::setDuration(const qint64 &estimated_duration_Msec)
+double QFfmpegStream::getDurationInSec() const
+{
+    return getDurationInMicroSec() / 1000000.0;
+}
+
+qint64 QFfmpegStream::getDurationInMicroSec() const
+{
+    if (m_stream)
+        return 1000000 * m_stream->time_base.num * m_stream->duration / m_stream->time_base.den;
+
+    return 0;
+}
+
+bool QFfmpegStream::setDurationInMicroSec(const qint64 &estimated_duration_Microsec)
 {
     if (m_stream != Q_NULLPTR && m_stream->time_base.num != 0)
     {
-        m_stream->duration = qCeil((double)(estimated_duration_Msec * m_stream->time_base.den) / (double)(1000 * m_stream->time_base.num));
+        m_stream->duration = qCeil((double)(estimated_duration_Microsec * m_stream->time_base.den) / (double)(1000000 * m_stream->time_base.num));
         return true;
     }
 

@@ -61,7 +61,7 @@ public:
     void setVolumeInfo(const QHash<QString, double>& info);
     QHash<QString, double> volumeInfo() const { return m_volumeInfo; }
 
-    qint64 pos() const  Q_DECL_OVERRIDE            { return m_pos; }    // position in bytes of read data
+    qint64 pos() const  Q_DECL_OVERRIDE;
 
     bool open() Q_DECL_OVERRIDE;
     bool isOpen() const Q_DECL_OVERRIDE { return m_opened; }
@@ -76,7 +76,7 @@ private:
     void _close();
     qint64 transcodedPos() const { return pos() + bytesAvailable(); }  // position in bytes of transcoded data
     qint64 transcodedProgress() const;
-    virtual qint64 originalLengthInMSeconds() const = 0;
+    virtual double originalLengthInMSeconds() const = 0;
 
 signals:
     void formatChanged();
@@ -91,21 +91,21 @@ private slots:
     virtual void _open() = 0;
 
 protected:
-    bool m_opened;
-    qint64 m_pos;
+    bool m_opened = false;
+    qint64 m_pos = 0;
 
 private:
     QString m_url;
 
     QElapsedTimer transcodeClock;
 
-    TranscodeFormatAvailable m_format;
+    TranscodeFormatAvailable m_format = UNKNOWN;
 
     QStringList m_audioLanguages;
     QStringList m_subtitleLanguages;
     QString m_frameRate;
-    int m_audioChannelCount;
-    int m_audioSampleRate;
+    int m_audioChannelCount = -1;
+    int m_audioSampleRate = -1;
     QHash<QString, double> m_volumeInfo;
 };
 

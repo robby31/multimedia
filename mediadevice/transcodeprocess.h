@@ -18,7 +18,7 @@ public:
 
     int exitCode() const Q_DECL_OVERRIDE { return m_process.exitCode(); }
 
-    void setOriginalLengthInMSeconds(const qint64& duration);
+    void setOriginalLengthInMSeconds(const double &duration);
 
     qint64 bitrate() const Q_DECL_OVERRIDE;  // bitrate in kbits/sec
     void setBitrate(const qint64 &bitrate) Q_DECL_OVERRIDE;
@@ -37,7 +37,7 @@ private:
     virtual void updateArguments() = 0;
     qint64 transcodedPos() const { return pos() + bytesAvailable(); }  // position in bytes of transcoded data
     qint64 transcodedProgress() const;
-    qint64 originalLengthInMSeconds() const Q_DECL_OVERRIDE;
+    double originalLengthInMSeconds() const Q_DECL_OVERRIDE;
 
 public slots:
     void close() Q_DECL_OVERRIDE;
@@ -56,7 +56,7 @@ private slots:
 
 
 private:
-    qint64 m_durationMSecs = -1;     // original duration in mseconds without timeseekStart, timeseekEnd
+    double m_durationMSecs = -1;     // original duration in mseconds without timeseekStart, timeseekEnd
     qint64 m_bitrate = -1;
     QProcess m_process;
     bool killTranscodeProcess;  // true if the application aborts the transcoding

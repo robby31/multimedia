@@ -38,7 +38,7 @@ public:
 
 private:
     void _close();
-    qint64 originalLengthInMSeconds() const Q_DECL_OVERRIDE;
+    double originalLengthInMSeconds() const Q_DECL_OVERRIDE;
 
 signals:
 

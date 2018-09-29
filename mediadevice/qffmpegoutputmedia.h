@@ -20,7 +20,9 @@ public:
     QFfmpegOutputStream *subtitleStream() const Q_DECL_OVERRIDE;
 
     QString getFormat() const Q_DECL_OVERRIDE;
-    qint64 getDuration() const Q_DECL_OVERRIDE;
+    qint64 getStartTimeInMicroSec() const Q_DECL_OVERRIDE;
+    qint64 getDurationInMicroSec() const Q_DECL_OVERRIDE;
+    double getDurationInSec() const Q_DECL_OVERRIDE;
     qint64 getBitrate() const Q_DECL_OVERRIDE;
     qint64 size() const Q_DECL_OVERRIDE;
 

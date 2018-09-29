@@ -21,7 +21,7 @@ public:
     virtual bool isValid() const;
 
     bool setStream(AVStream *stream);
-    bool setStream(AVStream *stream, int streamId);
+    bool setStream(AVStream *stream, uint streamId);
 
     bool setTimeBase(int num, int den);
 
@@ -34,8 +34,10 @@ public:
 
     virtual void flush() = 0;
 
-    bool setDuration(const qint64 &estimated_duration_Msec);
-    qint64 getDuration() const;
+    qint64 getStartTimeInMicroSec() const;
+    bool setDurationInMicroSec(const qint64 &estimated_duration_Microsec);
+    qint64 getDurationInMicroSec() const;
+    double getDurationInSec() const;
 
     AVSampleFormat sampleFormat() const;
 

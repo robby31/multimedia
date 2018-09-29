@@ -18,12 +18,28 @@ QString QFfmpegOutputMedia::getFormat() const
     return pFormatCtx->oformat->name;
 }
 
-qint64 QFfmpegOutputMedia::getDuration() const
+qint64 QFfmpegOutputMedia::getStartTimeInMicroSec() const
+{
+    if (pFormatCtx != Q_NULLPTR && pFormatCtx->start_time != AV_NOPTS_VALUE)
+        return pFormatCtx->start_time * 1000000 / AV_TIME_BASE;
+
+    return 0;
+}
+
+double QFfmpegOutputMedia::getDurationInSec() const
 {
     if (!m_inputMedia)
-        return -1;
+        return 0.0;
 
-    return m_inputMedia->getDuration();
+    return m_inputMedia->getDurationInSec();
+}
+
+qint64 QFfmpegOutputMedia::getDurationInMicroSec() const
+{
+    if (!m_inputMedia)
+        return 0;
+
+    return m_inputMedia->getDurationInMicroSec();
 }
 
 qint64 QFfmpegOutputMedia::getBitrate() const
@@ -43,17 +59,22 @@ qint64 QFfmpegOutputMedia::size() const
 {
     qint64 res = headerSize();
 
-    if (m_audioStream && m_audioStream->isValid() && m_audioStream->getDuration() > 0 && m_audioStream->bitrate() > 0)
+    if (m_audioStream && m_audioStream->isValid() && m_audioStream->getDurationInSec() > 0 && m_audioStream->bitrate() > 0)
     {
-        res += m_audioStream->getDuration() * m_audioStream->bitrate() * overhead_factor() / 8000;
+        double duration = m_audioStream->getDurationInSec();
+
+        if (m_audioStream->getStartTimeInMicroSec() == 0)
+            duration += 0.05;
+
+        res += duration * m_audioStream->bitrate() * overhead_factor() / 8;
     }
 
     if (m_videoStream && m_videoStream->isValid())
     {
         if (!m_inputMedia || !m_inputMedia->videoStream() || m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR)
         {
-            if (m_videoStream->getDuration() > 0 && m_videoStream->bitrate() > 0)
-                res += m_videoStream->getDuration() * m_videoStream->bitrate() / 8000;
+            if (m_videoStream->getDurationInSec() > 0 && m_videoStream->bitrate() > 0)
+                res += m_videoStream->getDurationInSec() * m_videoStream->bitrate() / 8;
         }
         else
         {
@@ -222,10 +243,10 @@ bool QFfmpegOutputMedia::openCodec()
     if (m_inputMedia)
     {
         if (m_audioStream)
-            m_audioStream->setDuration(m_inputMedia->audioStream()->getDuration());
+            m_audioStream->setDurationInMicroSec(m_inputMedia->audioStream()->getDurationInMicroSec());
 
         if (m_videoStream)
-            m_videoStream->setDuration(m_inputMedia->videoStream()->getDuration());
+            m_videoStream->setDurationInMicroSec(m_inputMedia->videoStream()->getDurationInMicroSec());
     }
 
 //    av_dump_format(pFormatCtx, 0, pFormatCtx->filename, 1);
