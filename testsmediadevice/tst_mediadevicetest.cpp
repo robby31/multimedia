@@ -430,12 +430,10 @@ void mediadeviceTest::testQFfmpegTranscodingMP3_data()
     QTest::newRow("MP3 bitrate=320000 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 320000 << 802000 << 800000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
 
     QTest::newRow("MP3 bitrate=192000") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 192000 << 3826952 << 480000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
-
-    QTest::newRow("MP3 bitrate=189255") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 189255 << 3772267 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << -1 << -1;
-    QTest::newRow("MP3 bitrate=189255 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 189255 << 3535698 << 473120 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
-    QTest::newRow("MP3 bitrate=189255 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 189255 << 238568 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
-    QTest::newRow("MP3 bitrate=189255 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 189255 << 711706 << 473120 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
-    QTest::newRow("MP3 bitrate=189255 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 189255 << 475137 << 473120 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
+    QTest::newRow("MP3 bitrate=192000 TimeStart=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 149373 << 192000 << 3586952 << 480000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << -1 << -1;
+    QTest::newRow("MP3 bitrate=192000 TimeEnd=10") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 10000 << 192000 << 242000 << 480000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 10 << 10;
+    QTest::newRow("MP3 bitrate=192000 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 30000 << 192000 << 722000 << 480000 << 20 << -1 << -1 << -1 << -1 << -1 << -1 << 30 << 30;
+    QTest::newRow("MP3 bitrate=192000 TimeStart=10 TimeEnd=30") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 20000 << 192000 << 482000 << 480000 << 20 << -1 << -1 << -1 << -1 << 10 << 10 << 30 << 30;
 }
 
 void mediadeviceTest::testQFfmpegTranscodingMP3()

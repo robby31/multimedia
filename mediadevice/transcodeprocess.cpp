@@ -67,6 +67,9 @@ bool TranscodeProcess::atEnd() const
     if (!isOpen() || bytesAvailable()>0 || m_process.state() == QProcess::Running)
         return false;
 
+    if (endByte() > 0)
+        return m_pos >= endByte();
+
     return m_process.atEnd();
 }
 
@@ -90,6 +93,27 @@ QByteArray TranscodeProcess::read(qint64 maxlen)
             emit status(QString("Transcoding paused (%1%)").arg(newProgress));
         else
             emit status(QString("Transcoding (%1%)").arg(newProgress));
+    }
+
+    if (startByte() > 0)
+    {
+        if (m_pos < startByte())
+        {
+            qDebug() << "BYTES IGNORED" << m_pos << startByte();
+            return QByteArray();
+        }
+
+        if ((m_pos-data.size()) < startByte())
+        {
+            qDebug() << "REMOVE BYTES" << m_pos << startByte() << data.size() << startByte()-m_pos+data.size();
+            data.remove(0, QVariant::fromValue(startByte()-m_pos).toInt()+data.size());
+        }
+    }
+
+    if (endByte() > 0)
+    {
+        if (m_pos > endByte())
+            data.chop(QVariant::fromValue(m_pos-endByte()-1).toInt());
     }
 
     return data;
@@ -270,12 +294,12 @@ void TranscodeProcess::setBitrate(const qint64 &bitrate)
     }
 }
 
-void TranscodeProcess::setOriginalLengthInMSeconds(const qint64& duration)
+void TranscodeProcess::setOriginalLengthInMSeconds(const double& duration)
 {
     m_durationMSecs = duration;
 }
 
-qint64 TranscodeProcess::originalLengthInMSeconds() const
+double TranscodeProcess::originalLengthInMSeconds() const
 {
     return m_durationMSecs;
 }

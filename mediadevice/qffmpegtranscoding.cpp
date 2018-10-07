@@ -25,13 +25,16 @@ QFfmpegTranscoding::~QFfmpegTranscoding()
         m_outputMedia = Q_NULLPTR;
     }
 
-    _close();
+    TranscodeDevice::close();
 }
 
 bool QFfmpegTranscoding::atEnd() const
 {
     if (!isOpen() || !m_outputMedia)
         return true;
+
+    if (endByte() > 0)
+        return m_pos >= endByte();
 
     if (m_outputMedia)
         return m_outputMedia->atEnd();
@@ -112,6 +115,27 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
 
     qDebug() << msg << "ended read" << data.size() << "bytes in" << timer.elapsed() << "ms.";
 
+    if (startByte() > 0)
+    {
+        if (m_pos < startByte())
+        {
+            qDebug() << "BYTES IGNORED" << m_pos << startByte();
+            return QByteArray();
+        }
+
+        if ((m_pos-data.size()) < startByte())
+        {
+            qDebug() << "REMOVE BYTES" << m_pos << startByte() << data.size() << startByte()-m_pos+data.size();
+            data.remove(0, QVariant::fromValue(startByte()-m_pos).toInt()+data.size());
+        }
+    }
+
+    if (endByte() > 0)
+    {
+        if (m_pos > endByte())
+            data.chop(QVariant::fromValue(m_pos-endByte()-1).toInt());
+    }
+
     return data;
 }
 
@@ -133,6 +157,29 @@ void QFfmpegTranscoding::readyForOpening()
                 setBitrate(1411200);
             else
                 setBitrate(1536000);
+        }
+        else if (format() == COPY && m_outputMedia && !m_outputMedia->audioStream())
+        {
+            QHash<AVMediaType, AVCodecID> mediaConfig;
+            mediaConfig[AVMEDIA_TYPE_AUDIO] = m_inputMedia->audioStream()->codec()->codecCtx()->codec_id;
+
+            QString outputFormat = m_inputMedia->getFormat();
+            if (outputFormat == "mov,mp4,m4a,3gp,3g2,mj2")
+                outputFormat = "ipod";
+
+            if (!m_outputMedia->openBuffer(outputFormat, mediaConfig))
+            {
+                setError(QString("unable to open buffer %1").arg(m_inputMedia->getFormat()));
+            }
+            else if (m_outputMedia->audioStream())
+            {
+                m_outputMedia->audioStream()->setSampleFmt(m_inputMedia->audioStream()->sampleFormat());
+                setBitrate(m_inputMedia->audioStream()->bitrate());
+            }
+            else
+            {
+                setError("unable to initialize audio stream");
+            }
         }
 
         if (!m_inputMedia->isOpen())
@@ -336,7 +383,6 @@ void QFfmpegTranscoding::formatHasChanged()
             else if (m_outputMedia->audioStream())
             {
                 m_outputMedia->audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16P);
-                m_outputMedia->audioStream()->setBitRate(bitrate());
 
                 //            m_outputMedia.videoStream()->setPixelFormat(AV_PIX_FMT_RGB24);
                 //            m_outputMedia.videoStream()->codec()->codecCtx()->width = 300;
@@ -418,7 +464,6 @@ void QFfmpegTranscoding::formatHasChanged()
             else if (m_outputMedia->audioStream())
             {
                 m_outputMedia->audioStream()->setSampleFmt(AV_SAMPLE_FMT_FLTP);
-                m_outputMedia->audioStream()->setBitRate(bitrate());
 
                 //            m_outputMedia.videoStream()->setPixelFormat(AV_PIX_FMT_RGB24);
                 //            m_outputMedia.videoStream()->codec()->codecCtx()->width = 300;
@@ -451,6 +496,36 @@ void QFfmpegTranscoding::formatHasChanged()
                 setError("unable to initialize audio stream");
             }
         }
+        else if (format() == COPY)
+        {
+            if (!m_inputMedia)
+            {
+                // output format will be initialized when input will be provided
+            }
+            else
+            {
+                QHash<AVMediaType, AVCodecID> mediaConfig;
+                mediaConfig[AVMEDIA_TYPE_AUDIO] = m_inputMedia->audioStream()->codec()->codecCtx()->codec_id;
+
+                QString outputFormat = m_inputMedia->getFormat();
+                if (outputFormat == "mov,mp4,m4a,3gp,3g2,mj2")
+                    outputFormat = "ipod";
+
+                if (!m_outputMedia->openBuffer(outputFormat, mediaConfig))
+                {
+                    setError(QString("unable to open buffer %1").arg(m_inputMedia->getFormat()));
+                }
+                else if (m_outputMedia->audioStream())
+                {
+                    m_outputMedia->audioStream()->setSampleFmt(m_inputMedia->audioStream()->sampleFormat());
+                    setBitrate(m_inputMedia->audioStream()->bitrate());
+                }
+                else
+                {
+                    setError("unable to initialize audio stream");
+                }
+            }
+        }
         else
         {
             setError(QString("invalid format %1").arg(format()));
@@ -462,12 +537,12 @@ void QFfmpegTranscoding::formatHasChanged()
     }
 }
 
-qint64 QFfmpegTranscoding::originalLengthInMSeconds() const
+double QFfmpegTranscoding::originalLengthInMSeconds() const
 {
     if (m_inputMedia)
-        return m_inputMedia->getDuration();
+        return m_inputMedia->getDurationInMicroSec() / 1000.0;
 
-    return -1;
+    return 0.0;
 }
 
 void QFfmpegTranscoding::startDemux()

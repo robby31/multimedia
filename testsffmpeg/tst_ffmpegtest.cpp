@@ -167,7 +167,7 @@ void ffmpegTest::testQFfmpegMedia_data()
 {
     QTest::addColumn<QString>("pathname");
     QTest::addColumn<QString>("format");
-    QTest::addColumn<int>("duration");
+    QTest::addColumn<qint64>("duration");
     QTest::addColumn<qint64>("size");
     QTest::addColumn<QString>("audioFormat");
     QTest::addColumn<int>("AudioChannelCount");
@@ -190,14 +190,14 @@ void ffmpegTest::testQFfmpegMedia_data()
     QTest::addColumn<QString>("TLEN");
     QTest::addColumn<QString>("date");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << QString("mp3") << 159373 << (qint64)3841064 << "mp3" << 2 << 44100 << 189255 << 192808 << QString("500x500") << 0.0 << QStringList("") << QStringList("") << QStringList() << 4537 << true << QString("Phébus") << QString("-M-") << QString("Mister Mystère") << QString("2/13") << QString("1/2") << QString("Rock  Français") << QString("159320") << QString("2009-09-07");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << QString("mov,mp4,m4a,3gp,3g2,mj2") << 188987 << (qint64)3190914 << "aac" << 2 << 44100 << 124436 << 135074 << QString("300x300") << 0.0 << QStringList("") << QStringList("und") << QStringList() << 20388 << true << QString("Monde virtuel") << QString("-M-") << QString("Je dis aime") << QString("1/15") << QString("1/1") << QString("Pop") << QString("") << QString("1999-10-25");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << "mov,mp4,m4a,3gp,3g2,mj2" << 275387 << (qint64)33218372 << "alac" << 2 << 48000 << 963753 << 964994 << "600x600" << 0.0 << QStringList("") << QStringList("und") << QStringList() << 8428 << true << "Give Life Back To Music" << "Daft Punk" << "Random Access Memories" << "1" << "" << "Euro House" << "" << "2013";
-    QTest::newRow("Video_MKV") << QString("/Users/doudou/Movies/Films/District.9.2009.720p.BrRip.YIFY.mkv") << QString("matroska,webm") << 6735830 << (qint64)733723671 << "aac" << 2 << 48000 << 0 << 871427 << QString("1280x688") << 23.976023976023978 << QStringList("") << QStringList("") << QStringList("eng") << 0 << false << QString("District 9 - YIFY") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << QString("mp3") << (qint64)159373061 << (qint64)3841064 << "mp3" << 2 << 44100 << 189255 << 192808 << QString("500x500") << 0.0 << QStringList("") << QStringList("") << QStringList() << 4537 << true << QString("Phébus") << QString("-M-") << QString("Mister Mystère") << QString("2/13") << QString("1/2") << QString("Rock  Français") << QString("159320") << QString("2009-09-07");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << QString("mov,mp4,m4a,3gp,3g2,mj2") << (qint64)188987211 << (qint64)3190914 << "aac" << 2 << 44100 << 124436 << 135074 << QString("300x300") << 0.0 << QStringList("") << QStringList("und") << QStringList() << 20388 << true << QString("Monde virtuel") << QString("-M-") << QString("Je dis aime") << QString("1/15") << QString("1/1") << QString("Pop") << QString("") << QString("1999-10-25");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << "mov,mp4,m4a,3gp,3g2,mj2" << (qint64)275387000 << (qint64)33218372 << "alac" << 2 << 48000 << 963753 << 964994 << "600x600" << 0.0 << QStringList("") << QStringList("und") << QStringList() << 8428 << true << "Give Life Back To Music" << "Daft Punk" << "Random Access Memories" << "1" << "" << "Euro House" << "" << "2013";
+    QTest::newRow("Video_MKV") << QString("/Users/doudou/Movies/Films/District.9.2009.720p.BrRip.YIFY.mkv") << QString("matroska,webm") << (qint64)6735830000 << (qint64)733723671 << "aac" << 2 << 48000 << 0 << 871427 << QString("1280x688") << 23.976023976023978 << QStringList("") << QStringList("") << QStringList("eng") << 0 << false << QString("District 9 - YIFY") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
 
     QStringList tmp;
     tmp << "spa" << "eng" << "fre";
-    QTest::newRow("Video_MKV2") << QString("/Users/doudou/Movies/Films/Margin Call [BDrip m-1080p AC3 Esp-Eng-Fr+subs].mkv") << QString("matroska,webm") << 6419022 << (qint64)3445044042 << "ac3" << 6 << 48000 << 448000 << 4293543 << QString("1920x1080") << 24.0 << QStringList("spa") << QStringList(tmp) << QStringList(tmp) << 0 << false << QString("Margin Call m-1080p.guerrero36") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
+    QTest::newRow("Video_MKV2") << QString("/Users/doudou/Movies/Films/Margin Call [BDrip m-1080p AC3 Esp-Eng-Fr+subs].mkv") << QString("matroska,webm") << (qint64)6419022000 << (qint64)3445044042 << "ac3" << 6 << 48000 << 448000 << 4293543 << QString("1920x1080") << 24.0 << QStringList("spa") << QStringList(tmp) << QStringList(tmp) << 0 << false << QString("Margin Call m-1080p.guerrero36") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("") << QString("");
 
 }
 
@@ -207,7 +207,7 @@ void ffmpegTest::testQFfmpegMedia()
 
     QFETCH(QString, pathname);
     QFETCH(QString, format);
-    QFETCH(int, duration);
+    QFETCH(qint64, duration);
     QFETCH(qint64, size);
     QFETCH(QString, audioFormat);
     QFETCH(int, AudioChannelCount);
@@ -235,24 +235,24 @@ void ffmpegTest::testQFfmpegMedia()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     QCOMPARE(media.filename(), pathname);
     QVERIFY(media.getVersion().startsWith("libavformat"));
     QCOMPARE(media.isValid(), true);
     QCOMPARE(media.getFormat(), format);
-    QCOMPARE(media.getDuration(), duration);
+    QCOMPARE(media.getDurationInMicroSec(), duration);
     QCOMPARE(media.getBitrate(), bitrate);
     QCOMPARE(media.size(), size);
 
-    QVERIFY(media.audioStream() != NULL);
+    QVERIFY(media.audioStream() != Q_NULLPTR);
     QCOMPARE(media.audioStream()->channelCount(), AudioChannelCount);
     QCOMPARE(media.audioStream()->samplerate(), AudioSampleRate);
     QCOMPARE(media.audioStream()->bitrate(), AudioBitrate);
     QCOMPARE(media.audioStream()->format(), audioFormat);
     //    QCOMPARE(media.audioStream()->getDuration(), media.getDuration());
 
-    QVERIFY(media.videoStream() != NULL);
+    QVERIFY(media.videoStream() != Q_NULLPTR);
     QCOMPARE(media.videoStream()->resolution(), videoResolution);
     QCOMPARE(QVariant::fromValue(media.videoStream()->frameRate()).toString(), QVariant::fromValue(videoFrameRate).toString());
     //    QCOMPARE(media.videoStream()->getDuration(), media.getDuration());
@@ -296,9 +296,9 @@ void ffmpegTest::testQFfmpegMediaEncodeFileWAV_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<QString>("encoded_filename");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 28104126 << QString("Audio_MP3_Phebus");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 33328974 << QString("Audio_M4A_Monde_Virtuel");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 52874318 << QString("Audio_M4A_Daft_Punk");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 28104126 << QString("Audio_MP3_Phebus");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 33328974 << QString("Audio_M4A_Monde_Virtuel");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 52874318 << QString("Audio_M4A_Daft_Punk");
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeFileWAV()
@@ -315,7 +315,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileWAV()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QList<AVMediaType> l_mediaType;
@@ -325,7 +325,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileWAV()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openFile(QString("%1_%2.wav").arg(media.getFormat(), encoded_filename), l_mediaType), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("wav"));
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16), true);
 
@@ -337,13 +337,13 @@ void ffmpegTest::testQFfmpegMediaEncodeFileWAV()
     QCOMPARE(outputMedia.filename(), QString("%1_%2.wav").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("wav"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     if (media.audioStream()->samplerate() == 44100)
         QCOMPARE(outputMedia.getBitrate(), 1411200);
     else
         QCOMPARE(outputMedia.getBitrate(), 1536000);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("pcm_s16le"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16);
@@ -356,15 +356,15 @@ void ffmpegTest::testQFfmpegMediaEncodeFileWAV()
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
     else
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1536000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
     QCOMPARE(outputMedia.encodeMedia(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 
     QString filename = outputMedia.filename();
@@ -380,9 +380,9 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<QString>("encoded_filename");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 6374966 << QString("Audio_MP3_Phebus");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 7559880 << QString("Audio_M4A_Monde_Virtuel");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 11017965 << QString("Audio_M4A_Daft_Punk");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 6374966 << QString("Audio_MP3_Phebus");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 7559880 << QString("Audio_M4A_Monde_Virtuel");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 11017965 << QString("Audio_M4A_Daft_Punk");
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeFileMP3()
@@ -399,7 +399,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QList<AVMediaType> l_mediaType;
@@ -408,7 +408,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openFile(QString("%1_%2.mp3").arg(media.getFormat(), encoded_filename), l_mediaType), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
 
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16P), true);
@@ -422,10 +422,10 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3()
     QCOMPARE(outputMedia.filename(), QString("%1_%2.mp3").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     QCOMPARE(outputMedia.getBitrate(), 320000);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("mp3"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16P);
@@ -435,19 +435,27 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 320000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
     QCOMPARE(outputMedia.encodeMedia(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "size encoded" << encoded_size << "expected" << outputMedia.size();
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 
+    // tests output file encoded
     QString filename = outputMedia.filename();
     outputMedia.close();
+
+    QFfmpegInputMedia encodedMedia;
+    QCOMPARE(encodedMedia.open(filename, true), true);
+    QCOMPARE(encodedMedia.size(), encoded_size);
+    encodedMedia.close();
+
     QFileInfo file(filename);
     QCOMPARE(file.size(), encoded_size);
 }
@@ -459,9 +467,9 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<QString>("encoded_filename");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 6426017 << QString("AudioWithImage_MP3_Phebus");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 7796754 << QString("AudioWithImage_M4A_Monde_Virtuel");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 11082927 << QString("AudioWithImage_M4A_Daft_Punk");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 6426017 << QString("AudioWithImage_MP3_Phebus");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 7796754 << QString("AudioWithImage_M4A_Monde_Virtuel");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 11082927 << QString("AudioWithImage_M4A_Daft_Punk");
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
@@ -478,7 +486,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QList<AVMediaType> l_mediaType;
@@ -488,8 +496,8 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openFile(QString("%1_%2.mp3").arg(media.getFormat(), encoded_filename), l_mediaType), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.audioStream() != NULL);
-    QVERIFY(outputMedia.videoStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
+    QVERIFY(outputMedia.videoStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
 
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16P), true);
@@ -508,10 +516,10 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
     QCOMPARE(outputMedia.filename(), QString("%1_%2.mp3").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     QCOMPARE(outputMedia.getBitrate(), 320000);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("mp3"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16P);
@@ -521,9 +529,9 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 320000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() != NULL);
+    QVERIFY(outputMedia.videoStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.videoStream()->format(), QString("png"));
     QCOMPARE(outputMedia.videoStream()->pixelFormat(), AV_PIX_FMT_RGB24);
     QCOMPARE(outputMedia.videoStream()->stream()->time_base.num, 1);
@@ -533,7 +541,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
 
     QCOMPARE(outputMedia.encodeMedia(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 
     QString filename = outputMedia.filename();
@@ -549,9 +557,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferWAV_data()
     QTest::addColumn<int>("encoded_size");
 
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 28104126;
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 33328974;
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 52874318;
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 28104126;
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 33328974;
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 52874318;
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeBufferWAV()
@@ -567,7 +575,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferWAV()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QHash<AVMediaType, AVCodecID> mediaConfig;
@@ -576,7 +584,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferWAV()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openBuffer("wav", mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("wav"));
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16), true);
     QCOMPARE(outputMedia.audioStream()->setChannelLayout(AV_CH_LAYOUT_STEREO), true);
@@ -590,13 +598,13 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferWAV()
     QCOMPARE(outputMedia.filename(), QString(""));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("wav"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     if (media.audioStream()->samplerate() == 44100)
         QCOMPARE(outputMedia.getBitrate(), 1411200);
     else
         QCOMPARE(outputMedia.getBitrate(), 1536000);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("pcm_s16le"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16);
@@ -609,9 +617,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferWAV()
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
     else
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1536000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
@@ -630,7 +638,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferWAV()
     QCOMPARE(bytesEncoded, encoded_size);
     QCOMPARE(outputMedia.atEnd(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 }
 
@@ -641,9 +649,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferMP3_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<int>("header_size");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 6374966 << 1089;
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 7559880 << 1089;
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 11017965 << 1005;
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 6374966 << 1089;
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 7559880 << 1089;
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 11017965 << 1005;
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeBufferMP3()
@@ -660,7 +668,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferMP3()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QHash<AVMediaType, AVCodecID> mediaConfig;
@@ -669,7 +677,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferMP3()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openBuffer("mp3", mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
 
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16P), true);
@@ -685,10 +693,10 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferMP3()
     QCOMPARE(outputMedia.filename(), QString(""));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("mp3"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     QCOMPARE(outputMedia.getBitrate(), 320000);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("mp3"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16P);
@@ -698,9 +706,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferMP3()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 320000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
@@ -719,7 +727,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferMP3()
     QCOMPARE(bytesEncoded, encoded_size);
     QCOMPARE(outputMedia.atEnd(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 }
 
@@ -730,9 +738,9 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<QString>("encoded_filename");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 2593525 << QString("Audio_MP3_Phebus");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 3034329 << QString("Audio_M4A_Monde_Virtuel");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 4494029 << QString("Audio_M4A_Daft_Punk");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 2593525 << QString("Audio_MP3_Phebus");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 3034329 << QString("Audio_M4A_Monde_Virtuel");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 4494029 << QString("Audio_M4A_Daft_Punk");
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
@@ -749,7 +757,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QHash<AVMediaType, AVCodecID> mediaConfig;
@@ -758,7 +766,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openFile(QString("%1_%2.m4a").arg(media.getFormat(), encoded_filename), QString("ipod"), mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_FLTP), true);
 
@@ -770,10 +778,10 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
     QCOMPARE(outputMedia.filename(), QString("%1_%2.m4a").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     QCOMPARE(outputMedia.getBitrate(), 131840);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("aac"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_FLTP);
@@ -783,15 +791,15 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 128000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
     QCOMPARE(outputMedia.encodeMedia(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.audioStream()->format() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.audioStream()->format() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
 
     QString filename = outputMedia.filename();
     qint64 outputSize = outputMedia.size();
@@ -809,9 +817,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferAAC_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<int>("header_size");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 2565278 << 40;
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 3000982 << 40;
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 4441562 << 40;
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 2565278 << 40;
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 3000982 << 40;
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 4441562 << 40;
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeBufferAAC()
@@ -828,7 +836,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferAAC()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QHash<AVMediaType, AVCodecID> mediaConfig;
@@ -837,7 +845,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferAAC()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openBuffer("ipod", mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
 
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_FLTP), true);
@@ -853,10 +861,10 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferAAC()
     QCOMPARE(outputMedia.filename(), QString(""));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     QCOMPARE(outputMedia.getBitrate(), 131840);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("aac"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_FLTP);
@@ -866,9 +874,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferAAC()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 128000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
@@ -887,7 +895,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferAAC()
     QCOMPARE(bytesEncoded, encoded_size);
     QCOMPARE(outputMedia.atEnd(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 }
 
@@ -898,9 +906,9 @@ void ffmpegTest::testQFfmpegMediaEncodeFileLPCM_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<QString>("encoded_filename");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 28104048 << QString("Audio_MP3_Phebus");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 33328896 << QString("Audio_M4A_Monde_Virtuel");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 52874240 << QString("Audio_M4A_Daft_Punk");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 28104048 << QString("Audio_MP3_Phebus");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 33328896 << QString("Audio_M4A_Monde_Virtuel");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 52874240 << QString("Audio_M4A_Daft_Punk");
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeFileLPCM()
@@ -917,7 +925,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileLPCM()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QList<AVMediaType> l_mediaType;
@@ -927,7 +935,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileLPCM()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openFile(QString("%1_%2.pcm").arg(media.getFormat(), encoded_filename), QString("s16le"), l_mediaType), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("s16le"));
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16), true);
 
@@ -939,13 +947,13 @@ void ffmpegTest::testQFfmpegMediaEncodeFileLPCM()
     QCOMPARE(outputMedia.filename(), QString("%1_%2.pcm").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("s16le"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     if (media.audioStream()->samplerate() == 44100)
         QCOMPARE(outputMedia.getBitrate(), 1411200);
     else
         QCOMPARE(outputMedia.getBitrate(), 1536000);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("pcm_s16le"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16);
@@ -958,15 +966,15 @@ void ffmpegTest::testQFfmpegMediaEncodeFileLPCM()
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
     else
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1536000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
     QCOMPARE(outputMedia.encodeMedia(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 
     QString filename = outputMedia.filename();
@@ -982,9 +990,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferLPCM_data()
     QTest::addColumn<int>("encoded_size");
 
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 28104048;
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 33328896;
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 52874240;
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 28104048;
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 33328896;
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 52874240;
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeBufferLPCM()
@@ -1000,7 +1008,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferLPCM()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QHash<AVMediaType, AVCodecID> mediaConfig;
@@ -1009,7 +1017,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferLPCM()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openBuffer("s16le", mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("s16le"));
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16), true);
     QCOMPARE(outputMedia.audioStream()->setChannelLayout(AV_CH_LAYOUT_STEREO), true);
@@ -1023,13 +1031,13 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferLPCM()
     QCOMPARE(outputMedia.filename(), QString(""));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("s16le"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     if (media.audioStream()->samplerate() == 44100)
         QCOMPARE(outputMedia.getBitrate(), 1411200);
     else
         QCOMPARE(outputMedia.getBitrate(), 1536000);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("pcm_s16le"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16);
@@ -1042,9 +1050,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferLPCM()
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
     else
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1536000);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
@@ -1059,7 +1067,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferLPCM()
             break;
     }
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
 
     QCOMPARE(outputMedia.bytesAvailable(), 0);
     QCOMPARE(bytesEncoded, encoded_size);
@@ -1075,9 +1083,9 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC_data()
     QTest::addColumn<int>("encoded_size");
     QTest::addColumn<QString>("encoded_filename");
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 15593061 << QString("Audio_MP3_Phebus");
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 21335483 << QString("Audio_M4A_Monde_Virtuel");
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 33189737 << QString("Audio_M4A_Daft_Punk");
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 15593061 << QString("Audio_MP3_Phebus");
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 21335483 << QString("Audio_M4A_Monde_Virtuel");
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 33189737 << QString("Audio_M4A_Daft_Punk");
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
@@ -1094,7 +1102,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QHash<AVMediaType, AVCodecID> mediaConfig;
@@ -1103,7 +1111,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openFile(QString("%1_%2.alac").arg(media.getFormat(), encoded_filename), QString("ipod"), mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16P), true);
     outputMedia.audioStream()->setBitRate(1411200);
@@ -1116,10 +1124,10 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
     QCOMPARE(outputMedia.filename(), QString("%1_%2.alac").arg(media.getFormat(), encoded_filename));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     QCOMPARE(outputMedia.getBitrate(), 1453536);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("alac"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16P);
@@ -1129,15 +1137,15 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
     QCOMPARE(outputMedia.encodeMedia(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.audioStream()->format() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.audioStream()->format() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 
     QString filename = outputMedia.filename();
@@ -1153,9 +1161,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC_data()
     QTest::addColumn<int>("encoded_size");
 
 
-    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373 << 15585306;
-    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987 << 21326356;
-    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387 << 33175662;
+    QTest::newRow("Audio_MP3") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/-M-/Mister Mystère/1-02 Phébus.mp3") << 159373061 << 15585306;
+    QTest::newRow("Audio_M4A") << QString("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/01 Monde virtuel.m4a") << 188987211 << 21326356;
+    QTest::newRow("Audio_M4A_2") << QString("/Users/doudou/Music/iTunes/iTunes Media/Music/Daft Punk/Random Access Memories/01 Give Life Back To Music.m4a") << 275387000 << 33175662;
 }
 
 void ffmpegTest::testQFfmpegMediaEncodeBufferALAC()
@@ -1171,7 +1179,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC()
     QCOMPARE(media.open(pathname, true), true);
     qInfo() << "media initialised in" << timer.elapsed() << "ms.";
     QVERIFY2(timer.elapsed() < 100, QString("media initialised in %1 ms.").arg(timer.elapsed()).toUtf8());
-    qInfo() << "media duration:" << media.getDuration() << "ms";
+    qInfo() << "media duration:" << media.getDurationInMicroSec() << "us";
 
     /* initialise output */
     QHash<AVMediaType, AVCodecID> mediaConfig;
@@ -1180,7 +1188,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC()
     QFfmpegOutputMedia outputMedia;
     QCOMPARE(outputMedia.openBuffer("ipod", mediaConfig), true);
     QCOMPARE(outputMedia.isValid(), true);
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
     QCOMPARE(outputMedia.audioStream()->setSampleFmt(AV_SAMPLE_FMT_S16P), true);
     QCOMPARE(outputMedia.audioStream()->setChannelLayout(AV_CH_LAYOUT_STEREO), true);
@@ -1195,10 +1203,10 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC()
     QCOMPARE(outputMedia.filename(), QString(""));
     QCOMPARE(outputMedia.isValid(), true);
     QCOMPARE(outputMedia.getFormat(), QString("ipod"));
-    QCOMPARE(outputMedia.getDuration(), duration);
+    QCOMPARE(outputMedia.getDurationInMicroSec(), duration);
     QCOMPARE(outputMedia.getBitrate(), 1453536);
 
-    QVERIFY(outputMedia.audioStream() != NULL);
+    QVERIFY(outputMedia.audioStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.audioStream()->isValid(), true);
     QCOMPARE(outputMedia.audioStream()->format(), QString("alac"));
     QCOMPARE(outputMedia.audioStream()->sampleFormat(), AV_SAMPLE_FMT_S16P);
@@ -1208,9 +1216,9 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
-    QCOMPARE(outputMedia.audioStream()->getDuration(), duration);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
 
-    QVERIFY(outputMedia.videoStream() == NULL);
+    QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
     timer.start();
 
@@ -1229,7 +1237,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC()
     QCOMPARE(bytesEncoded, encoded_size);
     QCOMPARE(outputMedia.atEnd(), true);
 
-    qInfo() << "input audio stream duration:" << media.audioStream()->getDuration() << "ms, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
+    qInfo() << "input audio stream duration:" << media.audioStream()->getDurationInMicroSec() << "us, audio encoded in " << outputMedia.getFormat() << ", output audio stream duration:" << outputMedia.posInMsec() << "ms, in" << timer.elapsed() << "ms.";
     QVERIFY2(encoded_size < outputMedia.size(), QString("%1 %2").arg(encoded_size).arg(outputMedia.size()).toUtf8());
 }
 

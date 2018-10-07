@@ -2,13 +2,7 @@
 
 TranscodeDevice::TranscodeDevice(QObject *parent) :
     Device(parent),
-    m_opened(false),
-    m_pos(0),
-    m_url(),
-    m_format(UNKNOWN),
-    m_frameRate(""),
-    m_audioChannelCount(-1),
-    m_audioSampleRate(-1)
+    m_frameRate("")
 {
     connect(this, SIGNAL(openSignal()), this, SLOT(_open()));
 }
@@ -61,7 +55,7 @@ qint64 TranscodeDevice::size() const
         return tmp_size;
     }
 
-    qWarning() << "length or bitrate is invalid" << lengthInMSeconds() << bitrate() << "full size = " << tmp_size << url();
+    qCritical() << "length or bitrate is invalid" << lengthInMSeconds() << bitrate() << "full size = " << tmp_size << url();
     return -1;
 }
 
@@ -115,9 +109,6 @@ void TranscodeDevice::urlError(const QString &message)
 
 bool TranscodeDevice::open()
 {
-    if (startByte() != -1 || endByte() != -1)
-        qWarning() << "range not applicable for TranscodeDevice" << startByte() << endByte();
-
     if (!isReadyToOpen())
     {
         qCritical() << "url is not defined";
@@ -148,7 +139,22 @@ qint64 TranscodeDevice::fullSize() const
 
 void TranscodeDevice::setRange(qint64 startByte, qint64 endByte)
 {
-    qWarning() << "range not applicable for TranscodeDevice" << startByte << endByte;
+    qint64 start = startByte;
+    qint64 end = endByte;
+
+    if (start >= fullSize())
+    {
+        qCritical() << "invalid startByte (greater than file size)" << startByte << fullSize();
+        start = 0;
+    }
+
+    if (end >= fullSize())
+    {
+        qCritical() << "invalid endByte (greater than file size)" << endByte << fullSize();
+        end = fullSize() - 1;
+    }
+
+    Device::setRange(start, end);
 }
 
 double TranscodeDevice::overheadfactor() const
@@ -184,4 +190,12 @@ void TranscodeDevice::setFormat(const TranscodeFormatAvailable &format)
 {
     m_format = format;
     emit formatChanged();
+}
+
+qint64 TranscodeDevice::pos() const
+{
+    if (startByte() != -1 && m_pos >= startByte())
+        return m_pos - startByte();
+
+    return m_pos;
 }
