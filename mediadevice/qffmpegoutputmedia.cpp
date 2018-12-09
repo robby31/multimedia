@@ -480,13 +480,11 @@ bool QFfmpegOutputMedia::writeFrame(QFfmpegOutputStream *stream)
         if (av_interleaved_write_frame(pFormatCtx, pkt) < 0)
         {
             qCritical() << "unable to store encoded data";
-            delete pkt;
             return false;
         }
 
         m_posInMsec = posInMsec;
 
-        delete pkt;
         return true;
     }
 
