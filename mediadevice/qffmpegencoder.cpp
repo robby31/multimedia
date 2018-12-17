@@ -156,7 +156,7 @@ bool QFfmpegEncoder::setChannelCount(const int &nb)
 {
     if (codecCtx())
     {
-        codecCtx()->channel_layout = av_get_default_channel_layout(nb);
+        codecCtx()->channel_layout = static_cast<uint64_t>(av_get_default_channel_layout(nb));
         codecCtx()->channels = nb;
         return true;
     }

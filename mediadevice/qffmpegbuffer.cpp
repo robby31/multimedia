@@ -6,10 +6,10 @@ QFfmpegBuffer::QFfmpegBuffer()
 {
     objectCounter++;
 
-    auto avio_ctx_buffer = (uint8_t*)av_malloc(avio_ctx_buffer_size);
+    auto avio_ctx_buffer = static_cast<uint8_t*>(av_malloc(avio_ctx_buffer_size));
     if (avio_ctx_buffer != Q_NULLPTR)
     {
-        avio_ctx = avio_alloc_context(avio_ctx_buffer, avio_ctx_buffer_size, 1, this,
+        avio_ctx = avio_alloc_context(avio_ctx_buffer, static_cast<int>(avio_ctx_buffer_size), 1, this,
                                       &QFfmpegBuffer::read_from_context, &QFfmpegBuffer::write_from_context, &QFfmpegBuffer::seek_from_context);
     }
 }
@@ -47,8 +47,8 @@ qint64 QFfmpegBuffer::bytesAvailable() const
 
 QByteArray QFfmpegBuffer::read(const qint64 &maxlen)
 {
-    qint64 bytesToRead = qMin((qint64)m_buffer.size(), maxlen);
-    QByteArray res = m_buffer.left(bytesToRead);
+    qint64 bytesToRead = qMin(static_cast<qint64>(m_buffer.size()), maxlen);
+    QByteArray res = m_buffer.left(static_cast<int>(bytesToRead));
     m_buffer.remove(0, res.size());
 
     m_startPos += res.size();
@@ -65,8 +65,8 @@ int QFfmpegBuffer::read_from_context(void *opaque, uint8_t *buf, int buf_size)
     if (buffer && bd)
     {
         /* copy internal buffer data to buf */
-        memcpy(buf, bd->data(), buf_size);
-        bd->remove(0, buf_size);
+        memcpy(buf, bd->data(), static_cast<size_t>(buf_size));
+        bd->remove(0, static_cast<int>(buf_size));
         return buf_size;
     }
 

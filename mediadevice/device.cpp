@@ -184,7 +184,7 @@ void Device::deviceReadyToOpen()
     readyToOpenCondition.wakeAll();
 }
 
-bool Device::waitOpen(const int &timeout)
+bool Device::waitOpen(const unsigned long &timeout)
 {
     QMutexLocker locker(&mutex);
 
