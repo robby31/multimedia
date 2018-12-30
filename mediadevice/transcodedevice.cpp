@@ -71,13 +71,13 @@ qint64 TranscodeDevice::lengthInMSeconds() const
         if (timeSeekEnd() > timeSeekStart() && (timeSeekEnd()*1000) < originalLengthInMSeconds())
             return (timeSeekEnd() - timeSeekStart())*1000;
 
-        return originalLengthInMSeconds() - timeSeekStart()*1000;
+        return static_cast<qint64>(originalLengthInMSeconds() - timeSeekStart()*1000);
     }
 
     if (timeSeekEnd() > 0 && (timeSeekEnd()*1000) < originalLengthInMSeconds())
         return timeSeekEnd()*1000;
 
-    return originalLengthInMSeconds();
+    return static_cast<qint64>(originalLengthInMSeconds());
 }
 
 qint64 TranscodeDevice::transcodedProgress() const
@@ -129,9 +129,9 @@ qint64 TranscodeDevice::fullSize() const
     if (lengthInMSeconds() > 0 && bitrate() > 0)
     {
         if (format() == MP3)
-            return (double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0 + 2000;   // header size = 2000 bytes
+            return static_cast<qint64>(static_cast<double>(lengthInMSeconds())/1000.0*static_cast<double>(bitrate())/8.0) + 2000;   // header size = 2000 bytes
 
-        return overheadfactor()*(double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0;
+        return static_cast<qint64>(overheadfactor()*static_cast<double>(lengthInMSeconds())/1000.0*static_cast<double>(bitrate())/8.0);
     }
 
     return -1;

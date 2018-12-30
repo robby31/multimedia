@@ -111,7 +111,7 @@ QByteArray QFfmpegEncoder::getRawData()
     foreach (AVPacket *pkt, m_encodedPkt)
     {
         if (pkt != Q_NULLPTR)
-            res.append(QByteArray::fromRawData((char *)pkt->data, pkt->size));
+            res.append(QByteArray::fromRawData(reinterpret_cast<char *>(pkt->data), pkt->size));
     }
 
     return res;

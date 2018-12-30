@@ -143,7 +143,7 @@ void TranscodeProcess::finishedTranscodeData(const int &exitCode, const QProcess
         appendLog(QString("TRANSCODING FINISHED with exitCode %1.").arg(exitCode));
     else
         appendLog(QString("TRANSCODING CRASHED."));
-    appendLog(QString("%2% TRANSCODING DONE in %1 seconds.").arg(QTime(0, 0).addMSecs(transcodingElapsed()).toString("hh:mm:ss")).arg(transcodedProgress()));
+    appendLog(QString("%2% TRANSCODING DONE in %1 seconds.").arg(QTime(0, 0).addMSecs(static_cast<int>(transcodingElapsed())).toString("hh:mm:ss")).arg(transcodedProgress()));
 
     if (!m_opened && bytesAvailable() > 0)
     {
@@ -268,9 +268,9 @@ qint64 TranscodeProcess::fullSize() const
     if (lengthInMSeconds() > 0 && bitrate() > 0)
     {
         if (format() == MP3)
-            return (double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0 + 2000;   // header size = 2000 bytes
+            return static_cast<qint64>(static_cast<double>(lengthInMSeconds())/1000.0*static_cast<double>(bitrate())/8.0) + 2000;   // header size = 2000 bytes
 
-        return overheadfactor()*(double)lengthInMSeconds()/1000.0*(double)bitrate()/8.0;
+        return static_cast<qint64>(overheadfactor()*static_cast<double>(lengthInMSeconds())/1000.0*static_cast<double>(bitrate())/8.0);
     }
 
     return -1;

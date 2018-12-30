@@ -188,9 +188,9 @@ QString QFfmpegCodec::resolution() const
 double QFfmpegCodec::frameRate() const
 {
     if (m_codecCtx != Q_NULLPTR && m_codecCtx->framerate.den != 0)
-        return (double) m_codecCtx->framerate.num / (double) m_codecCtx->framerate.den;
+        return static_cast<double>(m_codecCtx->framerate.num) / static_cast<double>(m_codecCtx->framerate.den);
 
-    return 0;
+    return 0.0;
 }
 
 int QFfmpegCodec::frameNumber() const

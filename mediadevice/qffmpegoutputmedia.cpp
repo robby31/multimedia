@@ -47,7 +47,7 @@ qint64 QFfmpegOutputMedia::getBitrate() const
     qint64 bit_rate = 0;
 
     if (m_audioStream && m_audioStream->isValid())
-        bit_rate += m_audioStream->bitrate() * overhead_factor();
+        bit_rate += static_cast<qint64>(m_audioStream->bitrate() * overhead_factor());
 
     if (m_videoStream && m_videoStream->isValid() && (!m_inputMedia || !m_inputMedia->videoStream() || m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR))
         bit_rate += m_videoStream->bitrate();
@@ -66,7 +66,7 @@ qint64 QFfmpegOutputMedia::size() const
         if (m_audioStream->getStartTimeInMicroSec() == 0)
             duration += 0.05;
 
-        res += duration * m_audioStream->bitrate() * overhead_factor() / 8;
+        res += static_cast<qint64>(duration * m_audioStream->bitrate() * overhead_factor() / 8.0);
     }
 
     if (m_videoStream && m_videoStream->isValid())
@@ -74,7 +74,7 @@ qint64 QFfmpegOutputMedia::size() const
         if (!m_inputMedia || !m_inputMedia->videoStream() || m_inputMedia->videoStream()->attached_pic() == Q_NULLPTR)
         {
             if (m_videoStream->getDurationInSec() > 0 && m_videoStream->bitrate() > 0)
-                res += m_videoStream->getDurationInSec() * m_videoStream->bitrate() / 8;
+                res += static_cast<qint64>(m_videoStream->getDurationInSec() * m_videoStream->bitrate() / 8.0);
         }
         else
         {

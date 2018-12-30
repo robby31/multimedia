@@ -23,7 +23,7 @@ qint64 QFfmpegInputMedia::getStartTimeInMicroSec() const
     if (pFormatCtx != Q_NULLPTR && pFormatCtx->start_time != AV_NOPTS_VALUE)
         return pFormatCtx->start_time * 1000000 / AV_TIME_BASE;
 
-    return 0.0;
+    return 0;
 }
 
 double QFfmpegInputMedia::getDurationInSec() const
@@ -38,7 +38,7 @@ qint64 QFfmpegInputMedia::getDurationInMicroSec() const
 
             return pFormatCtx->duration * 1000000 / AV_TIME_BASE;
 
-    return 0.0;
+    return 0;
 }
 
 qint64 QFfmpegInputMedia::getBitrate() const

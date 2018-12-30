@@ -79,7 +79,7 @@ int QFfmpegBuffer::write_from_context(void *opaque, uint8_t *buf, int buf_size)
 
     if (buffer)
     {
-        if (buffer->write(QByteArray::fromRawData((char *)buf, buf_size)))
+        if (buffer->write(QByteArray::fromRawData(reinterpret_cast<char *>(buf), buf_size)))
             return buf_size;
     }
 

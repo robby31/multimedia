@@ -43,7 +43,7 @@ bool QFfmpegStream::setStream(AVStream *stream, uint streamId)
 {
     if (setStream(stream))
     {
-        m_stream->id = streamId;
+        m_stream->id = static_cast<int>(streamId);
         return true;
     }
 
@@ -153,7 +153,7 @@ double QFfmpegStream::frameRate() const
     {
         AVRational frame_rate = m_stream->avg_frame_rate;
         if (frame_rate.den != 0)
-            return (double) frame_rate.num / (double) frame_rate.den;
+            return static_cast<double>(frame_rate.num) / static_cast<double>(frame_rate.den);
     }
 
     return 0.0;
@@ -184,7 +184,7 @@ bool QFfmpegStream::setDurationInMicroSec(const qint64 &estimated_duration_Micro
 {
     if (m_stream != Q_NULLPTR && m_stream->time_base.num != 0)
     {
-        m_stream->duration = qCeil((double)(estimated_duration_Microsec * m_stream->time_base.den) / (double)(1000000 * m_stream->time_base.num));
+        m_stream->duration = qCeil(static_cast<double>(estimated_duration_Microsec * m_stream->time_base.den) / static_cast<double>(1000000 * m_stream->time_base.num));
         return true;
     }
 

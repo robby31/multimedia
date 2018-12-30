@@ -313,7 +313,7 @@ qint64 QFfmpeg::getDuration() const
     qint64 res = -1;
 
     if (waitProbeFinished())
-        res = xmlResProbe.elementsByTagName("format").at(0).attributes().namedItem("duration").nodeValue().toDouble()*1000.0;
+        res = static_cast<qint64>(xmlResProbe.elementsByTagName("format").at(0).attributes().namedItem("duration").nodeValue().toDouble()*1000.0);
 
     return res;
 }
