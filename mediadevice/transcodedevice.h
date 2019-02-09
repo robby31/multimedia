@@ -11,6 +11,8 @@
 // Format available for transcoding
 enum TranscodeFormatAvailable { UNKNOWN, COPY, MP3, LPCM_S16BE, LPCM_S16LE, AAC, ALAC, WAV, MPEG2_AC3, H264_AAC, H264_AC3 };
 
+Q_DECLARE_METATYPE(TranscodeFormatAvailable)
+
 class TranscodeDevice : public Device
 {
     Q_OBJECT
