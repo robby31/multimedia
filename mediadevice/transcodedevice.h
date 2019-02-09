@@ -4,6 +4,7 @@
 #include <QElapsedTimer>
 #include <QDebug>
 #include <QDateTime>
+#include <QUrl>
 
 #include "device.h"
 
@@ -27,7 +28,7 @@ public:
 
     virtual bool waitForFinished(int msecs = 30000) = 0;
 
-    QString url() const { return m_url; }
+    QList<QUrl> url() const { return m_urls; }
 
     qint64 size() const Q_DECL_OVERRIDE;
 
@@ -83,7 +84,8 @@ signals:
     void openSignal();
 
 public slots:
-    void setUrl(const QString &url);
+    void setUrl(const QUrl &url);
+    void setUrls(const QList<QUrl> &urls);
     void urlError(const QString &message);
     void close() Q_DECL_OVERRIDE;
 
@@ -95,7 +97,7 @@ protected:
     qint64 m_pos = 0;
 
 private:
-    QString m_url;
+    QList<QUrl> m_urls;
 
     QElapsedTimer transcodeClock;
 

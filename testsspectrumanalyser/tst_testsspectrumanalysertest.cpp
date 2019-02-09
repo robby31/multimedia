@@ -12,7 +12,7 @@ class TestsspectrumanalyserTest : public QObject
     Q_OBJECT
 
 public:
-    TestsspectrumanalyserTest();
+    TestsspectrumanalyserTest() = default;
 
 public slots:
     void spectrumChanged(const FrequencySpectrum &spectrum);
@@ -22,13 +22,9 @@ private Q_SLOTS:
     void testMP3();
 
 private:
-    qreal m_freq;
+    qreal m_freq = 0.0;
 };
 
-TestsspectrumanalyserTest::TestsspectrumanalyserTest():
-    m_freq(0.0)
-{
-}
 
 void TestsspectrumanalyserTest::spectrumChanged(const FrequencySpectrum &spectrum)
 {
@@ -107,7 +103,7 @@ void TestsspectrumanalyserTest::testMP3()
     else
         decode_audio.setBitrate(1536000);
 
-    decode_audio.setUrl("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/07 On_Off.mp3");
+    decode_audio.setUrl(QUrl("/Users/doudou/workspaceQT/DLNA_server/tests/AUDIO/07 On_Off.mp3"));
 
     QCOMPARE(decode_audio.lengthInMSeconds(), 120000);
     QCOMPARE(decode_audio.audioSampleRate(), 48000);

@@ -53,8 +53,16 @@ void FfmpegTranscoding::updateArguments()
     if (!ssOption.isEmpty())
         arguments << "-ss" << ssOption;
 
+    QString subtitle_url;
     if (!url().isEmpty())
-        arguments << "-i" << url();
+    {
+        foreach (const QUrl &url, url())
+        {
+            arguments << "-i" << url.url();
+            if (subtitle_url.isEmpty())
+                subtitle_url = url.url();
+        }
+    }
 
     if (format() == MP3)
     {
@@ -133,9 +141,9 @@ void FfmpegTranscoding::updateArguments()
             if (subtitleStreamIndex >= 0)
             {
                 if (ssOption.isEmpty())
-                    arguments << "-vf" << QString("subtitles=%1:si=%2").arg(url()).arg(subtitleStreamIndex);
+                    arguments << "-vf" << QString("subtitles=%1:si=%2").arg(subtitle_url).arg(subtitleStreamIndex);
                 else
-                    arguments << "-vf" << QString("setpts=PTS+%3/TB,subtitles=%1:si=%2,setpts=PTS-STARTPTS").arg(url()).arg(subtitleStreamIndex).arg(ssOption);
+                    arguments << "-vf" << QString("setpts=PTS+%3/TB,subtitles=%1:si=%2,setpts=PTS-STARTPTS").arg(subtitle_url).arg(subtitleStreamIndex).arg(ssOption);
             }
 
 

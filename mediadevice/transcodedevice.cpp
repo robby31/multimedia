@@ -93,9 +93,15 @@ void TranscodeDevice::setVolumeInfo(const QHash<QString, double>& info)
     m_volumeInfo = info;
 }
 
-void TranscodeDevice::setUrl(const QString &url)
+void TranscodeDevice::setUrl(const QUrl &url)
 {
-    m_url = url;
+    m_urls << url;
+    emit readyToOpen();
+}
+
+void TranscodeDevice::setUrls(const QList<QUrl> &urls)
+{
+    m_urls = urls;
     emit readyToOpen();
 }
 
@@ -121,7 +127,7 @@ bool TranscodeDevice::open()
 
 bool TranscodeDevice::isReadyToOpen() const
 {
-    return !m_url.isEmpty();
+    return !m_urls.isEmpty();
 }
 
 qint64 TranscodeDevice::fullSize() const
