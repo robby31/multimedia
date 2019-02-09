@@ -56,7 +56,7 @@ void FfmpegTranscoding::updateArguments()
     QString subtitle_url;
     if (!url().isEmpty())
     {
-        foreach (const QUrl &url, url())
+        for (const QUrl &url : url())
         {
             arguments << "-i" << url.url();
             if (subtitle_url.isEmpty())
