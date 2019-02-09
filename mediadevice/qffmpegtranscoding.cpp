@@ -145,7 +145,12 @@ void QFfmpegTranscoding::readyForOpening()
     {
         auto input = new QFfmpegInputMedia();
         input->setParent(this);
-        input->open(url());
+        if (!url().isEmpty())
+        {
+            input->open(url().at(0).url());
+            if (url().size() > 1)
+                qWarning() << "media contains" << url().size() << "urls, only first url is supported.";
+        }
         setInput(input);
     }
 
@@ -184,7 +189,7 @@ void QFfmpegTranscoding::readyForOpening()
 
         if (!m_inputMedia->isOpen())
         {
-            setError(QString("unable to open input media %1").arg(url()));
+            setError(QString("unable to open input media %1").arg(m_inputMedia->filename()));
         }
     }
     else
