@@ -50,14 +50,14 @@ void FfmpegTranscoding::updateArguments()
 //    arguments << "-probesize" << "5000";
     arguments << "-analyzeduration" << "0";
 
-    if (!ssOption.isEmpty())
-        arguments << "-ss" << ssOption;
-
     QString subtitle_url;
     if (!url().isEmpty())
     {
         for (const QUrl &url : url())
         {
+            if (!ssOption.isEmpty())
+                arguments << "-ss" << ssOption;
+
             arguments << "-i" << url.url();
             if (subtitle_url.isEmpty())
                 subtitle_url = url.url();
