@@ -22,6 +22,7 @@ public:
     void setParent(void *parent);
     void *parent() const;
 
+    QString error() const;
     void setError(const QString &error);
 
     virtual bool close() = 0;

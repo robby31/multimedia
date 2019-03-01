@@ -190,3 +190,8 @@ double QFfmpegMedia::getVideoFrameRate() const
 
     return 0.0;
 }
+
+QString QFfmpegMedia::error() const
+{
+    return m_error;
+}
