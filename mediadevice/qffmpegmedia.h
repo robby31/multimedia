@@ -44,6 +44,7 @@ public:
     int getAudioSamplerate() const;
     qint64 getAudioBitrate() const;
 
+    QString getVideoFormat() const;
     QString getVideoResolution() const;
     double getVideoFrameRate() const;
 

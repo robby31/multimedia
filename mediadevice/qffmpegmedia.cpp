@@ -175,6 +175,14 @@ qint64 QFfmpegMedia::getAudioBitrate() const
     return -1;
 }
 
+QString QFfmpegMedia::getVideoFormat() const
+{
+    if (videoStream())
+        return videoStream()->format();
+
+    return QString();
+}
+
 QString QFfmpegMedia::getVideoResolution() const
 {
     if (videoStream())
