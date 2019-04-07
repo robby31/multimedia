@@ -356,7 +356,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileWAV()
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
     else
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1536000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -435,7 +435,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 320000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -529,7 +529,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileMP3WithImage()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 320000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() != Q_NULLPTR);
     QCOMPARE(outputMedia.videoStream()->format(), QString("png"));
@@ -617,7 +617,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferWAV()
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
     else
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1536000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -706,7 +706,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferMP3()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 320000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -791,7 +791,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileAAC()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 128000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -874,7 +874,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferAAC()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 128000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -966,7 +966,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileLPCM()
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
     else
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1536000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -1050,7 +1050,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferLPCM()
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
     else
         QCOMPARE(outputMedia.audioStream()->bitrate(), 1536000);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -1137,7 +1137,7 @@ void ffmpegTest::testQFfmpegMediaEncodeFileALAC()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
@@ -1216,7 +1216,7 @@ void ffmpegTest::testQFfmpegMediaEncodeBufferALAC()
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.num, 1);
     QCOMPARE(outputMedia.audioStream()->stream()->time_base.den, outputMedia.audioStream()->samplerate());
     QCOMPARE(outputMedia.audioStream()->bitrate(), 1411200);
-    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/1000, duration/1000);
+    QCOMPARE(outputMedia.audioStream()->getDurationInMicroSec()/10000, duration/10000);
 
     QVERIFY(outputMedia.videoStream() == Q_NULLPTR);
 
