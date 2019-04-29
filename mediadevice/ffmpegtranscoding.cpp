@@ -169,35 +169,35 @@ void FfmpegTranscoding::updateArguments()
 
 //        arguments << "-s" << "1920x1080";
 //        arguments << "-s" << "1280x720";
-        arguments << "-s" << "736x414";
+//        arguments << "-s" << "736x414";
 //        arguments << "-s" << "640x360";
 
         // set frame rate
         double framerate = 25.0;
         if (frameRate() == "23.976" || frameRate() == "24000/1001")
         {
-            arguments << "-r" << "24000/1001";
+//            arguments << "-r" << "24000/1001";
             framerate = 23.976;
         }
         else if (frameRate() == "29.970" || frameRate() == "30000/1001")
         {
-            arguments << "-r" << "30000/1001";
+//            arguments << "-r" << "30000/1001";
             framerate = 29.97;
         }
         else if (frameRate() == "30.000" || frameRate() == "30/1")
         {
-            arguments << "-r" << "30";
+//            arguments << "-r" << "30";
             framerate = 30.0;
         }
         else if (frameRate() == "25.000" || frameRate() == "25/1")
         {
-            arguments << "-r" << "25";
+//            arguments << "-r" << "25";
             framerate = 25.0;
         }
         else
         {
             // default framerate output
-            arguments << "-r" << "25";
+//            arguments << "-r" << "25";
             framerate = 25.0;
             qInfo() << QString("Use default framerate (%1)").arg(frameRate());
         }
@@ -218,14 +218,16 @@ void FfmpegTranscoding::updateArguments()
         }
         else
         {
-            arguments << "-vbr" << "3";
+            arguments << "-vbr" << "5";
+            if (audioChannelCount() > 0)
+                audio_bitrate = audioChannelCount()*96000;
         }
 
-        if (audioSampleRate() > 0)
-            arguments << "-ar" << QString("%1").arg(audioSampleRate());
+//        if (audioSampleRate() > 0)
+//            arguments << "-ar" << QString("%1").arg(audioSampleRate());
 
-        if (audioChannelCount() > 0)
-            arguments << "-ac" << QString("%1").arg(audioChannelCount());
+//        if (audioChannelCount() > 0)
+//            arguments << "-ac" << QString("%1").arg(audioChannelCount());
 
 //        if (variable_bitrate)
 //            arguments << "-af" << "aresample=async=1000";
@@ -239,7 +241,7 @@ void FfmpegTranscoding::updateArguments()
         {
             arguments << "-c:v" << "libx264";
 
-            arguments << "-profile:v" << "baseline" << "-level" << "3.0";
+            arguments << "-profile:v" << "baseline" << "-level" << "4.0";
 //            arguments << "-preset" << "ultrafast";
             arguments << "-tune" << "zerolatency";
         }
