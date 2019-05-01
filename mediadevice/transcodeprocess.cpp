@@ -18,6 +18,8 @@ TranscodeProcess::~TranscodeProcess()
 //    QString msg = QString("DESTROY TranscodeProcess, bytes available:%1, state:%2, paused?%3, durationBuffer:%4, maxBufferSize:%5").arg(bytesAvailable()).arg(m_process.state()).arg(m_paused).arg(durationBuffer()).arg(maxBufferSize());
 //    qDebug() << msg;
 
+    killProcess();
+    m_process.close();
     m_process.deleteLater();
 }
 
@@ -25,7 +27,6 @@ void TranscodeProcess::close()
 {
     killProcess();
     m_process.close();
-    killTranscodeProcess = false;
     TranscodeDevice::close();
 }
 
