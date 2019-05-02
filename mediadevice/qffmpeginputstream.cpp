@@ -35,10 +35,10 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, AVMediaTy
 {
     if (format != Q_NULLPTR)
     {
-        AVCodec *codec;
-        auto index = static_cast<uint>(av_find_best_stream(format, type, -1, -1, &codec, 0));
+        AVCodec *codec = Q_NULLPTR;
+        auto index = av_find_best_stream(format, type, -1, -1, &codec, 0);
 
-        if (index < format->nb_streams && setStream(format->streams[index]))
+        if (index >=0 && index < static_cast<int>(format->nb_streams) && setStream(format->streams[index]))
         {
             if (type == AVMEDIA_TYPE_AUDIO)
                 m_codec = new QFfmpegAudioDecoder();
@@ -47,11 +47,25 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, AVMediaTy
 
             if (!m_codec || !m_codec->init_codec(codec, stream()->codecpar))
             {
+                qCritical() << "unable to init codec" << codec << stream()->codecpar;
                 close();
                 return false;
             }
 
             return true;
+        }
+
+        if (index == AVERROR_STREAM_NOT_FOUND)
+        {
+//            qCritical() << "no stream with the requested type" << type << "could be found";
+        }
+        else if (index == AVERROR_DECODER_NOT_FOUND)
+        {
+            qCritical() << "no valid decoder for streams found with requested type" << type << ".";
+        }
+        else
+        {
+            qCritical() << "unable to set stream" << index << type << format->streams[index];
         }
     }
 
@@ -74,6 +88,9 @@ bool QFfmpegInputStream::init_decoding_stream(AVFormatContext *format, uint inde
 
             if (m_codec && m_codec->init_codec(codec, stream()->codecpar))
                 return true;
+        }
+        else {
+            qCritical() << "invalid stream" << index;
         }
     }
 
