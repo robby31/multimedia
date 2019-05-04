@@ -48,7 +48,7 @@ void FfmpegTranscoding::updateArguments()
     arguments << "-nostats";
 
 //    arguments << "-probesize" << "5000";
-    arguments << "-analyzeduration" << "0";
+//    arguments << "-analyzeduration" << "0";
 
     QString subtitle_url;
     if (!url().isEmpty())
@@ -80,7 +80,7 @@ void FfmpegTranscoding::updateArguments()
         arguments << "-map" <<  "0:a";
         arguments << "-map_metadata" << "-1";
 
-        arguments << "-f" << "ipod" << "-codec:a" << "libfdk_aac";
+        arguments << "-f" << "ipod" << "-codec:a" << "libfdk_aac" << "-movflags" << "+faststart";
 
         if (bitrate() > 0)
             arguments << "-b:a" << QString("%1").arg(bitrate());
@@ -205,32 +205,24 @@ void FfmpegTranscoding::updateArguments()
         // set audio options
         int audio_bitrate = 160000;  // default value for audio bitrate
         if (audioChannelCount() > 0)
-            audio_bitrate = audioChannelCount()*80000;   // if audio channel count is valid, define bitrate = channel * 80kb/s
+            audio_bitrate = audioChannelCount()*96000;   // if audio channel count is valid, define bitrate = channel * 96kb/s
 
         if (format() == MPEG2_AC3 || format() == H264_AC3)
+        {
             arguments << "-c:a" << "ac3";
+        }
         else if (format() == H264_AAC)
-            arguments << "-c:a" << "libfdk_aac";
+        {
+            arguments << "-c:a" << "libfdk_aac" << "-movflags" << "+faststart";
+        }
 
-        if (!variable_bitrate)
-        {
-            arguments << "-b:a" << QString("%1").arg(audio_bitrate);
-        }
-        else
-        {
-            arguments << "-vbr" << "5";
-            if (audioChannelCount() > 0)
-                audio_bitrate = audioChannelCount()*96000;
-        }
+        arguments << "-b:a" << QString("%1").arg(audio_bitrate);
 
 //        if (audioSampleRate() > 0)
 //            arguments << "-ar" << QString("%1").arg(audioSampleRate());
 
 //        if (audioChannelCount() > 0)
 //            arguments << "-ac" << QString("%1").arg(audioChannelCount());
-
-//        if (variable_bitrate)
-//            arguments << "-af" << "aresample=async=1000";
 
         // set video options
         if (format() == MPEG2_AC3)
@@ -243,7 +235,7 @@ void FfmpegTranscoding::updateArguments()
 
             arguments << "-profile:v" << "baseline" << "-level" << "4.0";
 //            arguments << "-preset" << "ultrafast";
-            arguments << "-tune" << "zerolatency";
+//            arguments << "-tune" << "zerolatency";
         }
 
         if (!variable_bitrate)
