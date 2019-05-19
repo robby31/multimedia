@@ -9,7 +9,9 @@ QT       += xml multimedia
 
 TARGET = $$qtLibraryTarget(mediadevice)
 TEMPLATE = lib
-CONFIG += staticlib
+
+CONFIG += debug_and_release
+CONFIG += shared_and_static build_all
 
 CONFIG += c++14
 
@@ -89,8 +91,10 @@ HEADERS += \
 DISTFILES +=
 
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/analyzer
+LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(analyzer)
 
 INCLUDEPATH += /opt/local/include
+LIBS += -L/opt/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample
 
 installPath = $$(MYLIBRARY)/$$QT_VERSION
 target.path = $$installPath
@@ -101,3 +105,14 @@ h_include.files = $${HEADERS}
 h_include.path = $$installIncludePath
 
 INSTALLS += target h_include
+
+macx {
+    CONFIG += lib_bundle
+
+    FRAMEWORK_HEADERS.version = Versions
+    FRAMEWORK_HEADERS.files = $${HEADERS}
+    FRAMEWORK_HEADERS.path = include
+    QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
+
+    QMAKE_FRAMEWORK_BUNDLE_NAME = mediadevice
+}
