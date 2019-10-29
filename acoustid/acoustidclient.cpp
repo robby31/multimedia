@@ -5,8 +5,7 @@ const QString AcoustIdClient::ACOUSTID_URL = "http://api.acoustid.org/v2/lookup"
 AcoustIdClient::AcoustIdClient(QObject *parent):
     QObject(parent),
     manager(this),
-    key("8XaBELgH"),
-    last_answer(0)
+    key("29E2YuWCkD")
 {
     connect(&manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
@@ -44,10 +43,11 @@ void AcoustIdClient::requestId(const QString &fingerprint, const int &duration)
 //    meta << "sources";
     parameters << QString("%1=%2").arg("meta").arg(meta.join('+'));
 
+    qDebug() << "request URL" << QUrl(ACOUSTID_URL+"?"+parameters.join('&'));
     manager.get(QNetworkRequest(QUrl(ACOUSTID_URL+"?"+parameters.join('&'))));
 }
 
-AcoustIdAnswer *AcoustIdClient::waitReply(const int &timeout)
+AcoustIdAnswer *AcoustIdClient::waitReply(const size_t &timeout)
 {
     // waiting reply with timeout
     mutex.lock();
@@ -55,6 +55,6 @@ AcoustIdAnswer *AcoustIdClient::waitReply(const int &timeout)
     mutex.unlock();
     if (ret)
         return last_answer;
-    else
-        return 0;
+
+    return Q_NULLPTR;
 }

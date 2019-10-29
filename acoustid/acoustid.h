@@ -12,8 +12,8 @@ class Acoustid : public QObject
     Q_OBJECT
 
 public:
-    explicit Acoustid(QObject *parent = 0);
-    virtual ~Acoustid();
+    explicit Acoustid(QObject *parent = Q_NULLPTR);
+    ~Acoustid() Q_DECL_OVERRIDE;
 
     AcoustIdAnswer *requestId(const QString &fingerprint, const int &duration);
     AcoustIdAnswer *requestId(const QFileInfo &filename);
@@ -25,7 +25,7 @@ private slots:
 
 private:
     QThread workerThread;
-    AcoustIdClient *client;
+    AcoustIdClient *client = Q_NULLPTR;
     ChromaprintWrapper m_chromaprint;
 };
 

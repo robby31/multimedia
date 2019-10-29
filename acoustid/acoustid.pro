@@ -12,6 +12,9 @@ TARGET = $$qtLibraryTarget(acoustid)
 TEMPLATE = lib
 CONFIG += staticlib
 
+CONFIG += debug_and_release
+CONFIG += build_all
+
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 !exists($$(MYLIBRARY)) {

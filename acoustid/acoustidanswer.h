@@ -8,7 +8,7 @@ class AcoustIdAnswer : public QDomDocument
 {
 
 public:
-    AcoustIdAnswer();
+    AcoustIdAnswer() = default;
 
     bool isValid() const;
 

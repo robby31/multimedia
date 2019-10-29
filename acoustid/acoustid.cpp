@@ -2,9 +2,7 @@
 
 Acoustid::Acoustid(QObject *parent):
     QObject(parent),
-    workerThread(this),
-    client(0),
-    m_chromaprint()
+    workerThread(this)
 {
     client = new AcoustIdClient();
     client->moveToThread(&workerThread);
@@ -27,7 +25,7 @@ AcoustIdAnswer *Acoustid::requestId(const QString &fingerprint, const int &durat
         AcoustIdAnswer *answer = client->waitReply();
         return answer;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 AcoustIdAnswer *Acoustid::requestId(const QFileInfo &filename)
@@ -36,5 +34,5 @@ AcoustIdAnswer *Acoustid::requestId(const QFileInfo &filename)
     QString fp = m_chromaprint.fingerPrint(filename.absoluteFilePath(), &duration);
     if (!fp.isNull())
         return requestId(fp, duration);
-    return 0;
+    return Q_NULLPTR;
 }

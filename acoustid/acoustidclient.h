@@ -15,9 +15,9 @@ class AcoustIdClient : public QObject
     Q_OBJECT
 
 public:
-    explicit AcoustIdClient(QObject *parent = 0);
+    explicit AcoustIdClient(QObject *parent = Q_NULLPTR);
 
-    AcoustIdAnswer *waitReply(const int &timeout=2000);
+    AcoustIdAnswer *waitReply(const size_t &timeout=2000);
 
 signals:
     void tagFound(AcoustIdAnswer *answer);
@@ -33,7 +33,7 @@ private:
 
     QString key;
 
-    AcoustIdAnswer *last_answer;
+    AcoustIdAnswer *last_answer = Q_NULLPTR;
 
     static const QString ACOUSTID_URL;
 };

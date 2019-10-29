@@ -1,9 +1,5 @@
 #include "acoustidanswer.h"
 
-AcoustIdAnswer::AcoustIdAnswer()
-{
-}
-
 bool AcoustIdAnswer::isValid() const
 {
     QDomNodeList l_nodes = elementsByTagName("status");
@@ -63,14 +59,14 @@ QDomNode AcoustIdAnswer::recording() const
                 qWarning() << QString("%1 recordings found, returns only first one").arg(l_nodes.count());
 
             return l_nodes.at(0);
-        } else {
-            qWarning() << "No recording found";
-            return QDomNode();
         }
-    } else {
-        // invalid answer
+
+        qWarning() << "No recording found";
         return QDomNode();
     }
+
+    // invalid answer
+    return QDomNode();
 }
 
 double AcoustIdAnswer::scoreFromNode(const QDomNode &node) const
@@ -88,12 +84,11 @@ double AcoustIdAnswer::scoreFromNode(const QDomNode &node) const
 
 double AcoustIdAnswer::score() const
 {
-    if (isValid()) {
-            return scoreFromNode(bestResult());
-    } else {
-        // invalid answer
-        return 0.0;
-    }
+    if (isValid())
+        return scoreFromNode(bestResult());
+
+    // invalid answer
+    return 0.0;
 }
 
 QString AcoustIdAnswer::trackId() const
@@ -109,10 +104,10 @@ QString AcoustIdAnswer::trackId() const
                     return l_children.at(index).toElement().text();
 
             return QString();
-    } else {
-        // invalid answer
-        return QString();
     }
+
+    // invalid answer
+    return QString();
 }
 
 int AcoustIdAnswer::duration() const
@@ -128,10 +123,10 @@ int AcoustIdAnswer::duration() const
                     return l_children.at(index).toElement().text().toInt();
 
             return 0;
-    } else {
-        // invalid answer
-        return 0;
     }
+
+    // invalid answer
+    return 0;
 }
 
 QString AcoustIdAnswer::title() const
@@ -147,8 +142,8 @@ QString AcoustIdAnswer::title() const
                     return l_children.at(index).toElement().text();
 
             return QString();
-    } else {
-        // invalid answer
-        return QString();
     }
+
+    // invalid answer
+    return QString();
 }
