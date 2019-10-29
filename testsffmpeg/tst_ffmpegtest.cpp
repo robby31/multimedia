@@ -56,7 +56,7 @@ void ffmpegTest::cleanup()
 
 ffmpegTest::ffmpegTest()
 {
-    QFfmpeg::setDirPath("/opt/local/bin");
+    QFfmpeg::setDirPath("/usr/local/bin");
 }
 
 void ffmpegTest::testQFfmpeg_data()

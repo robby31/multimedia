@@ -48,7 +48,7 @@ private Q_SLOTS:
 
 mediadeviceTest::mediadeviceTest()
 {
-    FfmpegTranscoding::setDirPath("/opt/local/bin");
+    FfmpegTranscoding::setDirPath("/usr/local/bin");
 }
 
 void mediadeviceTest::cleanup()

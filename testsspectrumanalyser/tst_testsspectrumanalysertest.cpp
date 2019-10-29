@@ -79,7 +79,7 @@ void TestsspectrumanalyserTest::testMP3()
 {
     m_freq = 0.0;
 
-    FfmpegTranscoding::setDirPath("/opt/local/bin");
+    FfmpegTranscoding::setDirPath("/usr/local/bin");
 
     QAudioFormat format;
     format.setByteOrder(QAudioFormat::LittleEndian);

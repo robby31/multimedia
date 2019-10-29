@@ -93,8 +93,8 @@ DISTFILES +=
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/analyzer
 LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(analyzer)
 
-INCLUDEPATH += /opt/local/include
-LIBS += -L/opt/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample
+INCLUDEPATH += /usr/local/include
+LIBS += -L/usr/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample
 
 installPath = $$(MYLIBRARY)/$$QT_VERSION
 target.path = $$installPath

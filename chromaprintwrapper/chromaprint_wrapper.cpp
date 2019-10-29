@@ -19,7 +19,7 @@ QString ChromaprintWrapper::get_version() const
 
 int ChromaprintWrapper::decode_audio_file(ChromaprintContext *chromaprint_ctx, const QString &file_name, const int &max_length, int *p_duration)
 {
-    programFfmpeg.setProgram("/opt/local/bin/ffprobe");
+    programFfmpeg.setProgram("/Users/doudou/workspaceQT/MyLibrary/5.13.0/bin");
 
     QStringList argFfmpeg;
     argFfmpeg << "-i" << file_name;
@@ -62,7 +62,7 @@ int ChromaprintWrapper::decode_audio_file(ChromaprintContext *chromaprint_ctx, c
             chromaprint_start(chromaprint_ctx, sample_rate, channels);
 
             // decode audio
-            programFfmpeg.setProgram("/opt/local/bin/ffmpeg");
+            programFfmpeg.setProgram("/Users/doudou/workspaceQT/MyLibrary/5.13.0/bin");
 
             QStringList argFfmpeg;
             argFfmpeg << "-i" << file_name;

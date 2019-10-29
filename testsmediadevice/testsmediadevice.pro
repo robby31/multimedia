@@ -34,7 +34,5 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
 LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(mediadevice)
 
-INCLUDEPATH += /opt/local/include
-LIBS += -L/opt/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample
-
-DYLD_LIBRARY_PATH += /opt/local/lib
+INCLUDEPATH += /usr/local/include
+LIBS += -L/usr/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample

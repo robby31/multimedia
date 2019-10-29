@@ -3,12 +3,12 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    chromaprintwrapper \
+    #chromaprintwrapper \
     testsChromaprintWrapper \
-    acoustid \
+    #acoustid \
     testacoustid \
-    mediadevice \
+    #mediadevice \
     testsffmpeg \
     testsmediadevice \
-    spectrumanalyser \
+    #spectrumanalyser \
     testsspectrumanalyser
