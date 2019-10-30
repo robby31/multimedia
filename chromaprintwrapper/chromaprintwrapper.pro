@@ -39,10 +39,10 @@ SOURCES += \
 HEADERS += \
     chromaprint_wrapper.h
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include
+INCLUDEPATH += $$(MYLIBRARY)/include
 
-installPath = $$(MYLIBRARY)/$$QT_VERSION
-target.path = $$installPath
+installPath = $$(MYLIBRARY)
+target.path = $$installPath/lib
 
 installIncludePath = $$installPath/include/multimedia
 

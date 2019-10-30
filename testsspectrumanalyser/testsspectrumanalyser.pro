@@ -27,17 +27,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/analyzer
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(analyzer)
+INCLUDEPATH += $$(MYLIBRARY)/include/analyzer
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(analyzer)
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(mediadevice)
+INCLUDEPATH += $$(MYLIBRARY)/include/multimedia
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(mediadevice)
 
 INCLUDEPATH += "../spectrumanalyser"
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(spectrumanalyser)
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(spectrumanalyser)
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/fftreal.framework/include
-LIBS += -F$$(MYLIBRARY)/$$QT_VERSION
+INCLUDEPATH += $$(MYLIBRARY)/lib/fftreal.framework/include
+LIBS += -F$$(MYLIBRARY)/lib
 LIBS += -framework fftreal
 
 SOURCES += \

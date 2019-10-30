@@ -30,11 +30,11 @@ DEFINES += PROFILING
 SOURCES += tst_ffmpegtest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/analyzer
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(analyzer)
+INCLUDEPATH += $$(MYLIBRARY)/include/analyzer
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(analyzer)
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(mediadevice)
+INCLUDEPATH += $$(MYLIBRARY)/include/multimedia
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(mediadevice)
 
 INCLUDEPATH += /usr/local/include
 LIBS += -L/usr/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample

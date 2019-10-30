@@ -31,8 +31,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += tst_mediadevicetest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(mediadevice)
+INCLUDEPATH += $$(MYLIBRARY)/include/multimedia
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(mediadevice)
 
 INCLUDEPATH += /usr/local/include
 LIBS += -L/usr/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample

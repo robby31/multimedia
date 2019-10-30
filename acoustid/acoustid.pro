@@ -40,11 +40,11 @@ HEADERS += acoustid.h \
     acoustidanswer.h \
     acoustidclient.h
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/multimedia
+INCLUDEPATH += $$(MYLIBRARY)/include
+INCLUDEPATH += $$(MYLIBRARY)/include/multimedia
 
-installPath = $$(MYLIBRARY)/$$QT_VERSION
-target.path = $$installPath
+installPath = $$(MYLIBRARY)
+target.path = $$installPath/lib
 
 installIncludePath = $$installPath/include/multimedia
 

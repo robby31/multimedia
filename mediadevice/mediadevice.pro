@@ -90,14 +90,14 @@ HEADERS += \
 
 DISTFILES +=
 
-INCLUDEPATH += $$(MYLIBRARY)/$$QT_VERSION/include/analyzer
-LIBS += -L$$(MYLIBRARY)/$$QT_VERSION -l$$qtLibraryTarget(analyzer)
+INCLUDEPATH += $$(MYLIBRARY)/include/analyzer
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(analyzer)
 
 INCLUDEPATH += /usr/local/include
 LIBS += -L/usr/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample
 
-installPath = $$(MYLIBRARY)/$$QT_VERSION
-target.path = $$installPath
+installPath = $$(MYLIBRARY)
+target.path = $$installPath/lib
 
 installIncludePath = $$installPath/include/multimedia
 

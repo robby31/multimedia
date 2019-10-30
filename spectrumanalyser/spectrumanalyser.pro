@@ -40,8 +40,8 @@ HEADERS += \
         frequencyspectrum.h   \
         utils.h
 
-installPath = $$(MYLIBRARY)/$$QT_VERSION
-target.path = $$installPath
+installPath = $$(MYLIBRARY)
+target.path = $$installPath/lib
 
 installIncludePath = $$installPath/include/multimedia
 
