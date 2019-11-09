@@ -2,9 +2,7 @@
 
 TranscodeProcess::TranscodeProcess(QObject *parent) :
     TranscodeDevice(parent),
-    m_process(this),
-    killTranscodeProcess(false),
-    m_paused(false)
+    m_process(this)
 {
     connect(&m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(dataAvailable()));
     connect(&m_process, SIGNAL(readyReadStandardError()), this, SLOT(appendTranscodingLogMessage()));
@@ -100,13 +98,19 @@ QByteArray TranscodeProcess::read(qint64 maxlen)
     {
         if (m_pos < startByte())
         {
+            #if !defined(QT_NO_DEBUG_OUTPUT)
             qDebug() << "BYTES IGNORED" << m_pos << startByte();
+            #endif
+
             return QByteArray();
         }
 
         if ((m_pos-data.size()) < startByte())
         {
+            #if !defined(QT_NO_DEBUG_OUTPUT)
             qDebug() << "REMOVE BYTES" << m_pos << startByte() << data.size() << startByte()-m_pos+data.size();
+            #endif
+
             data.remove(0, QVariant::fromValue(startByte()-m_pos).toInt()+data.size());
         }
     }
@@ -183,7 +187,10 @@ void TranscodeProcess::finishedTranscodeData(const int &exitCode, const QProcess
 
 void TranscodeProcess::processStarted()
 {
+    #if !defined(QT_NO_DEBUG_OUTPUT)
     qDebug() << QString("Transcoding process %1 %2").arg(m_process.program(), m_process.arguments().join(' '));
+    #endif
+
     appendLog(m_process.program()+' ');
     appendLog(m_process.arguments().join(' '));
 
@@ -204,8 +211,8 @@ void TranscodeProcess::pause()
     qint64 pid = m_process.processId();
     if (!m_paused && m_process.state() != QProcess::NotRunning && pid > 0)
     {
-        qDebug() << QString("Pause transcoding (pid: %1)").arg(pid);
         #if !defined(QT_NO_DEBUG_OUTPUT)
+        qDebug() << QString("Pause transcoding (pid: %1)").arg(pid);
         appendLog(QString("PAUSE TRANSCODING"));
         #endif
 
@@ -230,8 +237,8 @@ void TranscodeProcess::resume()
     qint64 pid = m_process.processId();
     if (m_paused && m_process.state() != QProcess::NotRunning && pid > 0)
     {
-        qDebug() << QString("Restart transcoding (pid: %1)").arg(pid);
         #if !defined(QT_NO_DEBUG_OUTPUT)
+        qDebug() << QString("Restart transcoding (pid: %1)").arg(pid);
         appendLog(QString("RESUME TRANSCODING"));
         #endif
 

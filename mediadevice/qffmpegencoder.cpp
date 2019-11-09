@@ -12,8 +12,10 @@ void QFfmpegEncoder::close()
 
 void QFfmpegEncoder::_close()
 {
+    #if !defined(QT_NO_DEBUG_OUTPUT)
     if (codecCtx() != Q_NULLPTR)
         qDebug() << format() << codecCtx()->frame_number << "frames encoded.";
+    #endif
 
     if (!m_encodedPkt.isEmpty())
         qWarning() << m_encodedPkt.size() << "frames not encoded remains in encoder" << format();

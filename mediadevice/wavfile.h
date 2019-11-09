@@ -52,6 +52,7 @@ class WavFile : public QObject
 {
 public:
     explicit WavFile(QObject *parent = Q_NULLPTR);
+    ~WavFile() Q_DECL_OVERRIDE = default;
 
     enum TypeError { NoError, InvalidFile, InvalidHeader };
 
@@ -84,10 +85,10 @@ private:
     bool readHeader();
 
 private:
-    QIODevice *m_device;
+    QIODevice *m_device = Q_NULLPTR;
     QAudioFormat m_fileFormat;
-    qint64 m_headerLength;
-    TypeError m_error;
+    qint64 m_headerLength = 0;
+    TypeError m_error = NoError;
 };
 
 #endif // WAVFILE_H

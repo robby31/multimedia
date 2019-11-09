@@ -78,10 +78,7 @@ struct CombinedHeader
 };
 
 WavFile::WavFile(QObject *parent):
-    QObject(parent),
-    m_device(Q_NULLPTR),
-    m_headerLength(0),
-    m_error(NoError)
+    QObject(parent)
 {
 
 }

@@ -12,8 +12,10 @@ void QFfmpegDecoder::close()
 
 void QFfmpegDecoder::_close()
 {
+    #if !defined(QT_NO_DEBUG_OUTPUT)
     if (codecCtx())
         qDebug() << format() << codecCtx()->frame_number << "frames decoded.";
+    #endif
 
     if (!m_decodedFrames.isEmpty())
         qWarning() << m_decodedFrames.size() << "frames not decoded remains in decoder" << format();
@@ -76,15 +78,20 @@ bool QFfmpegDecoder::decodePacket(AVPacket *pkt)
                     }
                 }
 
+                #if !defined(QT_NO_DEBUG_OUTPUT)
                 if (m_decodedFrames.size() > 100)
                     qDebug() << "number of decoded frames in codec is" << m_decodedFrames.size();
+                #endif
             }
 
             delete frame;
             return true;
         }
 
+        #if !defined(QT_NO_DEBUG_OUTPUT)
         qDebug() << "send packet returns" << ret;
+        #endif
+
         return false;
     }
 

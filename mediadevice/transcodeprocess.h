@@ -59,8 +59,8 @@ private:
     double m_durationMSecs = -1;     // original duration in mseconds without timeseekStart, timeseekEnd
     qint64 m_bitrate = -1;
     QProcess m_process;
-    bool killTranscodeProcess;  // true if the application aborts the transcoding
-    bool m_paused;              // true if the transcoding has been paused
+    bool killTranscodeProcess = false;  // true if the application aborts the transcoding
+    bool m_paused = false;              // true if the transcoding has been paused
 };
 
 #endif // TRANSCODEPROCESS_H

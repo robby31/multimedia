@@ -15,6 +15,8 @@ public:
 
     void setVariableBitrate(const bool &flag);
 
+    void setOutput(const QString &output);
+
 private:
     void updateArguments() Q_DECL_OVERRIDE;
 
@@ -24,7 +26,8 @@ public slots:
 
 private:
     static QString EXE_DIRPATH;
-    bool variable_bitrate;
+    bool variable_bitrate = false;
+    QString m_output;
 };
 
 #endif // FFMPEGTRANSCODING_H

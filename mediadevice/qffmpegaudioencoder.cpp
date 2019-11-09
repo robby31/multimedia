@@ -108,10 +108,12 @@ bool QFfmpegAudioEncoder::init_resampler(QFfmpegCodec *input)
                 return false;
             }
 
+            #if !defined(QT_NO_DEBUG_OUTPUT)
             qDebug() << "resampling initialised:";
             qDebug() << "   channel count  :" << inputCodecCtx->channels << "-->" << channelCount();
             qDebug() << "   sample rate    :" << inputCodecCtx->sample_rate << "-->" << samplerate();
             qDebug() << "   sample format  :" << av_get_sample_fmt_name(inputCodecCtx->sample_fmt) << "-->" << av_get_sample_fmt_name(sampleFormat());
+            #endif
 
             return true;
         }

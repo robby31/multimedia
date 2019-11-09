@@ -68,13 +68,13 @@ qint64 TranscodeDevice::lengthInMSeconds() const
 {
     if (timeSeekStart() > 0)
     {
-        if (timeSeekEnd() > timeSeekStart() && (timeSeekEnd()*1000) < originalLengthInMSeconds())
+        if (timeSeekEnd() > timeSeekStart() && (timeSeekEnd()*1000) < static_cast<qint64>(originalLengthInMSeconds()))
             return (timeSeekEnd() - timeSeekStart())*1000;
 
-        return static_cast<qint64>(originalLengthInMSeconds() - timeSeekStart()*1000);
+        return static_cast<qint64>(originalLengthInMSeconds()) - timeSeekStart()*1000;
     }
 
-    if (timeSeekEnd() > 0 && (timeSeekEnd()*1000) < originalLengthInMSeconds())
+    if (timeSeekEnd() > 0 && (timeSeekEnd()*1000) < static_cast<qint64>(originalLengthInMSeconds()))
         return timeSeekEnd()*1000;
 
     return static_cast<qint64>(originalLengthInMSeconds());
@@ -204,4 +204,15 @@ qint64 TranscodeDevice::pos() const
         return m_pos - startByte();
 
     return m_pos;
+}
+
+ContainerType TranscodeDevice::containerFormat() const
+{
+    return m_containerFormat;
+}
+
+void TranscodeDevice::setContainer(const ContainerType &format)
+{
+    m_containerFormat = format;
+    emit containerChanged();
 }

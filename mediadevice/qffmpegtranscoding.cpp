@@ -113,19 +113,27 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
         setError("unable to read transcoding, media is not correctly initialised.");
     }
 
+    #if !defined(QT_NO_DEBUG_OUTPUT)
     qDebug() << msg << "ended read" << data.size() << "bytes in" << timer.elapsed() << "ms.";
+    #endif
 
     if (startByte() > 0)
     {
         if (m_pos < startByte())
         {
+            #if !defined(QT_NO_DEBUG_OUTPUT)
             qDebug() << "BYTES IGNORED" << m_pos << startByte();
+            #endif
+
             return QByteArray();
         }
 
         if ((m_pos-data.size()) < startByte())
         {
+            #if !defined(QT_NO_DEBUG_OUTPUT)
             qDebug() << "REMOVE BYTES" << m_pos << startByte() << data.size() << startByte()-m_pos+data.size();
+            #endif
+
             data.remove(0, QVariant::fromValue(startByte()-m_pos).toInt()+data.size());
         }
     }
@@ -552,7 +560,10 @@ double QFfmpegTranscoding::originalLengthInMSeconds() const
 
 void QFfmpegTranscoding::startDemux()
 {
+    #if !defined(QT_NO_DEBUG_OUTPUT)
     qDebug() << QDateTime::currentDateTime().toString("dd MMM yyyy hh:mm:ss,zzz") << "start demux";
+    #endif
+
     m_timerDemux.start(500);
 }
 
@@ -575,12 +586,17 @@ void QFfmpegTranscoding::demux()
         if (prev_bytesAvailable < m_outputMedia->bytesAvailable())
             emit readyRead();
 
+        #if !defined(QT_NO_DEBUG_OUTPUT)
         qDebug() << msg << "ended demux qffmpeg transcoding, bytes available" << m_outputMedia->bytesAvailable() << "in" << timer.elapsed() << "ms.";
+        #endif
 
     }
     else if (m_outputMedia && m_outputMedia->atEnd())
     {
+        #if !defined(QT_NO_DEBUG_OUTPUT)
         qDebug() << msg << "demux end reached";
+        #endif
+
         emit endReached();
         emit status("Transcoding finished.");
     }

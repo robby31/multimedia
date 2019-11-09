@@ -8,8 +8,7 @@ void FfmpegTranscoding::setDirPath(const QString &folder)
 }
 
 FfmpegTranscoding::FfmpegTranscoding(QObject *parent) :
-    TranscodeProcess(parent),
-    variable_bitrate(false)
+    TranscodeProcess(parent)
 {
     QDir folder(EXE_DIRPATH);
     setProgram(folder.absoluteFilePath("ffmpeg"));
@@ -276,7 +275,10 @@ void FfmpegTranscoding::updateArguments()
     else if (format() == COPY)
     {
         // set container format to MPEGTS
-        arguments << "-f" << "mpegts";
+        if (containerFormat() == MP4)
+            arguments << "-f" << "mp4";
+        else if (containerFormat() == MPEGTS)
+            arguments << "-f" << "mpegts";
 
         arguments << "-c:a" << "copy";
         arguments << "-c:v" << "copy";
@@ -309,7 +311,10 @@ void FfmpegTranscoding::updateArguments()
     // normalize audio
 //    arguments << "-af" << "dynaudnorm";
 
-    arguments << "pipe:";
+    if (m_output.isEmpty())
+        arguments << "pipe:";
+    else
+        arguments << m_output;
 
     setArguments(arguments);
 }
@@ -317,4 +322,9 @@ void FfmpegTranscoding::updateArguments()
 void FfmpegTranscoding::setVariableBitrate(const bool &flag)
 {
     variable_bitrate = flag;
+}
+
+void FfmpegTranscoding::setOutput(const QString &output)
+{
+    m_output = output;
 }

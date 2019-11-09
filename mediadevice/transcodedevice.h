@@ -10,6 +10,7 @@
 
 // Format available for transcoding
 enum TranscodeFormatAvailable { UNKNOWN, COPY, MP3, LPCM_S16BE, LPCM_S16LE, AAC, ALAC, WAV, MPEG2_AC3, H264_AAC, H264_AC3 };
+enum ContainerType { DEFAULT, MPEGTS, MP4 };
 
 Q_DECLARE_METATYPE(TranscodeFormatAvailable)
 
@@ -18,6 +19,7 @@ class TranscodeDevice : public Device
     Q_OBJECT
 
     Q_PROPERTY(TranscodeFormatAvailable format READ format WRITE setFormat NOTIFY formatChanged)
+    Q_PROPERTY(ContainerType container READ containerFormat WRITE setContainer NOTIFY containerChanged)
 
 public:
     explicit TranscodeDevice(QObject *parent = Q_NULLPTR);
@@ -45,6 +47,9 @@ public:
 
     TranscodeFormatAvailable format() const;
     void setFormat(const TranscodeFormatAvailable &format);
+
+    ContainerType containerFormat() const;
+    void setContainer(const ContainerType &format);
 
     QStringList audioLanguages() const                      { return m_audioLanguages; }
     void setAudioLanguages(const QStringList &languages)    { m_audioLanguages = languages; }
@@ -83,6 +88,7 @@ private:
 
 signals:
     void formatChanged();
+    void containerChanged();
     void openSignal();
 
 public slots:
@@ -104,6 +110,7 @@ private:
     QElapsedTimer transcodeClock;
 
     TranscodeFormatAvailable m_format = UNKNOWN;
+    ContainerType m_containerFormat = DEFAULT;
 
     QStringList m_audioLanguages;
     QStringList m_subtitleLanguages;
