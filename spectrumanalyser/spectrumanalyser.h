@@ -75,7 +75,11 @@ class SpectrumAnalyserThread : public QObject
 
 public:
     SpectrumAnalyserThread(QObject *parent);
-    ~SpectrumAnalyserThread();
+    ~SpectrumAnalyserThread() Q_DECL_OVERRIDE;
+    SpectrumAnalyserThread(SpectrumAnalyserThread const&) = delete;
+    SpectrumAnalyserThread& operator =(SpectrumAnalyserThread const&) = delete;
+    SpectrumAnalyserThread(SpectrumAnalyserThread&&) = delete;
+    SpectrumAnalyserThread& operator=(SpectrumAnalyserThread&&) = delete;
 
 public slots:
     void setWindowFunction(WindowFunction type);
@@ -99,9 +103,9 @@ private:
     WindowFunction                              m_windowFunction;
 
 #ifdef DISABLE_FFT
-    typedef qreal                               DataType;
+    using DataType =                            qreal;
 #else
-    typedef FFTRealFixLenParam::DataType        DataType;
+    using DataType =                            FFTRealFixLenParam::DataType;
 #endif
     QVector<DataType>                           m_window;
 
@@ -124,8 +128,7 @@ class SpectrumAnalyser : public QObject
     Q_OBJECT
 
 public:
-    SpectrumAnalyser(QObject *parent = 0);
-    ~SpectrumAnalyser();
+    SpectrumAnalyser(QObject *parent = Q_NULLPTR);
 
 #ifdef DUMP_SPECTRUMANALYSER
     void setOutputPath(const QString &outputPath);
@@ -182,11 +185,11 @@ private:
         Cancelled
     };
 
-    State              m_state;
+    State              m_state = Idle;
 
 #ifdef DUMP_SPECTRUMANALYSER
     QDir                m_outputDir;
-    int                 m_count;
+    int                 m_count = 0;
     QFile               m_textFile;
     QTextStream         m_textStream;
 #endif

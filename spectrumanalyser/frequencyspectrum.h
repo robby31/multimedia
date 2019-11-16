@@ -77,8 +77,8 @@ public:
         bool clipped;
     };
 
-    typedef QVector<Element>::iterator iterator;
-    typedef QVector<Element>::const_iterator const_iterator;
+    using iterator = QVector<Element>::iterator;
+    using const_iterator = QVector<Element>::const_iterator;
 
     void reset();
 

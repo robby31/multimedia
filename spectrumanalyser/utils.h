@@ -89,7 +89,7 @@ public:
     NullDebug& operator<<(const T&) { return *this; }
 };
 
-inline NullDebug nullDebug() { return NullDebug(); }
+inline NullDebug nullDebug() { return {}; }
 
 #ifdef LOG_ENGINE
 #   define ENGINE_DEBUG qDebug()

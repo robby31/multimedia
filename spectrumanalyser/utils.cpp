@@ -57,7 +57,7 @@ qint64 audioLength(const QAudioFormat &format, qint64 microSeconds)
 
 qreal nyquistFrequency(const QAudioFormat &format)
 {
-    return format.sampleRate() / 2;
+    return format.sampleRate() / 2.0;
 }
 
 QString formatToString(const QAudioFormat &format)
@@ -98,11 +98,7 @@ QString formatToString(const QAudioFormat &format)
             }
 
             result = QString("%1 Hz %2 bit %3 %4 %5")
-                .arg(format.sampleRate())
-                .arg(format.sampleSize())
-                .arg(formatType)
-                .arg(formatEndian)
-                .arg(formatChannels);
+                .arg(format.sampleRate()).arg(format.sampleSize()).arg(formatType, formatEndian, formatChannels);
         } else {
             result = format.codec();
         }
@@ -135,5 +131,5 @@ qreal pcmToReal(qint16 pcm)
 
 qint16 realToPcm(qreal real)
 {
-    return real * PCMS16MaxValue;
+    return static_cast<qint16>(real * PCMS16MaxValue);
 }
