@@ -53,13 +53,9 @@ mediadeviceTest::mediadeviceTest()
 
 void mediadeviceTest::cleanup()
 {
-    QCOMPARE(QFfmpegMedia::objectCounter, 0);
-    QCOMPARE(QFfmpegStream::objectCounter, 0);
-    QCOMPARE(QFfmpegCodec::objectCounter, 0);
-    QCOMPARE(QFfmpegBuffer::objectCounter, 0);
-    QCOMPARE(QFfmpegFrame::objectCounter, 0);
+    DebugInfo::display_alive_objects();
 
-    QCOMPARE(Device::objectCounter, 0);
+    QCOMPARE(DebugInfo::count_alive_objects(), 0);
 }
 
 void mediadeviceTest::testStreamingFile_data()
