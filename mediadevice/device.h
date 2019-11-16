@@ -7,6 +7,10 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <QtMath>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QTimer>
+#include "debuginfo.h"
 
 class Device : public QObject
 {
@@ -15,6 +19,10 @@ class Device : public QObject
 public:
     explicit Device(QObject *parent = Q_NULLPTR);
     ~Device() Q_DECL_OVERRIDE;
+    Device(Device const&) = delete;
+    Device& operator =(Device const&) = delete;
+    Device(Device&&) = delete;
+    Device& operator=(Device&&) = delete;
 
     virtual void setTimeSeek(qint64 start, qint64 end);
     qint64 timeSeekStart() const;
@@ -46,6 +54,7 @@ public:
     virtual bool isReadyToOpen() const = 0;
     bool waitReadyToOpen(const unsigned long &timeout=30000);
     bool waitOpen(const unsigned long &timeout=30000);
+    virtual bool waitForFinished(const int &timeout=30000);
 
     virtual QByteArray read(qint64 maxlen) = 0;
 
@@ -87,9 +96,6 @@ private:
     QMutex mutex;
     QWaitCondition readyToOpenCondition;
     QWaitCondition isopenedCondition;
-
-public:
-    qint64 static objectCounter;
 };
 
 #endif // DEVICE_H

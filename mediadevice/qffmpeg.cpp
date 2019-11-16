@@ -36,6 +36,8 @@ QFfmpeg::QFfmpeg(QObject *parent):
 {
     ANALYZER;
 
+    DebugInfo::add_object(this);
+
     if (EXE_DIRPATH.isEmpty())
     {
         qCritical() << "QFFmpeg, invalid installation path where are located FFMPEG binaries.";
@@ -55,6 +57,8 @@ QFfmpeg::QFfmpeg(const QString &filename, QObject *parent):
     filename()
 {
     ANALYZER;
+
+    DebugInfo::add_object(this);
 
     if (EXE_DIRPATH.isEmpty())
     {
@@ -76,6 +80,8 @@ QFfmpeg::QFfmpeg(const QString &filename, QObject *parent):
 
 QFfmpeg::~QFfmpeg()
 {
+    DebugInfo::remove_object(this);
+
     if (programFfmpegProbe)
     {
         programFfmpegProbe->disconnect(this);

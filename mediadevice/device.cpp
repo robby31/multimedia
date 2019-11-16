@@ -1,13 +1,11 @@
 #include "device.h"
 
-qint64 Device::objectCounter = 0;
-
 const QString Device::CRLF = "\r\n";
 
 Device::Device(QObject *parent) :
     QObject(parent)
 {
-    ++objectCounter;
+    DebugInfo::add_object(this);
 
     connect(this, SIGNAL(readyToOpen()), this, SLOT(deviceReadyToOpen()));
     connect(this, SIGNAL(openedSignal()), this, SLOT(deviceOpened()));
@@ -15,7 +13,7 @@ Device::Device(QObject *parent) :
 
 Device::~Device()
 {
-    --objectCounter;
+    DebugInfo::remove_object(this);
 }
 
 void Device::appendLog(const QString &msg)
@@ -198,6 +196,35 @@ bool Device::waitOpen(const unsigned long &timeout)
         qDebug() << "wait device until open" << this;
         #endif
         return isopenedCondition.wait(locker.mutex(), timeout);
+    }
+
+    return true;
+}
+
+bool Device::waitForFinished(const int &timeout)
+{
+    if (bytesAvailable() > 0)
+        emit readyRead();
+
+    if (!atEnd())
+    {
+        QElapsedTimer timer;
+        timer.start();
+
+        QEventLoop loop;
+        connect(this, &Device::endReached, &loop, &QEventLoop::quit);
+
+        QTimer timeout_timer;
+        if (timeout > 0)
+        {
+            connect(&timeout_timer, &QTimer::timeout, &loop, &QEventLoop::quit);
+            timeout_timer.start(timeout);
+        }
+
+        loop.exec();
+
+        if (timeout > 0)
+            return timer.elapsed() < timeout;
     }
 
     return true;

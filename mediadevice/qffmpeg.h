@@ -6,6 +6,7 @@
 #include <QtXml>
 
 #include "analyzer.h"
+#include "debuginfo.h"
 
 class QFfmpeg : public QObject
 {
@@ -15,6 +16,10 @@ public:
     explicit QFfmpeg(QObject *parent = Q_NULLPTR);
     explicit QFfmpeg(const QString &filename, QObject *parent = Q_NULLPTR);
     ~QFfmpeg() Q_DECL_OVERRIDE;
+    QFfmpeg(QFfmpeg const&) = delete;
+    QFfmpeg& operator =(QFfmpeg const&) = delete;
+    QFfmpeg(QFfmpeg&&) = delete;
+    QFfmpeg& operator=(QFfmpeg&&) = delete;
 
     bool isValid() const;
 
