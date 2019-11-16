@@ -1,7 +1,6 @@
 #include "chromaprint_wrapper.h"
 
 ChromaprintWrapper::ChromaprintWrapper():
-    algo(CHROMAPRINT_ALGORITHM_DEFAULT),
     chromaprint_ctx(chromaprint_new(algo))
 {
 }

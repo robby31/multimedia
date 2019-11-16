@@ -7,14 +7,11 @@
 QT       -= gui
 QT       += xml
 
-TARGET = chromaprintwrapper
-TARGET = $$qtLibraryTarget($$TARGET)
-
+TARGET = $$qtLibraryTarget(chromaprintwrapper)
 TEMPLATE = lib
-CONFIG += staticlib
 
 CONFIG += debug_and_release
-CONFIG += build_all
+CONFIG += shared_and_static build_all
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
@@ -40,6 +37,7 @@ HEADERS += \
     chromaprint_wrapper.h
 
 INCLUDEPATH += $$(MYLIBRARY)/include
+LIBS += -L$$(MYLIBRARY)/lib -lchromaprint
 
 installPath = $$(MYLIBRARY)
 target.path = $$installPath/lib
@@ -50,3 +48,14 @@ h_include.files = chromaprint_wrapper.h
 h_include.path = $$installIncludePath
 
 INSTALLS += target h_include
+
+macx {
+    CONFIG += lib_bundle
+
+    FRAMEWORK_HEADERS.version = Versions
+    FRAMEWORK_HEADERS.files = $${HEADERS}
+    FRAMEWORK_HEADERS.path = include
+    QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
+
+    QMAKE_FRAMEWORK_BUNDLE_NAME = chromaprintwrapper
+}

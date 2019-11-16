@@ -23,12 +23,12 @@ void AcoustIdClient::requestId(const QString &fingerprint, const int &duration)
 {
     QStringList parameters;
 
-    parameters << QString("%1=%2").arg("format").arg("xml");
-    parameters << QString("%1=%2").arg("client").arg(key);
+    parameters << QString("%1=%2").arg("format", "xml");
+    parameters << QString("%1=%2").arg("client", key);
 
-    parameters << QString("%1=%2").arg("duration").arg(QString("%1").arg(duration));
+    parameters << QString("%1=%2").arg("duration", QString("%1").arg(duration));
 
-    parameters << QString("%1=%2").arg("fingerprint").arg(fingerprint);
+    parameters << QString("%1=%2").arg("fingerprint", fingerprint);
 
     QStringList meta;
     meta << "recordings";
@@ -41,7 +41,7 @@ void AcoustIdClient::requestId(const QString &fingerprint, const int &duration)
 //    meta << "usermeta";
     meta << "compress";
 //    meta << "sources";
-    parameters << QString("%1=%2").arg("meta").arg(meta.join('+'));
+    parameters << QString("%1=%2").arg("meta", meta.join('+'));
 
     qDebug() << "request URL" << QUrl(ACOUSTID_URL+"?"+parameters.join('&'));
     manager.get(QNetworkRequest(QUrl(ACOUSTID_URL+"?"+parameters.join('&'))));

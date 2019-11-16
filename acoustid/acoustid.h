@@ -14,6 +14,10 @@ class Acoustid : public QObject
 public:
     explicit Acoustid(QObject *parent = Q_NULLPTR);
     ~Acoustid() Q_DECL_OVERRIDE;
+    Acoustid(Acoustid const&) = delete;
+    Acoustid& operator =(Acoustid const&) = delete;
+    Acoustid(Acoustid&&) = delete;
+    Acoustid& operator=(Acoustid&&) = delete;
 
     AcoustIdAnswer *requestId(const QString &fingerprint, const int &duration);
     AcoustIdAnswer *requestId(const QFileInfo &filename);

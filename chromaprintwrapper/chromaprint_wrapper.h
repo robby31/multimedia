@@ -14,6 +14,10 @@ class ChromaprintWrapper
 public:
     ChromaprintWrapper();
     ~ChromaprintWrapper();
+    ChromaprintWrapper(ChromaprintWrapper const&) = delete;
+    ChromaprintWrapper& operator =(ChromaprintWrapper const&) = delete;
+    ChromaprintWrapper(ChromaprintWrapper&&) = delete;
+    ChromaprintWrapper& operator=(ChromaprintWrapper&&) = delete;
 
     QString get_version() const;
 
@@ -23,7 +27,7 @@ private:
     int decode_audio_file(ChromaprintContext *chromaprint_ctx, const QString &file_name, const int &max_length, int *p_duration);
 
 private:
-    int algo;
+    int algo = CHROMAPRINT_ALGORITHM_DEFAULT;
     ChromaprintContext *chromaprint_ctx;
     QProcess programFfmpeg;
 };

@@ -35,8 +35,8 @@ QDomNode AcoustIdAnswer::bestResult() const
     if (isValid()) {
         QHash<QString, QDomNode> results = resultsByScore();
         QList<double> scores;
-        foreach (const QString &key, results.keys())
-            scores.append(key.toDouble());
+        for (auto it = results.constBegin(); it != results.constEnd(); ++it)
+            scores.append(it.key().toDouble());
         std::sort(scores.begin(), scores.end(), std::greater<double>());
         QString bestScore = QString("%1").arg(scores.at(0));
 
