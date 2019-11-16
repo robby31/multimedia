@@ -9,9 +9,15 @@ extern "C" {
 
 class QFfmpegVideoEncoder : public QFfmpegEncoder
 {
+    Q_OBJECT
+
 public:
-    QFfmpegVideoEncoder() = default;
+    explicit QFfmpegVideoEncoder(QObject *parent = Q_NULLPTR);
     ~QFfmpegVideoEncoder() Q_DECL_OVERRIDE;
+    QFfmpegVideoEncoder(QFfmpegVideoEncoder const&) = delete;
+    QFfmpegVideoEncoder& operator =(QFfmpegVideoEncoder const&) = delete;
+    QFfmpegVideoEncoder(QFfmpegVideoEncoder&&) = delete;
+    QFfmpegVideoEncoder& operator=(QFfmpegVideoEncoder&&) = delete;
 
     void close() Q_DECL_OVERRIDE;
 

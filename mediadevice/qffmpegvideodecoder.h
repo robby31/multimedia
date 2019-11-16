@@ -5,8 +5,10 @@
 
 class QFfmpegVideoDecoder: public QFfmpegDecoder
 {
+    Q_OBJECT
+
 public:
-    QFfmpegVideoDecoder() = default;
+    explicit QFfmpegVideoDecoder(QObject *parent = Q_NULLPTR);
 };
 
 #endif // QFFMPEGVIDEODECODER_H
