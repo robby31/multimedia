@@ -7,9 +7,15 @@
 
 class QFfmpegOutputStream : public QFfmpegStream
 {
+    Q_OBJECT
+
 public:
-    QFfmpegOutputStream() = default;
+    explicit QFfmpegOutputStream(QObject *parent = Q_NULLPTR);
     ~QFfmpegOutputStream() Q_DECL_OVERRIDE;
+    QFfmpegOutputStream(QFfmpegOutputStream const&) = delete;
+    QFfmpegOutputStream& operator =(QFfmpegOutputStream const&) = delete;
+    QFfmpegOutputStream(QFfmpegOutputStream&&) = delete;
+    QFfmpegOutputStream& operator=(QFfmpegOutputStream&&) = delete;
 
     bool isValid() const Q_DECL_OVERRIDE;
 

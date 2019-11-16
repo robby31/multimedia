@@ -1,15 +1,14 @@
 #include "qffmpegstream.h"
 
-qint64 QFfmpegStream::objectCounter = 0;
-
-QFfmpegStream::QFfmpegStream()
+QFfmpegStream::QFfmpegStream(QObject *parent):
+    QObject(parent)
 {
-    objectCounter++;
+    DebugInfo::add_object(this);
 }
 
 QFfmpegStream::~QFfmpegStream()
 {
-    objectCounter--;
+    DebugInfo::remove_object(this);
     _close();
 }
 

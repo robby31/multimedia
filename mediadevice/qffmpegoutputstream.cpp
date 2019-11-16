@@ -1,5 +1,11 @@
 #include "qffmpegoutputstream.h"
 
+QFfmpegOutputStream::QFfmpegOutputStream(QObject *parent):
+    QFfmpegStream(parent)
+{
+
+}
+
 QFfmpegOutputStream::~QFfmpegOutputStream()
 {
     _close();

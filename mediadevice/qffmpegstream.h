@@ -6,17 +6,23 @@
 #include <QDebug>
 #include "qffmpegdecoder.h"
 #include "qffmpegencoder.h"
+#include "debuginfo.h"
 
 extern "C" {
 #include <libavformat/avformat.h>
 }
 
-class QFfmpegStream
+class QFfmpegStream : public QObject
 {
+    Q_OBJECT
 
 public:
-    QFfmpegStream();
-    virtual ~QFfmpegStream();
+    explicit QFfmpegStream(QObject *parent = Q_NULLPTR);
+    ~QFfmpegStream() Q_DECL_OVERRIDE;
+    QFfmpegStream(QFfmpegStream const&) = delete;
+    QFfmpegStream& operator =(QFfmpegStream const&) = delete;
+    QFfmpegStream(QFfmpegStream&&) = delete;
+    QFfmpegStream& operator=(QFfmpegStream&&) = delete;
 
     virtual bool isValid() const;
 
@@ -61,9 +67,6 @@ public:
 
 private:
     void _close();
-
-public:
-    static qint64 objectCounter;
 
 private:
     AVStream *m_stream = Q_NULLPTR;   // stream linked to AVFormatContext for decoding input

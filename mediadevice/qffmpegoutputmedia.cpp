@@ -1,5 +1,11 @@
 #include "qffmpegoutputmedia.h"
 
+QFfmpegOutputMedia::QFfmpegOutputMedia(QObject *parent):
+    QFfmpegMedia(parent)
+{
+
+}
+
 QFfmpegOutputMedia::~QFfmpegOutputMedia()
 {
     _close();

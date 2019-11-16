@@ -1,16 +1,15 @@
 #include "qffmpegpacket.h"
 
-qint64 QFfmpegPacket::objectCounter = 0;
-
-QFfmpegPacket::QFfmpegPacket():
+QFfmpegPacket::QFfmpegPacket(QObject *parent):
+    QObject(parent),
     m_pkt(av_packet_alloc())
 {
-    objectCounter++;
+    DebugInfo::add_object(this);
 }
 
 QFfmpegPacket::~QFfmpegPacket()
 {
-    objectCounter--;
+    DebugInfo::remove_object(this);
 
     if (isValid())
         av_packet_free(&m_pkt);
