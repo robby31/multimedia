@@ -8,9 +8,10 @@ QT       -= gui
 QT       += multimedia
 
 TARGET = $$qtLibraryTarget(spectrumanalyser)
-
 TEMPLATE = lib
-CONFIG += staticlib
+
+CONFIG += debug_and_release
+CONFIG += shared_and_static build_all
 
 !exists($$(MYLIBRARY)) {
     error("variable MYLIBRARY not set.")
@@ -27,7 +28,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-INCLUDEPATH += "../../fftreal"
+INCLUDEPATH += $$(MYLIBRARY)/lib/fftreal.framework/include
+LIBS += -F$$(MYLIBRARY)/lib
+LIBS += -framework fftreal
 
 SOURCES += \
         spectrumanalyser.cpp \
@@ -49,3 +52,14 @@ h_includes.files = $${HEADERS}
 h_includes.path = $$installIncludePath
 
 INSTALLS += target h_includes
+
+macx {
+    CONFIG += lib_bundle
+
+    FRAMEWORK_HEADERS.version = Versions
+    FRAMEWORK_HEADERS.files = $${HEADERS}
+    FRAMEWORK_HEADERS.path = include
+    QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
+
+    QMAKE_FRAMEWORK_BUNDLE_NAME = spectrumanalyser
+}

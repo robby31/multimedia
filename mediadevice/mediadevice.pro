@@ -15,6 +15,8 @@ CONFIG += shared_and_static build_all
 
 CONFIG += c++14
 
+CONFIG += sdk_no_version_check
+
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 !exists($$(MYLIBRARY)) {
@@ -92,6 +94,9 @@ DISTFILES +=
 
 INCLUDEPATH += $$(MYLIBRARY)/include/analyzer
 LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(analyzer)
+
+INCLUDEPATH += $$(MYLIBRARY)/include/QmlApplication
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(QmlApplication)
 
 INCLUDEPATH += /usr/local/include
 LIBS += -L/usr/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample

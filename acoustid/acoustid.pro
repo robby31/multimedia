@@ -8,12 +8,10 @@ QT       -= gui
 QT       += network xml
 
 TARGET = $$qtLibraryTarget(acoustid)
-
 TEMPLATE = lib
-CONFIG += staticlib
 
 CONFIG += debug_and_release
-CONFIG += build_all
+CONFIG += shared_and_static build_all
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
@@ -40,8 +38,11 @@ HEADERS += acoustid.h \
     acoustidanswer.h \
     acoustidclient.h
 
-INCLUDEPATH += $$(MYLIBRARY)/include
 INCLUDEPATH += $$(MYLIBRARY)/include/multimedia
+LIBS += -L$$(MYLIBRARY)/lib -l$$qtLibraryTarget(chromaprintwrapper)
+
+INCLUDEPATH += $$(MYLIBRARY)/include
+LIBS += -L$$(MYLIBRARY)/lib -lchromaprint
 
 installPath = $$(MYLIBRARY)
 target.path = $$installPath/lib
@@ -54,3 +55,14 @@ h_includes.files = acoustid.h \
 h_includes.path = $$installIncludePath
 
 INSTALLS += target h_includes
+
+macx {
+    CONFIG += lib_bundle
+
+    FRAMEWORK_HEADERS.version = Versions
+    FRAMEWORK_HEADERS.files = $${HEADERS}
+    FRAMEWORK_HEADERS.path = include
+    QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
+
+    QMAKE_FRAMEWORK_BUNDLE_NAME = acoustid
+}
