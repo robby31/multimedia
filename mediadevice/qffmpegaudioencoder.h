@@ -10,9 +10,15 @@ extern "C" {
 
 class QFfmpegAudioEncoder : public QFfmpegEncoder
 {
+    Q_OBJECT
+
 public:
-    QFfmpegAudioEncoder() = default;
+    explicit QFfmpegAudioEncoder(QObject *parent = Q_NULLPTR);
     ~QFfmpegAudioEncoder() Q_DECL_OVERRIDE;
+    QFfmpegAudioEncoder(QFfmpegAudioEncoder const&) = delete;
+    QFfmpegAudioEncoder& operator =(QFfmpegAudioEncoder const&) = delete;
+    QFfmpegAudioEncoder(QFfmpegAudioEncoder&&) = delete;
+    QFfmpegAudioEncoder& operator=(QFfmpegAudioEncoder&&) = delete;
 
     void close() Q_DECL_OVERRIDE;
 

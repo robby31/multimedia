@@ -2,16 +2,23 @@
 #define QFFMPEGFRAME_H
 
 #include <QDebug>
+#include "debuginfo.h"
 
 extern "C" {
 #include <libavutil/frame.h>
 }
 
-class QFfmpegFrame
+class QFfmpegFrame : public QObject
 {
+    Q_OBJECT
+
 public:
-    QFfmpegFrame();
-    virtual ~QFfmpegFrame();
+    explicit QFfmpegFrame(QObject *parent = Q_NULLPTR);
+    ~QFfmpegFrame() Q_DECL_OVERRIDE;
+    QFfmpegFrame(QFfmpegFrame const&) = delete;
+    QFfmpegFrame& operator =(QFfmpegFrame const&) = delete;
+    QFfmpegFrame(QFfmpegFrame&&) = delete;
+    QFfmpegFrame& operator=(QFfmpegFrame&&) = delete;
 
     bool isValid() const;
 
@@ -24,9 +31,6 @@ public:
 
     void setMediaType(const AVMediaType &type);
     AVMediaType mediaType() const;
-
-public:
-    static qint64 objectCounter;
 
 private:
     AVFrame *m_frame = Q_NULLPTR;

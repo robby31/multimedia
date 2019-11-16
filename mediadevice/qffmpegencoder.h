@@ -5,9 +5,15 @@
 
 class QFfmpegEncoder : public QFfmpegCodec
 {
+    Q_OBJECT
+
 public:
-    QFfmpegEncoder() = default;
+    explicit QFfmpegEncoder(QObject *parent = Q_NULLPTR);
     ~QFfmpegEncoder() Q_DECL_OVERRIDE;
+    QFfmpegEncoder(QFfmpegEncoder const&) = delete;
+    QFfmpegEncoder& operator =(QFfmpegEncoder const&) = delete;
+    QFfmpegEncoder(QFfmpegEncoder&&) = delete;
+    QFfmpegEncoder& operator=(QFfmpegEncoder&&) = delete;
 
     void close() Q_DECL_OVERRIDE;
 

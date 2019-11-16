@@ -1,10 +1,9 @@
 #include "qffmpegbuffer.h"
 
-qint64 QFfmpegBuffer::objectCounter = 0;
-
-QFfmpegBuffer::QFfmpegBuffer()
+QFfmpegBuffer::QFfmpegBuffer(QObject *parent):
+    QObject(parent)
 {
-    objectCounter++;
+    DebugInfo::add_object(this);
 
     auto avio_ctx_buffer = static_cast<uint8_t*>(av_malloc(avio_ctx_buffer_size));
     if (avio_ctx_buffer != Q_NULLPTR)
@@ -16,7 +15,7 @@ QFfmpegBuffer::QFfmpegBuffer()
 
 QFfmpegBuffer::~QFfmpegBuffer()
 {
-    objectCounter--;
+    DebugInfo::remove_object(this);
 
     if (avio_ctx != Q_NULLPTR)
     {

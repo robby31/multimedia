@@ -1,16 +1,15 @@
 #include "qffmpegframe.h"
 
-qint64 QFfmpegFrame::objectCounter = 0;
-
-QFfmpegFrame::QFfmpegFrame():
+QFfmpegFrame::QFfmpegFrame(QObject *parent):
+    QObject(parent),
     m_frame(av_frame_alloc())
 {
-    objectCounter++;
+    DebugInfo::add_object(this);
 }
 
 QFfmpegFrame::~QFfmpegFrame()
 {
-    objectCounter--;
+    DebugInfo::remove_object(this);
 
     if (isValid())
         av_frame_free(&m_frame);

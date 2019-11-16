@@ -1,5 +1,11 @@
 #include "qffmpegencoder.h"
 
+QFfmpegEncoder::QFfmpegEncoder(QObject *parent):
+    QFfmpegCodec(parent)
+{
+
+}
+
 QFfmpegEncoder::~QFfmpegEncoder()
 {
     _close();

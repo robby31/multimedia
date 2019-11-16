@@ -1,5 +1,11 @@
 #include "qffmpegaudioencoder.h"
 
+QFfmpegAudioEncoder::QFfmpegAudioEncoder(QObject *parent):
+    QFfmpegEncoder(parent)
+{
+
+}
+
 QFfmpegAudioEncoder::~QFfmpegAudioEncoder()
 {
     _close();

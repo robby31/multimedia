@@ -7,10 +7,15 @@
 
 class QFfmpegInputMedia : public QFfmpegMedia
 {
+    Q_OBJECT
 
 public:
-    QFfmpegInputMedia() = default;
+    explicit QFfmpegInputMedia(QObject *parent = Q_NULLPTR);
     ~QFfmpegInputMedia() Q_DECL_OVERRIDE;
+    QFfmpegInputMedia(QFfmpegInputMedia const&) = delete;
+    QFfmpegInputMedia& operator =(QFfmpegInputMedia const&) = delete;
+    QFfmpegInputMedia(QFfmpegInputMedia&&) = delete;
+    QFfmpegInputMedia& operator=(QFfmpegInputMedia&&) = delete;
 
     AVFormatContext *context() const Q_DECL_OVERRIDE;
 

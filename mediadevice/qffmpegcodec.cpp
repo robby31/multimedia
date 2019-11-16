@@ -1,15 +1,14 @@
 #include "qffmpegcodec.h"
 
-qint64 QFfmpegCodec::objectCounter = 0;
-
-QFfmpegCodec::QFfmpegCodec()
+QFfmpegCodec::QFfmpegCodec(QObject *parent):
+    QObject(parent)
 {
-    objectCounter++;
+    DebugInfo::add_object(this);
 }
 
 QFfmpegCodec::~QFfmpegCodec()
 {
-    objectCounter--;
+    DebugInfo::remove_object(this);
 }
 
 void QFfmpegCodec::close()

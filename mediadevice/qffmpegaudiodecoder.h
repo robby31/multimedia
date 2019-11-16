@@ -5,8 +5,10 @@
 
 class QFfmpegAudioDecoder : public QFfmpegDecoder
 {
+    Q_OBJECT
+
 public:
-    QFfmpegAudioDecoder() = default;
+    explicit QFfmpegAudioDecoder(QObject *parent = Q_NULLPTR);
 };
 
 #endif // QFFMPEGAUDIODECODER_H

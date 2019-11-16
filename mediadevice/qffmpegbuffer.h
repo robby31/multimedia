@@ -2,17 +2,23 @@
 #define QFFMPEGBUFFER_H
 
 #include <QDebug>
+#include "debuginfo.h"
 
 extern "C" {
 #include <libavformat/avio.h>
 }
 
-class QFfmpegBuffer
+class QFfmpegBuffer : public QObject
 {
+    Q_OBJECT
 
 public:
-    QFfmpegBuffer();
-    virtual ~QFfmpegBuffer();
+    explicit QFfmpegBuffer(QObject *parent = Q_NULLPTR);
+    ~QFfmpegBuffer() Q_DECL_OVERRIDE;
+    QFfmpegBuffer(QFfmpegBuffer const&) = delete;
+    QFfmpegBuffer& operator =(QFfmpegBuffer const&) = delete;
+    QFfmpegBuffer(QFfmpegBuffer&&) = delete;
+    QFfmpegBuffer& operator=(QFfmpegBuffer&&) = delete;
 
     bool isValid() const;
 
@@ -30,9 +36,6 @@ private:
 
     bool write(const QByteArray &data);
     bool seek(const qint64 &pos);
-
-public:
-    static qint64 objectCounter;
 
 private:
     AVIOContext *avio_ctx = Q_NULLPTR;

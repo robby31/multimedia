@@ -4,16 +4,23 @@
 #include <QString>
 #include <QDebug>
 #include "qffmpegframe.h"
+#include "debuginfo.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
 }
 
-class QFfmpegCodec
+class QFfmpegCodec : public QObject
 {
+    Q_OBJECT
+
 public:
-    QFfmpegCodec();
-    virtual ~QFfmpegCodec();
+    explicit QFfmpegCodec(QObject *parent = Q_NULLPTR);
+    ~QFfmpegCodec() Q_DECL_OVERRIDE;
+    QFfmpegCodec(QFfmpegCodec const&) = delete;
+    QFfmpegCodec& operator =(QFfmpegCodec const&) = delete;
+    QFfmpegCodec(QFfmpegCodec&&) = delete;
+    QFfmpegCodec& operator=(QFfmpegCodec&&) = delete;
 
     virtual bool isValid() const;
 
@@ -38,9 +45,6 @@ public:
     double frameRate() const;
 
     int frameNumber() const;
-
-public:
-    static qint64 objectCounter;
 
 private:
     AVCodecContext *m_codecCtx = Q_NULLPTR;

@@ -1,5 +1,11 @@
 #include "qffmpeginputmedia.h"
 
+QFfmpegInputMedia::QFfmpegInputMedia(QObject *parent):
+    QFfmpegMedia(parent)
+{
+
+}
+
 QFfmpegInputMedia::~QFfmpegInputMedia()
 {
     _close();
