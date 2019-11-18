@@ -80,7 +80,7 @@ struct CombinedHeader
 WavFile::WavFile(QObject *parent):
     QObject(parent)
 {
-
+    DebugInfo::add_object(this);
 }
 
 bool WavFile::openLocalFile(const QString &fileName)
@@ -93,6 +93,7 @@ bool WavFile::openLocalFile(const QString &fileName)
     }
 
     m_device = new QFile(fileName, this);
+    DebugInfo::add_object(m_device);
 
     if (!m_device->open(QIODevice::ReadOnly))
     {
@@ -108,21 +109,24 @@ bool WavFile::openLocalFile(const QString &fileName)
         m_device->deleteLater();
         m_device = Q_NULLPTR;
 
-        FfmpegTranscoding decode_audio;
+        // file is not a WAV format so we transcode it in wave
+
+        #if !defined(QT_NO_DEBUG_OUTPUT)
+        qDebug() << fileName << "is not a WAV file, so we transcode it.";
+        #endif
+
+        QFfmpegTranscoding decode_audio;
         decode_audio.setFormat(WAV);
-        decode_audio.setOriginalLengthInMSeconds(120000);
-        decode_audio.setAudioSampleRate(48000);
-        decode_audio.setBitrate(1536000);
         decode_audio.setUrl(fileName);
+
         if (decode_audio.isReadyToOpen() && decode_audio.open())
         {
-            decode_audio.startRequestData();
-            decode_audio.waitForFinished();
-            auto buffer = new QBuffer(this);
+            m_device = new QBuffer(this);
+            DebugInfo::add_object(m_device);
 
-            m_device = buffer;
             if (!m_device->open(QIODevice::ReadWrite))
             {
+                qCritical() << "unable to open buffer";
                 m_error = InvalidFile;
                 m_device->deleteLater();
                 m_device = Q_NULLPTR;
@@ -130,13 +134,14 @@ bool WavFile::openLocalFile(const QString &fileName)
             }
 
             while (!decode_audio.atEnd())
-                buffer->write(decode_audio.read(1000000));
+                m_device->write(decode_audio.read(1000000));
 
             if (!readHeader())
             {
+                qCritical() << "invalid header";
                 m_error = InvalidHeader;
                 m_device->close();
-                delete m_device;
+                m_device->deleteLater();
                 m_device = Q_NULLPTR;
                 return false;
             }
@@ -144,6 +149,7 @@ bool WavFile::openLocalFile(const QString &fileName)
             return true;
         }
 
+        m_error = InvalidFile;
         return false;
     }
 
@@ -228,7 +234,7 @@ qint64 WavFile::bytesAvailable() const
     if (m_device)
         return m_device->bytesAvailable();
 
-    return 0;
+    return -1;
 }
 
 qint64 WavFile::samplesAvailable() const
@@ -236,7 +242,7 @@ qint64 WavFile::samplesAvailable() const
     if (bytesPerSample() != 0)
         return bytesAvailable() / bytesPerSample();
 
-    return 0;
+    return -1;
 }
 
 QByteArray WavFile::readSamples(const qint64 &nbSamples)
@@ -278,7 +284,7 @@ qint64 WavFile::pos() const
     if (m_device)
         return m_device->pos();
 
-    return 0;
+    return -1;
 }
 
 qint64 WavFile::size() const
@@ -286,7 +292,7 @@ qint64 WavFile::size() const
     if (m_device)
         return m_device->size();
 
-    return 0;
+    return -1;
 }
 
 qint64 WavFile::durationMsec() const

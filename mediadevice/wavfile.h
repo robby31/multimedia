@@ -41,20 +41,22 @@
 #ifndef WAVFILE_H
 #define WAVFILE_H
 
-#include <QObject>
 #include <QFile>
 #include <QAudioFormat>
 #include <QIODevice>
-#include "ffmpegtranscoding.h"
+#include "qffmpegtranscoding.h"
 #include <QBuffer>
+#include "debuginfo.h"
 
 class WavFile : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit WavFile(QObject *parent = Q_NULLPTR);
-    ~WavFile() Q_DECL_OVERRIDE = default;
 
     enum TypeError { NoError, InvalidFile, InvalidHeader };
+    Q_ENUM(TypeError)
 
     TypeError error() const;
 
