@@ -45,6 +45,9 @@ INCLUDEPATH += $$(MYLIBRARY)/lib/fftreal.framework/include
 LIBS += -F$$(MYLIBRARY)/lib
 LIBS += -framework fftreal
 
+INCLUDEPATH += /usr/local/include
+LIBS += -L/usr/local/lib -lavcodec -lavformat -lavutil -lswscale -lswresample
+
 SOURCES += \
         tst_testsspectrumanalysertest.cpp 
 

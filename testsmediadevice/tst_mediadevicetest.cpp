@@ -331,7 +331,9 @@ void mediadeviceTest::testWavFile()
     QCOMPARE(wav.bytesPerSample(), 4);
     QCOMPARE(wav.bitrate(), 1536000);
     QCOMPARE(wav.samplesAvailable(), 26142080);
+    QCOMPARE(wav.bytesAvailable(), 104568320);
 
+    QCOMPARE(wav.pos(), 44);
     QCOMPARE(wav.size(), 104568364);
     QCOMPARE(wav.durationMsec(), 544626);
 
@@ -360,7 +362,9 @@ void mediadeviceTest::testTranscodedWavFileFromMP3()
     QCOMPARE(wav.bytesPerSample(), 4);
     QCOMPARE(wav.bitrate(), 1411200);
     QCOMPARE(wav.samplesAvailable(), 852608);
+    QCOMPARE(wav.bytesAvailable(), 3410434);
 
+    QCOMPARE(wav.pos(), 44);
     QCOMPARE(wav.size(), 3410478);
     QCOMPARE(wav.durationMsec(), 19333);
 
@@ -389,7 +393,9 @@ void mediadeviceTest::testTranscodedWavFileFromM4A()
     QCOMPARE(wav.bytesPerSample(), 4);
     QCOMPARE(wav.bitrate(), 1411200);
     QCOMPARE(wav.samplesAvailable(), 8332232);
+    QCOMPARE(wav.bytesAvailable(), 33328930);
 
+    QCOMPARE(wav.pos(), 44);
     QCOMPARE(wav.size(), 33328974);
     QCOMPARE(wav.durationMsec(), 188939);
 
