@@ -41,9 +41,9 @@ void TranscodeProcess::dataAvailable()
     appendLog(QString("received %1 bytes transcoding data.").arg(bytesAvailable()));
     #endif
 
-    if (!m_opened && bytesAvailable() > 0)
+    if (!isOpen() && bytesAvailable() > 0)
     {
-        m_opened = true;
+        setOpen(true);
         emit openedSignal();
     }
 
@@ -54,7 +54,7 @@ void TranscodeProcess::dataAvailable()
 //            pause();
 //    }
 
-    if (m_opened)
+    if (isOpen())
         emit readyRead();
 }
 
@@ -67,7 +67,7 @@ bool TranscodeProcess::atEnd() const
         return false;
 
     if (endByte() > 0)
-        return m_pos >= endByte();
+        return _pos() >= endByte();
 
     return m_process.atEnd();
 }
@@ -77,9 +77,9 @@ QByteArray TranscodeProcess::read(qint64 maxlen)
     qint64 oldProgress = progress();
 
     QByteArray data;
-     if (m_opened)
+     if (isOpen())
          data = m_process.read(maxlen);
-     m_pos += data.size();
+     _setPos(_pos() + data.size());
 
 //    if (m_paused && m_process->state() != QProcess::NotRunning && bytesAvailable() < (maxBufferSize()*0.75))
 //        resume();
@@ -96,29 +96,29 @@ QByteArray TranscodeProcess::read(qint64 maxlen)
 
     if (startByte() > 0)
     {
-        if (m_pos < startByte())
+        if (_pos() < startByte())
         {
             #if !defined(QT_NO_DEBUG_OUTPUT)
-            qDebug() << "BYTES IGNORED" << m_pos << startByte();
+            qDebug() << "BYTES IGNORED" << _pos() << startByte();
             #endif
 
             return QByteArray();
         }
 
-        if ((m_pos-data.size()) < startByte())
+        if ((_pos()-data.size()) < startByte())
         {
             #if !defined(QT_NO_DEBUG_OUTPUT)
-            qDebug() << "REMOVE BYTES" << m_pos << startByte() << data.size() << startByte()-m_pos+data.size();
+            qDebug() << "REMOVE BYTES" << _pos() << startByte() << data.size() << startByte()-_pos()+data.size();
             #endif
 
-            data.remove(0, QVariant::fromValue(startByte()-m_pos).toInt()+data.size());
+            data.remove(0, QVariant::fromValue(startByte()-_pos()).toInt()+data.size());
         }
     }
 
     if (endByte() > 0)
     {
-        if (m_pos > endByte())
-            data.chop(QVariant::fromValue(m_pos-endByte()-1).toInt());
+        if (_pos() > endByte())
+            data.chop(QVariant::fromValue(_pos()-endByte()-1).toInt());
     }
 
     return data;
@@ -150,9 +150,9 @@ void TranscodeProcess::finishedTranscodeData(const int &exitCode, const QProcess
         appendLog(QString("TRANSCODING CRASHED."));
     appendLog(QString("%2% TRANSCODING DONE in %1 seconds.").arg(QTime(0, 0).addMSecs(static_cast<int>(transcodingElapsed())).toString("hh:mm:ss")).arg(transcodedProgress()));
 
-    if (!m_opened && bytesAvailable() > 0)
+    if (!isOpen() && bytesAvailable() > 0)
     {
-        m_opened = true;
+        setOpen(true);
         emit openedSignal();
         emit readyRead();
     }
@@ -266,9 +266,9 @@ qint64 TranscodeProcess::transcodedProgress() const
     return qint64(100.0*double(transcodedPos())/double(size()));
 }
 
-bool TranscodeProcess::waitForFinished(int msecs)
+bool TranscodeProcess::waitForFinished(const int &timeout)
 {
-    return m_process.waitForFinished(msecs);
+    return m_process.waitForFinished(timeout);
 }
 
 qint64 TranscodeProcess::fullSize() const

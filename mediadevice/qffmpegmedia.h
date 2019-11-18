@@ -3,13 +3,14 @@
 
 #include <QDebug>
 #include "qffmpegstream.h"
+#include "debuginfo.h"
 
-class QFfmpegMedia
+class QFfmpegMedia : public QObject
 {
+    Q_OBJECT
 
 public:
-    QFfmpegMedia();
-    virtual ~QFfmpegMedia();
+    explicit QFfmpegMedia(QObject *parent = Q_NULLPTR);
 
     static QString getVersion();
 
@@ -18,9 +19,6 @@ public:
     QString filename() const;
 
     bool isValid() const;
-
-    void setParent(void *parent);
-    void *parent() const;
 
     QString error() const;
     void setError(const QString &error);
@@ -69,11 +67,7 @@ private:
 
     QStringList getMetaDataStream(const AVMediaType &type, const QString &param) const;
 
-public:
-    static qint64 objectCounter;
-
 private:
-    void *m_parent = Q_NULLPTR;
     static bool m_initialised;
     QString m_error;
 };

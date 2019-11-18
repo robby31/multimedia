@@ -17,8 +17,6 @@ public:
     void setTimeSeek(qint64 start, qint64 end) Q_DECL_OVERRIDE;
     void setRange(qint64 startByte, qint64 endByte) Q_DECL_OVERRIDE;
 
-    bool waitForFinished(int msecs = 30000);
-
     qint64 bitrate() const Q_DECL_OVERRIDE;  // bitrate in kbits/sec
 
     qint64 size() const Q_DECL_OVERRIDE;

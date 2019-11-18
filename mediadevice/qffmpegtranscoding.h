@@ -12,11 +12,11 @@ class QFfmpegTranscoding : public TranscodeDevice
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(QFfmpegTranscoding)
+
 public:
     explicit QFfmpegTranscoding(QObject *parent = Q_NULLPTR);
     ~QFfmpegTranscoding() Q_DECL_OVERRIDE;
-
-    bool waitForFinished(int msecs = 30000) Q_DECL_OVERRIDE;
 
     void setError(const QString &message);
     QString error() const;

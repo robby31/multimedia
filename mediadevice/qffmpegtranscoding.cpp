@@ -13,18 +13,6 @@ QFfmpegTranscoding::QFfmpegTranscoding(QObject *parent):
 
 QFfmpegTranscoding::~QFfmpegTranscoding()
 {
-    if (m_inputMedia && m_inputMedia->parent() == this)
-    {
-        delete m_inputMedia;
-        m_inputMedia = Q_NULLPTR;
-    }
-
-    if (m_outputMedia && m_outputMedia->parent() == this)
-    {
-        delete m_outputMedia;
-        m_outputMedia = Q_NULLPTR;
-    }
-
     TranscodeDevice::close();
 }
 
@@ -34,7 +22,7 @@ bool QFfmpegTranscoding::atEnd() const
         return true;
 
     if (endByte() > 0)
-        return m_pos >= endByte();
+        return _pos() >= endByte();
 
     if (m_outputMedia)
         return m_outputMedia->atEnd();
@@ -60,7 +48,7 @@ void QFfmpegTranscoding::setInput(QFfmpegInputMedia *input)
     if (input)
     {
         if (m_inputMedia && m_inputMedia->parent() == this)
-            delete m_inputMedia;
+            m_inputMedia->deleteLater();
 
         m_inputMedia = input;
 
@@ -77,6 +65,7 @@ void QFfmpegTranscoding::setInput(QFfmpegInputMedia *input)
 
 QByteArray QFfmpegTranscoding::read(qint64 maxlen)
 {
+    #if !defined(QT_NO_DEBUG_OUTPUT)
     QElapsedTimer timer;
     timer.start();
 
@@ -84,6 +73,7 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
     msg = msg.append(QDateTime::currentDateTime().toString("dd MMM yyyy hh:mm:ss,zzz"));
     msg = msg.append(QString(" read qffmpeg transcoding %1, bytes available %2 ").arg(maxlen).arg(m_outputMedia->bytesAvailable()));
     msg = msg.append("in thread ").append(QThread::currentThread()->objectName());
+    #endif
 
     QByteArray data;
 
@@ -103,7 +93,7 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
             data = m_outputMedia->read(maxlen);
         }
 
-        m_pos += data.size();
+        _setPos(_pos() + data.size());
         m_nextPts = m_outputMedia->posInMsec();
 
         emit status(QString("Transcoding (%1%)").arg(progress()));
@@ -119,29 +109,29 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
 
     if (startByte() > 0)
     {
-        if (m_pos < startByte())
+        if (_pos() < startByte())
         {
             #if !defined(QT_NO_DEBUG_OUTPUT)
-            qDebug() << "BYTES IGNORED" << m_pos << startByte();
+            qDebug() << "BYTES IGNORED" << _pos() << startByte();
             #endif
 
             return QByteArray();
         }
 
-        if ((m_pos-data.size()) < startByte())
+        if ((_pos()-data.size()) < startByte())
         {
             #if !defined(QT_NO_DEBUG_OUTPUT)
-            qDebug() << "REMOVE BYTES" << m_pos << startByte() << data.size() << startByte()-m_pos+data.size();
+            qDebug() << "REMOVE BYTES" << _pos() << startByte() << data.size() << startByte()-_pos()+data.size();
             #endif
 
-            data.remove(0, QVariant::fromValue(startByte()-m_pos).toInt()+data.size());
+            data.remove(0, QVariant::fromValue(startByte()-_pos()).toInt()+data.size());
         }
     }
 
     if (endByte() > 0)
     {
-        if (m_pos > endByte())
-            data.chop(QVariant::fromValue(m_pos-endByte()-1).toInt());
+        if (_pos() > endByte())
+            data.chop(QVariant::fromValue(_pos()-endByte()-1).toInt());
     }
 
     return data;
@@ -151,8 +141,7 @@ void QFfmpegTranscoding::readyForOpening()
 {
     if (!url().isEmpty() && !m_inputMedia)
     {
-        auto input = new QFfmpegInputMedia();
-        input->setParent(this);
+        auto input = new QFfmpegInputMedia(this);
         if (!url().isEmpty())
         {
             input->open(url().at(0).url());
@@ -246,7 +235,7 @@ void QFfmpegTranscoding::_open()
                 }
             }
 
-            m_opened = true;
+            setOpen(true);
             emit openedSignal();
         }
         else
@@ -258,26 +247,6 @@ void QFfmpegTranscoding::_open()
     {
         setError("unable to open transcoding, media is not correctly initialised.");
     }
-}
-
-bool QFfmpegTranscoding::waitForFinished(int msecs)
-{
-    QElapsedTimer timer;
-    timer.start();
-
-    while (!atEnd())
-    {
-        emit readyRead();
-
-        if (msecs != -1 && timer.elapsed() > msecs)
-            return false;
-
-        QThread::msleep(200);
-        QCoreApplication::processEvents();
-        QThread::yieldCurrentThread();
-    }
-
-    return true;
 }
 
 qint64 QFfmpegTranscoding::posInMsec() const
@@ -330,7 +299,7 @@ void QFfmpegTranscoding::_close()
         if (m_outputMedia->audioStream())
             tmpAudioBitRate = m_outputMedia->audioStream()->bitrate();
 
-        delete m_outputMedia;
+        m_outputMedia->deleteLater();
         m_outputMedia = Q_NULLPTR;
 
         setFormat(format());
@@ -376,10 +345,7 @@ void QFfmpegTranscoding::setAudioBitrate(const qint64 &bitrate)
 void QFfmpegTranscoding::formatHasChanged()
 {
     if (!m_outputMedia)
-    {
-        m_outputMedia = new QFfmpegOutputMedia();
-        m_outputMedia->setParent(this);
-    }
+        m_outputMedia = new QFfmpegOutputMedia(this);
 
     if (m_outputMedia)
     {
@@ -569,21 +535,22 @@ void QFfmpegTranscoding::startDemux()
 
 void QFfmpegTranscoding::demux()
 {
+    #if !defined(QT_NO_DEBUG_OUTPUT)
     QString msg;
     msg = msg.append(QDateTime::currentDateTime().toString("dd MMM yyyy hh:mm:ss,zzz"));
+    #endif
 
     if (m_outputMedia && !m_outputMedia->atEnd())
     {
+        #if !defined(QT_NO_DEBUG_OUTPUT)
         msg.append(QString(" demux qffmpeg transcoding, %1 bytes available in thread %2").arg(m_outputMedia->bytesAvailable()).arg(QThread::currentThread()->objectName()));
-
         QElapsedTimer timer;
         timer.start();
-
-        qint64 prev_bytesAvailable = m_outputMedia->bytesAvailable();
+        #endif
 
         m_outputMedia->demuxInputToBufferSize(maxBufferSize());
 
-        if (prev_bytesAvailable < m_outputMedia->bytesAvailable())
+        if (m_outputMedia->bytesAvailable())
             emit readyRead();
 
         #if !defined(QT_NO_DEBUG_OUTPUT)

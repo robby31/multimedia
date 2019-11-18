@@ -18,6 +18,8 @@ class TranscodeDevice : public Device
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(TranscodeDevice)
+
     Q_PROPERTY(TranscodeFormatAvailable format READ format WRITE setFormat NOTIFY formatChanged)
     Q_PROPERTY(ContainerType container READ containerFormat WRITE setContainer NOTIFY containerChanged)
 
@@ -29,8 +31,6 @@ public:
     qint64 transcodingElapsed();
 
     virtual int exitCode() const = 0;
-
-    virtual bool waitForFinished(int msecs = 30000) = 0;
 
     QList<QUrl> url() const { return m_urls; }
 
@@ -73,12 +73,16 @@ public:
 
     bool open() Q_DECL_OVERRIDE;
     bool isOpen() const Q_DECL_OVERRIDE { return m_opened; }
+    void setOpen(const bool &flag) { m_opened = flag; }
 
     bool isReadyToOpen() const Q_DECL_OVERRIDE;
 
 
 protected:
     qint64 fullSize() const;
+
+    qint64 _pos() const { return m_pos; }
+    void _setPos(const qint64 &new_pos) { m_pos = new_pos; }
 
 private:
     void _close();
@@ -100,12 +104,11 @@ public slots:
 private slots:
     virtual void _open() = 0;
 
-protected:
-    bool m_opened = false;
-    qint64 m_pos = 0;
-
 private:
     QList<QUrl> m_urls;
+
+    bool m_opened = false;
+    qint64 m_pos = 0;
 
     QElapsedTimer transcodeClock;
 

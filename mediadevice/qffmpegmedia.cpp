@@ -2,18 +2,12 @@
 
 bool QFfmpegMedia::m_initialised = false;
 
-qint64 QFfmpegMedia::objectCounter = 0;
-
-QFfmpegMedia::QFfmpegMedia()
+QFfmpegMedia::QFfmpegMedia(QObject *parent):
+    QObject(parent)
 {
-    objectCounter++;
+    DebugInfo::add_object(this);
 
     init();
-}
-
-QFfmpegMedia::~QFfmpegMedia()
-{
-    objectCounter--;
 }
 
 void QFfmpegMedia::init()
@@ -44,16 +38,6 @@ QString QFfmpegMedia::filename() const
 bool QFfmpegMedia::isValid() const
 {
     return m_initialised && m_error.isEmpty();
-}
-
-void QFfmpegMedia::setParent(void *parent)
-{
-    m_parent = parent;
-}
-
-void *QFfmpegMedia::parent() const
-{
-    return m_parent;
 }
 
 void QFfmpegMedia::setError(const QString &error)

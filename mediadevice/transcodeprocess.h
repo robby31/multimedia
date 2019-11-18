@@ -9,12 +9,14 @@ class TranscodeProcess : public TranscodeDevice
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(TranscodeProcess)
+
 public:
     explicit TranscodeProcess(QObject *parent = Q_NULLPTR);
     ~TranscodeProcess() Q_DECL_OVERRIDE;
 
     bool isKilled() const { return killTranscodeProcess; }
-    bool waitForFinished(int msecs = 30000) Q_DECL_OVERRIDE;
+    bool waitForFinished(const int &timeout = 30000) Q_DECL_OVERRIDE;
 
     int exitCode() const Q_DECL_OVERRIDE { return m_process.exitCode(); }
 
