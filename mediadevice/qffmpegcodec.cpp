@@ -6,11 +6,6 @@ QFfmpegCodec::QFfmpegCodec(QObject *parent):
     DebugInfo::add_object(this);
 }
 
-QFfmpegCodec::~QFfmpegCodec()
-{
-    DebugInfo::remove_object(this);
-}
-
 void QFfmpegCodec::close()
 {
     if (m_codecCtx != Q_NULLPTR)

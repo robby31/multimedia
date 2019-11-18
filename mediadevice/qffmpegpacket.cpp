@@ -9,8 +9,6 @@ QFfmpegPacket::QFfmpegPacket(QObject *parent):
 
 QFfmpegPacket::~QFfmpegPacket()
 {
-    DebugInfo::remove_object(this);
-
     if (isValid())
         av_packet_free(&m_pkt);
 }

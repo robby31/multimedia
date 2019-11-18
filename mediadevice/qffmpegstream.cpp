@@ -8,7 +8,6 @@ QFfmpegStream::QFfmpegStream(QObject *parent):
 
 QFfmpegStream::~QFfmpegStream()
 {
-    DebugInfo::remove_object(this);
     _close();
 }
 

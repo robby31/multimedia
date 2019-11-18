@@ -10,13 +10,11 @@ class QFfmpegOutputMedia : public QFfmpegMedia
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(QFfmpegOutputMedia)
+
 public:
     explicit QFfmpegOutputMedia(QObject *parent = Q_NULLPTR);
     ~QFfmpegOutputMedia() Q_DECL_OVERRIDE;
-    QFfmpegOutputMedia(QFfmpegOutputMedia const&) = delete;
-    QFfmpegOutputMedia& operator =(QFfmpegOutputMedia const&) = delete;
-    QFfmpegOutputMedia(QFfmpegOutputMedia&&) = delete;
-    QFfmpegOutputMedia& operator=(QFfmpegOutputMedia&&) = delete;
 
     AVFormatContext *context() const Q_DECL_OVERRIDE;
 

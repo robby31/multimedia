@@ -16,13 +16,11 @@ class QFfmpegStream : public QObject
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(QFfmpegStream)
+
 public:
     explicit QFfmpegStream(QObject *parent = Q_NULLPTR);
     ~QFfmpegStream() Q_DECL_OVERRIDE;
-    QFfmpegStream(QFfmpegStream const&) = delete;
-    QFfmpegStream& operator =(QFfmpegStream const&) = delete;
-    QFfmpegStream(QFfmpegStream&&) = delete;
-    QFfmpegStream& operator=(QFfmpegStream&&) = delete;
 
     virtual bool isValid() const;
 

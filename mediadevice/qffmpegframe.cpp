@@ -9,8 +9,6 @@ QFfmpegFrame::QFfmpegFrame(QObject *parent):
 
 QFfmpegFrame::~QFfmpegFrame()
 {
-    DebugInfo::remove_object(this);
-
     if (isValid())
         av_frame_free(&m_frame);
 }

@@ -80,8 +80,6 @@ QFfmpeg::QFfmpeg(const QString &filename, QObject *parent):
 
 QFfmpeg::~QFfmpeg()
 {
-    DebugInfo::remove_object(this);
-
     if (programFfmpegProbe)
     {
         programFfmpegProbe->disconnect(this);
@@ -336,6 +334,7 @@ void QFfmpeg::parsePicture()
     if (isValid() && !filename.isEmpty())
     {
         programFfmpegPicture = new QProcess(this);
+        DebugInfo::add_object(programFfmpegPicture);
         connect(programFfmpegPicture, SIGNAL(destroyed(QObject*)), this, SLOT(pictureDestroyed()));
         connect(programFfmpegPicture, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(pictureFinished(int,QProcess::ExitStatus)));
 
@@ -467,6 +466,7 @@ bool QFfmpeg::setFilename(const QString &filename, const bool &readPicture)
     if (isValid() && !filename.isEmpty())
     {
         programFfmpegProbe = new QProcess(this);
+        DebugInfo::add_object(programFfmpegProbe);
         connect(programFfmpegProbe, SIGNAL(destroyed(QObject*)), this, SLOT(probeDestroyed()));
         connect(programFfmpegProbe, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(probeFinished(int,QProcess::ExitStatus)));
 

@@ -16,11 +16,6 @@ class QFfmpegCodec : public QObject
 
 public:
     explicit QFfmpegCodec(QObject *parent = Q_NULLPTR);
-    ~QFfmpegCodec() Q_DECL_OVERRIDE;
-    QFfmpegCodec(QFfmpegCodec const&) = delete;
-    QFfmpegCodec& operator =(QFfmpegCodec const&) = delete;
-    QFfmpegCodec(QFfmpegCodec&&) = delete;
-    QFfmpegCodec& operator=(QFfmpegCodec&&) = delete;
 
     virtual bool isValid() const;
 

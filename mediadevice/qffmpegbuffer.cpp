@@ -15,8 +15,6 @@ QFfmpegBuffer::QFfmpegBuffer(QObject *parent):
 
 QFfmpegBuffer::~QFfmpegBuffer()
 {
-    DebugInfo::remove_object(this);
-
     if (avio_ctx != Q_NULLPTR)
     {
         av_freep(&avio_ctx->buffer);

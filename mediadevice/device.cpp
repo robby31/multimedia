@@ -11,11 +11,6 @@ Device::Device(QObject *parent) :
     connect(this, SIGNAL(openedSignal()), this, SLOT(deviceOpened()));
 }
 
-Device::~Device()
-{
-    DebugInfo::remove_object(this);
-}
-
 void Device::appendLog(const QString &msg)
 {
     emit LogMessage(msg);

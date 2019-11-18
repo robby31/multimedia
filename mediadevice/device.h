@@ -18,11 +18,6 @@ class Device : public QObject
 
 public:
     explicit Device(QObject *parent = Q_NULLPTR);
-    ~Device() Q_DECL_OVERRIDE;
-    Device(Device const&) = delete;
-    Device& operator =(Device const&) = delete;
-    Device(Device&&) = delete;
-    Device& operator=(Device&&) = delete;
 
     virtual void setTimeSeek(qint64 start, qint64 end);
     qint64 timeSeekStart() const;

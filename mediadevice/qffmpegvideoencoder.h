@@ -11,13 +11,11 @@ class QFfmpegVideoEncoder : public QFfmpegEncoder
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(QFfmpegVideoEncoder)
+
 public:
     explicit QFfmpegVideoEncoder(QObject *parent = Q_NULLPTR);
     ~QFfmpegVideoEncoder() Q_DECL_OVERRIDE;
-    QFfmpegVideoEncoder(QFfmpegVideoEncoder const&) = delete;
-    QFfmpegVideoEncoder& operator =(QFfmpegVideoEncoder const&) = delete;
-    QFfmpegVideoEncoder(QFfmpegVideoEncoder&&) = delete;
-    QFfmpegVideoEncoder& operator=(QFfmpegVideoEncoder&&) = delete;
 
     void close() Q_DECL_OVERRIDE;
 

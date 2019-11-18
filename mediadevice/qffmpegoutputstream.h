@@ -9,13 +9,11 @@ class QFfmpegOutputStream : public QFfmpegStream
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(QFfmpegOutputStream)
+
 public:
     explicit QFfmpegOutputStream(QObject *parent = Q_NULLPTR);
     ~QFfmpegOutputStream() Q_DECL_OVERRIDE;
-    QFfmpegOutputStream(QFfmpegOutputStream const&) = delete;
-    QFfmpegOutputStream& operator =(QFfmpegOutputStream const&) = delete;
-    QFfmpegOutputStream(QFfmpegOutputStream&&) = delete;
-    QFfmpegOutputStream& operator=(QFfmpegOutputStream&&) = delete;
 
     bool isValid() const Q_DECL_OVERRIDE;
 

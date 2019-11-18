@@ -12,14 +12,12 @@ class QFfmpeg : public QObject
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(QFfmpeg)
+
 public:
     explicit QFfmpeg(QObject *parent = Q_NULLPTR);
     explicit QFfmpeg(const QString &filename, QObject *parent = Q_NULLPTR);
     ~QFfmpeg() Q_DECL_OVERRIDE;
-    QFfmpeg(QFfmpeg const&) = delete;
-    QFfmpeg& operator =(QFfmpeg const&) = delete;
-    QFfmpeg(QFfmpeg&&) = delete;
-    QFfmpeg& operator=(QFfmpeg&&) = delete;
 
     bool isValid() const;
 

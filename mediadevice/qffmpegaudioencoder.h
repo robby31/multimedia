@@ -12,13 +12,11 @@ class QFfmpegAudioEncoder : public QFfmpegEncoder
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(QFfmpegAudioEncoder)
+
 public:
     explicit QFfmpegAudioEncoder(QObject *parent = Q_NULLPTR);
     ~QFfmpegAudioEncoder() Q_DECL_OVERRIDE;
-    QFfmpegAudioEncoder(QFfmpegAudioEncoder const&) = delete;
-    QFfmpegAudioEncoder& operator =(QFfmpegAudioEncoder const&) = delete;
-    QFfmpegAudioEncoder(QFfmpegAudioEncoder&&) = delete;
-    QFfmpegAudioEncoder& operator=(QFfmpegAudioEncoder&&) = delete;
 
     void close() Q_DECL_OVERRIDE;
 

@@ -12,13 +12,11 @@ class QFfmpegFrame : public QObject
 {
     Q_OBJECT
 
+    Q_DISABLE_COPY_MOVE(QFfmpegFrame)
+
 public:
     explicit QFfmpegFrame(QObject *parent = Q_NULLPTR);
     ~QFfmpegFrame() Q_DECL_OVERRIDE;
-    QFfmpegFrame(QFfmpegFrame const&) = delete;
-    QFfmpegFrame& operator =(QFfmpegFrame const&) = delete;
-    QFfmpegFrame(QFfmpegFrame&&) = delete;
-    QFfmpegFrame& operator=(QFfmpegFrame&&) = delete;
 
     bool isValid() const;
 
