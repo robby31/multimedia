@@ -1,8 +1,14 @@
 #include "acoustidanswer.h"
 
+AcoustIdAnswer::AcoustIdAnswer(QObject *parent):
+    QObject(parent)
+{
+
+}
+
 bool AcoustIdAnswer::isValid() const
 {
-    QDomNodeList l_nodes = elementsByTagName("status");
+    QDomNodeList l_nodes = doc.elementsByTagName("status");
     if (l_nodes.count() == 1) {
         return l_nodes.at(0).toElement().text() == "ok";
     }
@@ -10,9 +16,19 @@ bool AcoustIdAnswer::isValid() const
     return false;
 }
 
+bool AcoustIdAnswer::setContent(const QByteArray &text)
+{
+    return doc.setContent(text);
+}
+
+QString AcoustIdAnswer::content() const
+{
+    return doc.toString();
+}
+
 int AcoustIdAnswer::countResults() const
 {
-    QDomNodeList l_nodes = elementsByTagName("result");
+    QDomNodeList l_nodes = doc.elementsByTagName("result");
     return l_nodes.count();
 }
 
@@ -21,7 +37,7 @@ QHash<QString, QDomNode> AcoustIdAnswer::resultsByScore() const
     QHash<QString, QDomNode> res;
 
     if (isValid()) {
-        QDomNodeList l_nodes = elementsByTagName("result");
+        QDomNodeList l_nodes = doc.elementsByTagName("result");
         for (int i=0; i<l_nodes.count(); ++i) {
             double score = scoreFromNode(l_nodes.at(i));
             res[QString("%1").arg(score)] = l_nodes.at(i);

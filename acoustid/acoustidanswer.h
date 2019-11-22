@@ -4,13 +4,17 @@
 #include <QDomDocument>
 #include <QDebug>
 
-class AcoustIdAnswer : public QDomDocument
+class AcoustIdAnswer : public QObject
 {
+    Q_OBJECT
 
 public:
-    AcoustIdAnswer() = default;
+    explicit AcoustIdAnswer(QObject *parent = Q_NULLPTR);
 
     bool isValid() const;
+
+    bool setContent(const QByteArray &text);
+    QString content() const;
 
     // acoustid information
     int countResults() const;
@@ -22,6 +26,7 @@ public:
     QString title() const;
 
 private:
+    QDomDocument doc;
     QHash<QString, QDomNode> resultsByScore() const;
     QDomNode bestResult() const;
     QDomNode recording() const;

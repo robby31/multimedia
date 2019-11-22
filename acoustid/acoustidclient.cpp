@@ -1,34 +1,51 @@
 #include "acoustidclient.h"
 
-const QString AcoustIdClient::ACOUSTID_URL = "http://api.acoustid.org/v2/lookup";
+const QUrl AcoustIdClient::ACOUSTID_URL = QUrl("http://api.acoustid.org/v2/lookup");
 
 AcoustIdClient::AcoustIdClient(QObject *parent):
     QObject(parent),
     manager(this),
-    key("29E2YuWCkD")
+    key("29E2YuWCkD"),
+    loop(this)
 {
-    connect(&manager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(replyFinished(QNetworkReply*)));
 }
 
-void AcoustIdClient::replyFinished(QNetworkReply *reply)
+void AcoustIdClient::replyFinished()
 {
-    last_answer = new AcoustIdAnswer();
+    auto reply = qobject_cast<QNetworkReply*>(sender());
+    if (!reply)
+    {
+        qCritical() << "invalid reply";
+        return;
+    }
+
+    if (reply->error() != QNetworkReply::NetworkError::NoError)
+    {
+        qCritical() << "reply ERROR" << reply->errorString();
+        return;
+    }
+
+    last_answer = new AcoustIdAnswer(this);
     last_answer->setContent(reply->readAll());
-    emit tagFound(last_answer);
-    replyWaitCondition.wakeAll();
+
+    qDebug() << "TAG FOUND" << last_answer;
+    qDebug() << last_answer->content();
 }
 
 void AcoustIdClient::requestId(const QString &fingerprint, const int &duration)
 {
-    QStringList parameters;
+    qDebug() << "request id to acoustIdClient" << fingerprint.size() << duration;
 
-    parameters << QString("%1=%2").arg("format", "xml");
-    parameters << QString("%1=%2").arg("client", key);
+    last_answer = Q_NULLPTR;
 
-    parameters << QString("%1=%2").arg("duration", QString("%1").arg(duration));
+    QUrlQuery query;
 
-    parameters << QString("%1=%2").arg("fingerprint", fingerprint);
+    query.addQueryItem("format", "xml");
+    query.addQueryItem("client", key);
+
+    query.addQueryItem("duration", QString("%1").arg(duration));
+
+    query.addQueryItem("fingerprint", fingerprint);
 
     QStringList meta;
     meta << "recordings";
@@ -41,20 +58,33 @@ void AcoustIdClient::requestId(const QString &fingerprint, const int &duration)
 //    meta << "usermeta";
     meta << "compress";
 //    meta << "sources";
-    parameters << QString("%1=%2").arg("meta", meta.join('+'));
+    query.addQueryItem("meta", meta.join('+'));
 
-    qDebug() << "request URL" << QUrl(ACOUSTID_URL+"?"+parameters.join('&'));
-    manager.get(QNetworkRequest(QUrl(ACOUSTID_URL+"?"+parameters.join('&'))));
+    QUrl url(ACOUSTID_URL);
+    url.setQuery(query);
+    qDebug() << "request URL" << url;
+
+    QNetworkReply *reply = manager.get(QNetworkRequest(url));
+    connect(reply, &QNetworkReply::finished, this, &AcoustIdClient::replyFinished);
+    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
 }
 
-AcoustIdAnswer *AcoustIdClient::waitReply(const size_t &timeout)
+AcoustIdAnswer *AcoustIdClient::waitReply(const int &timeout)
 {
-    // waiting reply with timeout
-    mutex.lock();
-    bool ret = replyWaitCondition.wait(&mutex, timeout);
-    mutex.unlock();
-    if (ret)
+    if (last_answer)
         return last_answer;
 
-    return Q_NULLPTR;
+    QTimer timer;
+    if (timeout > 0)
+    {
+        connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
+        timer.start(timeout);
+    }
+
+    loop.exec();
+
+    if (!last_answer)
+        qWarning() << "TIMEOUT";
+
+    return last_answer;
 }

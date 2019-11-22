@@ -17,25 +17,20 @@ class AcoustIdClient : public QObject
 public:
     explicit AcoustIdClient(QObject *parent = Q_NULLPTR);
 
-    AcoustIdAnswer *waitReply(const size_t &timeout=2000);
-
-signals:
-    void tagFound(AcoustIdAnswer *answer);
-
-public slots:
     void requestId(const QString &fingerprint, const int &duration);
-    void replyFinished(QNetworkReply *reply);
+
+    AcoustIdAnswer *waitReply(const int &timeout = 5000);
+
+private slots:
+    void replyFinished();
 
 private:
     QNetworkAccessManager manager;
-    QMutex mutex;
-    QWaitCondition replyWaitCondition;
-
     QString key;
-
+    QEventLoop loop;
     AcoustIdAnswer *last_answer = Q_NULLPTR;
 
-    static const QString ACOUSTID_URL;
+    static const QUrl ACOUSTID_URL;
 };
 
 #endif // ACOUSTIDCLIENT_H
