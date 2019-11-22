@@ -209,14 +209,10 @@ bool Device::waitForFinished(const int &timeout)
         QEventLoop loop;
         connect(this, &Device::endReached, &loop, &QEventLoop::quit);
 
-        QTimer timeout_timer;
         if (timeout > 0)
-        {
-            connect(&timeout_timer, &QTimer::timeout, &loop, &QEventLoop::quit);
-            timeout_timer.start(timeout);
-        }
+            QTimer::singleShot(timeout, &loop, &QEventLoop::quit);
 
-        loop.exec();
+        loop.exec(QEventLoop::ExcludeUserInputEvents);
 
         if (timeout > 0)
             return timer.elapsed() < timeout;
