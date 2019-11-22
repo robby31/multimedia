@@ -49,9 +49,7 @@ target.path = $$installPath/lib
 
 installIncludePath = $$installPath/include/multimedia
 
-h_includes.files = acoustid.h \
-    acoustidanswer.h \
-    acoustidclient.h
+h_includes.files = $${HEADERS}
 h_includes.path = $$installIncludePath
 
 INSTALLS += target h_includes

@@ -2,37 +2,29 @@
 
 Acoustid::Acoustid(QObject *parent):
     QObject(parent),
-    workerThread(this)
+    client(this)
 {
-    client = new AcoustIdClient();
-    client->moveToThread(&workerThread);
-    connect(&workerThread, &QThread::finished, client, &QObject::deleteLater);
-    connect(this, SIGNAL(requestClient(QString,int)), client, SLOT(requestId(QString,int)));
-    workerThread.start();
 }
 
-Acoustid::~Acoustid()
+AcoustIdAnswer *Acoustid::requestId(const QString &fingerprint, const int &duration, const int &timeout)
 {
-    workerThread.quit();
-    if (!workerThread.wait(1000))
-        qWarning() << "Unable to stop acoustid thread.";
+    client.requestId(fingerprint, duration);
+
+    AcoustIdAnswer *answer = client.waitReply(timeout);
+    return answer;
 }
 
-AcoustIdAnswer *Acoustid::requestId(const QString &fingerprint, const int &duration)
-{
-    emit requestClient(fingerprint, duration);
-    if (client) {
-        AcoustIdAnswer *answer = client->waitReply();
-        return answer;
-    }
-    return Q_NULLPTR;
-}
-
-AcoustIdAnswer *Acoustid::requestId(const QFileInfo &filename)
+AcoustIdAnswer *Acoustid::requestId(const QFileInfo &filename, const int &timeout)
 {
     int duration = -1;
-    QString fp = m_chromaprint.fingerPrint(filename.absoluteFilePath(), &duration);
+
+    ChromaprintWrapper chromaprint;
+    QString fp = chromaprint.fingerPrint(filename.absoluteFilePath(), &duration);
+
+    qDebug() << "fingerprint, size =" << fp.size();
+
     if (!fp.isNull())
-        return requestId(fp, duration);
+        return requestId(fp, duration, timeout);
+
     return Q_NULLPTR;
 }
