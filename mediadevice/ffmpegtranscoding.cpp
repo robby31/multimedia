@@ -65,7 +65,7 @@ void FfmpegTranscoding::updateArguments()
 
     if (format() == MP3)
     {
-        arguments << "-map" <<  "0:a";
+        arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "mp3" << "-codec:a" << "libmp3lame";
@@ -76,7 +76,7 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == AAC)
     {
-        arguments << "-map" <<  "0:a";
+        arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "ipod" << "-codec:a" << "libfdk_aac" << "-movflags" << "+faststart";
@@ -86,7 +86,7 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == ALAC)
     {
-        arguments << "-map" <<  "0:a";
+        arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "ipod" << "-codec:a" << "alac" << "-sample_fmt" << "s16p" << "-movflags" << "frag_keyframe+empty_moov+faststart";
@@ -96,7 +96,7 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == LPCM_S16BE)
     {
-        arguments << "-map" <<  "0:a";
+        arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "s16be";
@@ -106,7 +106,7 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == LPCM_S16LE)
     {
-        arguments << "-map" <<  "0:a";
+        arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "s16le";
@@ -116,7 +116,7 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == WAV)
     {
-        arguments << "-map" <<  "0:a";
+        arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "wav";
