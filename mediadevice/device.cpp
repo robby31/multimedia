@@ -154,7 +154,7 @@ void Device::requestData(qint64 maxlen)
             else
             {
                 #if !defined(QT_NO_DEBUG_OUTPUT)
-                qDebug() << QString("%1: sendDataToClient no data available").arg(QDateTime::currentDateTime().toString("dd MMM yyyy hh:mm:ss,zzz"));
+                appendLog(QString("%1: sendDataToClient no data available").arg(QDateTime::currentDateTime().toString("dd MMM yyyy hh:mm:ss,zzz")));
                 #endif
             }
         }
@@ -168,7 +168,7 @@ bool Device::waitReadyToOpen(const unsigned long &timeout)
     if (!isReadyToOpen())
     {
         #if !defined(QT_NO_DEBUG_OUTPUT)
-        qDebug() << "wait device is ready to open" << this;
+        appendLog("wait device is ready to open");
         #endif
         return readyToOpenCondition.wait(locker.mutex(), timeout);
     }
@@ -188,7 +188,7 @@ bool Device::waitOpen(const unsigned long &timeout)
     if (!isOpen())
     {
         #if !defined(QT_NO_DEBUG_OUTPUT)
-        qDebug() << "wait device until open" << this;
+        appendLog("wait device until open");
         #endif
         return isopenedCondition.wait(locker.mutex(), timeout);
     }

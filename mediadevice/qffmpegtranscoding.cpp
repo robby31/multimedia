@@ -104,7 +104,7 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
     }
 
     #if !defined(QT_NO_DEBUG_OUTPUT)
-    qDebug() << msg << "ended read" << data.size() << "bytes in" << timer.elapsed() << "ms.";
+    appendLog(QString("%1 ended read %2 bytes in %3 ms.").arg(msg).arg(data.size()).arg(timer.elapsed()));
     #endif
 
     if (startByte() > 0)
@@ -112,7 +112,7 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
         if (_pos() < startByte())
         {
             #if !defined(QT_NO_DEBUG_OUTPUT)
-            qDebug() << "BYTES IGNORED" << _pos() << startByte();
+            appendLog(QString("BYTES IGNORED %1 %2").arg(_pos()).arg(startByte()));
             #endif
 
             return QByteArray();
@@ -121,7 +121,7 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
         if ((_pos()-data.size()) < startByte())
         {
             #if !defined(QT_NO_DEBUG_OUTPUT)
-            qDebug() << "REMOVE BYTES" << _pos() << startByte() << data.size() << startByte()-_pos()+data.size();
+            appendLog(QString("REMOVE BYTES %1 %2 %3 %4").arg(_pos()).arg(startByte()).arg(data.size()).arg(startByte()-_pos()+data.size()));
             #endif
 
             data.remove(0, QVariant::fromValue(startByte()-_pos()).toInt()+data.size());
@@ -527,7 +527,7 @@ double QFfmpegTranscoding::originalLengthInMSeconds() const
 void QFfmpegTranscoding::startDemux()
 {
     #if !defined(QT_NO_DEBUG_OUTPUT)
-    qDebug() << QDateTime::currentDateTime().toString("dd MMM yyyy hh:mm:ss,zzz") << "start demux";
+    appendLog("start demux");
     #endif
 
     m_timerDemux.start(500);
@@ -554,14 +554,14 @@ void QFfmpegTranscoding::demux()
             emit readyRead();
 
         #if !defined(QT_NO_DEBUG_OUTPUT)
-        qDebug() << msg << "ended demux qffmpeg transcoding, bytes available" << m_outputMedia->bytesAvailable() << "in" << timer.elapsed() << "ms.";
+        appendLog(QString("%1 ended demux qffmpeg transcoding, bytes available %2 in %3 ms.").arg(msg).arg(m_outputMedia->bytesAvailable()).arg(timer.elapsed()));
         #endif
 
     }
     else if (m_outputMedia && m_outputMedia->atEnd())
     {
         #if !defined(QT_NO_DEBUG_OUTPUT)
-        qDebug() << msg << "demux end reached";
+        appendLog(QString("%1 demux end reached").arg(msg));
         #endif
 
         emit endReached();
