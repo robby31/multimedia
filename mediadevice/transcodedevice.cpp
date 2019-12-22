@@ -19,6 +19,7 @@ void TranscodeDevice::close()
 
 void TranscodeDevice::_close()
 {
+    appendLog("device destroyed");
     m_opened = false;
     m_pos = 0;
     transcodeClock.invalidate();
