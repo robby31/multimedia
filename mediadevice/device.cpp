@@ -224,5 +224,8 @@ bool Device::waitForFinished(const int &timeout)
 void Device::requestDestroy()
 {
     if (!isOpen())
+    {
+        appendLog("request destroy device");
         deleteLater();
+    }
 }
