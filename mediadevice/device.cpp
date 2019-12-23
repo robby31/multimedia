@@ -220,3 +220,9 @@ bool Device::waitForFinished(const int &timeout)
 
     return true;
 }
+
+void Device::requestDestroy()
+{
+    if (!isOpen())
+        deleteLater();
+}

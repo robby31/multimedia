@@ -69,6 +69,7 @@ public slots:
     void startRequestData();
     void requestData(qint64 maxlen);
     virtual void close() = 0;
+    void requestDestroy();
 
 private slots:
     void deviceReadyToOpen();
