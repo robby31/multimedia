@@ -22,8 +22,10 @@ void MencoderTranscoding::updateArguments()
 //        arguments << "-ss" << QString("%1.0").arg(timeSeekStart());
 //    }
 
-    foreach (const QUrl &url, url())
-        arguments << url.url();
+    if (videoUrl().isValid())
+        arguments << videoUrl().url();
+    if (audioUrl().isValid())
+        arguments << audioUrl().url();
 
     if (format() == MPEG2_AC3) {
 

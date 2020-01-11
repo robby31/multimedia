@@ -32,7 +32,8 @@ public:
 
     virtual int exitCode() const = 0;
 
-    QList<QUrl> url() const { return m_urls; }
+    QUrl videoUrl() const;
+    QUrl audioUrl() const;
 
     qint64 size() const Q_DECL_OVERRIDE;
 
@@ -97,7 +98,9 @@ signals:
 
 public slots:
     void setUrl(const QUrl &url);
-    void setUrls(const QList<QUrl> &urls);
+    void setUrls(const QUrl &videoUrl, const QUrl &audioUrl);
+    void setVideoUrl(const QUrl &url);
+    void setAudioUrl(const QUrl &url);
     void urlError(const QString &message);
     void close() Q_DECL_OVERRIDE;
 
@@ -105,7 +108,8 @@ private slots:
     virtual void _open() = 0;
 
 private:
-    QList<QUrl> m_urls;
+    QUrl m_videoUrl;
+    QUrl m_audioUrl;
 
     bool m_opened = false;
     qint64 m_pos = 0;

@@ -56,7 +56,7 @@ qint64 TranscodeDevice::size() const
         return tmp_size;
     }
 
-    qCritical() << "length or bitrate is invalid" << lengthInMSeconds() << bitrate() << "full size = " << tmp_size << url();
+    qCritical() << "length or bitrate is invalid" << lengthInMSeconds() << bitrate() << "full size = " << tmp_size << videoUrl() << audioUrl();
     return -1;
 }
 
@@ -96,14 +96,38 @@ void TranscodeDevice::setVolumeInfo(const QHash<QString, double>& info)
 
 void TranscodeDevice::setUrl(const QUrl &url)
 {
-    m_urls << url;
+    m_videoUrl = url;
+    m_audioUrl = url;
     emit readyToOpen();
 }
 
-void TranscodeDevice::setUrls(const QList<QUrl> &urls)
+void TranscodeDevice::setUrls(const QUrl &videoUrl, const QUrl &audioUrl)
 {
-    m_urls = urls;
+    m_videoUrl = videoUrl;
+    m_audioUrl = audioUrl;
     emit readyToOpen();
+}
+
+void TranscodeDevice::setVideoUrl(const QUrl &url)
+{
+    m_videoUrl = url;
+    emit readyToOpen();
+}
+
+void TranscodeDevice::setAudioUrl(const QUrl &url)
+{
+    m_audioUrl = url;
+    emit readyToOpen();
+}
+
+QUrl TranscodeDevice::videoUrl() const
+{
+    return m_videoUrl;
+}
+
+QUrl TranscodeDevice::audioUrl() const
+{
+    return m_audioUrl;
 }
 
 void TranscodeDevice::urlError(const QString &message)
@@ -128,7 +152,7 @@ bool TranscodeDevice::open()
 
 bool TranscodeDevice::isReadyToOpen() const
 {
-    return !m_urls.isEmpty();
+    return videoUrl().isValid() || audioUrl().isValid();
 }
 
 qint64 TranscodeDevice::fullSize() const

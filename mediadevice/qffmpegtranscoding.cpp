@@ -40,7 +40,7 @@ qint64 QFfmpegTranscoding::bytesAvailable() const
 
 bool QFfmpegTranscoding::isReadyToOpen() const
 {
-    return !url().isEmpty() || m_inputMedia;
+    return videoUrl().isValid() || audioUrl().isValid() || m_inputMedia;
 }
 
 void QFfmpegTranscoding::setInput(QFfmpegInputMedia *input)
@@ -139,15 +139,15 @@ QByteArray QFfmpegTranscoding::read(qint64 maxlen)
 
 void QFfmpegTranscoding::readyForOpening()
 {
-    if (!url().isEmpty() && !m_inputMedia)
+    if ((videoUrl().isValid() || audioUrl().isValid()) && !m_inputMedia)
     {
         auto input = new QFfmpegInputMedia(this);
-        if (!url().isEmpty())
-        {
-            input->open(url().at(0).url());
-            if (url().size() > 1)
-                qWarning() << "media contains" << url().size() << "urls, only first url is supported.";
-        }
+        if (videoUrl().isValid())
+            input->open(videoUrl().url());
+        else if (audioUrl().isValid())
+            input->open(audioUrl().url());
+        if (videoUrl().isValid() && audioUrl().isValid() && videoUrl() != audioUrl())
+            qWarning() << "media contains different video and audio urls, only video url is supported.";
         setInput(input);
     }
 

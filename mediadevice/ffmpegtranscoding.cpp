@@ -49,22 +49,13 @@ void FfmpegTranscoding::updateArguments()
 //    arguments << "-probesize" << "5000";
 //    arguments << "-analyzeduration" << "0";
 
-    QString subtitle_url;
-    if (!url().isEmpty())
-    {
-        for (const QUrl &url : url())
-        {
-            if (!ssOption.isEmpty())
-                arguments << "-ss" << ssOption;
-
-            arguments << "-i" << url.url();
-            if (subtitle_url.isEmpty())
-                subtitle_url = url.url();
-        }
-    }
-
     if (format() == MP3)
     {
+        if (!ssOption.isEmpty())
+            arguments << "-ss" << ssOption;
+
+        arguments << "-i" << audioUrl().url();
+
         arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
@@ -76,6 +67,11 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == AAC)
     {
+        if (!ssOption.isEmpty())
+            arguments << "-ss" << ssOption;
+
+        arguments << "-i" << audioUrl().url();
+
         arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
@@ -86,6 +82,11 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == ALAC)
     {
+        if (!ssOption.isEmpty())
+            arguments << "-ss" << ssOption;
+
+        arguments << "-i" << audioUrl().url();
+
         arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
@@ -96,6 +97,11 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == LPCM_S16BE)
     {
+        if (!ssOption.isEmpty())
+            arguments << "-ss" << ssOption;
+
+        arguments << "-i" << audioUrl().url();
+
         arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
@@ -106,6 +112,11 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == LPCM_S16LE)
     {
+        if (!ssOption.isEmpty())
+            arguments << "-ss" << ssOption;
+
+        arguments << "-i" << audioUrl().url();
+
         arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
@@ -116,6 +127,11 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == WAV)
     {
+        if (!ssOption.isEmpty())
+            arguments << "-ss" << ssOption;
+
+        arguments << "-i" << audioUrl().url();
+
         arguments << "-vn";  // no video only audio
         arguments << "-map_metadata" << "-1";
 
@@ -126,6 +142,20 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == MPEG2_AC3 || format() == H264_AAC || format() == H264_AC3)
     {
+        if (!ssOption.isEmpty())
+            arguments << "-ss" << ssOption;
+
+        arguments << "-i" << videoUrl().url();
+        QString subtitle_url = videoUrl().url();
+
+        if (videoUrl() != audioUrl() && audioUrl().isValid())
+        {
+            if (!ssOption.isEmpty())
+                arguments << "-ss" << ssOption;
+
+            arguments << "-i" << audioUrl().url();
+        }
+
         if (!audioLanguages().contains("fre") && !audioLanguages().contains("fra"))
         {
             // select subtitle
@@ -274,14 +304,33 @@ void FfmpegTranscoding::updateArguments()
     }
     else if (format() == COPY)
     {
+        if (videoUrl().isValid())
+        {
+            if (!ssOption.isEmpty())
+                arguments << "-ss" << ssOption;
+
+            arguments << "-i" << videoUrl().url();
+        }
+
+        if (videoUrl() != audioUrl() && audioUrl().isValid())
+        {
+            if (!ssOption.isEmpty())
+                arguments << "-ss" << ssOption;
+
+            arguments << "-i" << audioUrl().url();
+        }
+
         // set container format to MPEGTS
         if (containerFormat() == MP4)
             arguments << "-f" << "mp4";
         else if (containerFormat() == MPEGTS)
             arguments << "-f" << "mpegts";
 
-        arguments << "-c:a" << "copy";
-        arguments << "-c:v" << "copy";
+        if (audioUrl().isValid())
+            arguments << "-c:a" << "copy";
+
+        if (videoUrl().isValid())
+            arguments << "-c:v" << "copy";
 
     }
     else
