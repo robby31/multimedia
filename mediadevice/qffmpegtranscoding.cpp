@@ -568,3 +568,8 @@ void QFfmpegTranscoding::demux()
         emit status("Transcoding finished.");
     }
 }
+
+void QFfmpegTranscoding::setVariableBitrate(const bool &flag)
+{
+    m_variableBitrate = flag;
+}

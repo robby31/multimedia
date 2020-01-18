@@ -61,8 +61,15 @@ void FfmpegTranscoding::updateArguments()
 
         arguments << "-f" << "mp3" << "-codec:a" << "libmp3lame";
 
-        if (bitrate() > 0)
-            arguments << "-b:a" << QString("%1").arg(bitrate());
+        if (variable_bitrate)
+        {
+            arguments << "-q:a" << "0";
+        }
+        else
+        {
+            if (bitrate() > 0)
+                arguments << "-b:a" << QString("%1").arg(bitrate());
+        }
 
     }
     else if (format() == AAC)

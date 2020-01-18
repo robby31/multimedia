@@ -36,6 +36,8 @@ public:
     qint64 posInMsec() const;
     qint64 progress() Q_DECL_OVERRIDE;
 
+    void setVariableBitrate(const bool &flag);
+
 private:
     void _close();
     double originalLengthInMSeconds() const Q_DECL_OVERRIDE;
@@ -60,6 +62,8 @@ private:
     qint64 m_nextPts = 0;
 
     QTimer m_timerDemux;
+
+    bool m_variableBitrate = true;
 };
 
 #endif // QFFMPEGTRANSCODING_H
