@@ -111,9 +111,9 @@ bool WavFile::openLocalFile(const QString &fileName)
 
         // file is not a WAV format so we transcode it in wave
 
-        #if !defined(QT_NO_DEBUG_OUTPUT)
+#if !defined(QT_NO_DEBUG_OUTPUT)
         qDebug() << fileName << "is not a WAV file, so we transcode it.";
-        #endif
+#endif
 
         QFfmpegTranscoding decode_audio;
         decode_audio.setFormat(WAV);

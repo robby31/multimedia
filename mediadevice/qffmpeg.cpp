@@ -120,9 +120,9 @@ void QFfmpeg::probeFinished(int exitCode, QProcess::ExitStatus exitStatus)
     {
         xmlResProbe.setContent(process->readAll());
 
-        #if !defined(QT_NO_DEBUG_OUTPUT)
+#if !defined(QT_NO_DEBUG_OUTPUT)
         qDebug() << xmlResProbe.toString();
-        #endif
+#endif
 
         QDomNodeList streamList = xmlResProbe.elementsByTagName("stream");
         for (int index=0;index<streamList.count();++index)

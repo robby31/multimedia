@@ -98,18 +98,18 @@ QByteArray TranscodeProcess::read(qint64 maxlen)
     {
         if (_pos() < startByte())
         {
-            #if !defined(QT_NO_DEBUG_OUTPUT)
+#if !defined(QT_NO_DEBUG_OUTPUT)
             qDebug() << "BYTES IGNORED" << _pos() << startByte();
-            #endif
+#endif
 
             return QByteArray();
         }
 
         if ((_pos()-data.size()) < startByte())
         {
-            #if !defined(QT_NO_DEBUG_OUTPUT)
+#if !defined(QT_NO_DEBUG_OUTPUT)
             qDebug() << "REMOVE BYTES" << _pos() << startByte() << data.size() << startByte()-_pos()+data.size();
-            #endif
+#endif
 
             data.remove(0, QVariant::fromValue(startByte()-_pos()).toInt()+data.size());
         }
@@ -187,9 +187,9 @@ void TranscodeProcess::finishedTranscodeData(const int &exitCode, const QProcess
 
 void TranscodeProcess::processStarted()
 {
-    #if !defined(QT_NO_DEBUG_OUTPUT)
+#if !defined(QT_NO_DEBUG_OUTPUT)
     qDebug() << QString("Transcoding process %1 %2").arg(m_process.program(), m_process.arguments().join(' '));
-    #endif
+#endif
 
     appendLog(m_process.program()+' ');
     appendLog(m_process.arguments().join(' '));
@@ -211,10 +211,10 @@ void TranscodeProcess::pause()
     qint64 pid = m_process.processId();
     if (!m_paused && m_process.state() != QProcess::NotRunning && pid > 0)
     {
-        #if !defined(QT_NO_DEBUG_OUTPUT)
+#if !defined(QT_NO_DEBUG_OUTPUT)
         qDebug() << QString("Pause transcoding (pid: %1)").arg(pid);
         appendLog(QString("PAUSE TRANSCODING"));
-        #endif
+#endif
 
         if (QProcess::startDetached(QString("kill -STOP %1").arg(pid)))
         {
@@ -237,10 +237,10 @@ void TranscodeProcess::resume()
     qint64 pid = m_process.processId();
     if (m_paused && m_process.state() != QProcess::NotRunning && pid > 0)
     {
-        #if !defined(QT_NO_DEBUG_OUTPUT)
+#if !defined(QT_NO_DEBUG_OUTPUT)
         qDebug() << QString("Restart transcoding (pid: %1)").arg(pid);
         appendLog(QString("RESUME TRANSCODING"));
-        #endif
+#endif
 
         if (QProcess::startDetached(QString("kill -CONT %1").arg(pid)))
         {
