@@ -113,9 +113,6 @@ void FfmpegTranscoding::updateArguments()
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "s16be";
-
-        if (bitrate() > 0)
-            arguments << "-b:a " << QString("%1").arg(bitrate());
     }
     else if (format() == LPCM_S16LE)
     {
@@ -128,9 +125,6 @@ void FfmpegTranscoding::updateArguments()
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "s16le";
-
-        if (bitrate() > 0)
-            arguments << "-b:a " << QString("%1").arg(bitrate());
     }
     else if (format() == WAV)
     {
@@ -143,9 +137,6 @@ void FfmpegTranscoding::updateArguments()
         arguments << "-map_metadata" << "-1";
 
         arguments << "-f" << "wav";
-
-        if (bitrate() > 0)
-            arguments << "-b:a" << QString("%1").arg(bitrate());
     }
     else if (format() == MPEG2_AC3 || format() == H264_AAC || format() == H264_AC3)
     {
